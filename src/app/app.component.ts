@@ -7,4 +7,5 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'FrontOfficeMaghrebia';
+  showNavbar: boolean = true; // Set this based on your logic
 }

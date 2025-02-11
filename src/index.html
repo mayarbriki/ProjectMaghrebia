@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
 
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <title>Ensurance | Landing &amp; Corporate Template</title>
+  <!-- ===============================================-->
+  <!--    Document Title-->
+  <!-- ===============================================-->
+  <title>Ensurance | Landing &amp; Corporate Template</title>
 
 
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicons/favicon.ico">
-    <link rel="manifest" href="./assets/img/favicons/manifest.json">
-    <meta name="msapplication-TileImage" content="./assets/img/favicons/mstile-150x150.png">
-    <meta name="theme-color" content="#ffffff">
+  <!-- ===============================================-->
+  <!--    Favicons-->
+  <!-- ===============================================-->
+  <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicons/favicon-16x16.png">
+  <link rel="shortcut icon" type="image/x-icon" href="./assets/img/favicons/favicon.ico">
+  <link rel="manifest" href="./assets/img/favicons/manifest.json">
+  <meta name="msapplication-TileImage" content="./assets/img/favicons/mstile-150x150.png">
+  <meta name="theme-color" content="#ffffff">
 
 
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
-    <link href="./vendors/prism/prism.css" rel="stylesheet">
-    <link href="./assets/css/theme.css" rel="stylesheet" />
-    <link href="./assets/css/user.css" rel="stylesheet" />
+  <!-- ===============================================-->
+  <!--    Stylesheets-->
+  <!-- ===============================================-->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="./vendors/prism/prism.css" rel="stylesheet">
+  <link href="./assets/css/theme.css" rel="stylesheet" />
+  <link href="./assets/css/user.css" rel="stylesheet" />
 
-  </head>
+</head>
 
 
   <body>
@@ -43,30 +43,9 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-      <nav class="navbar navbar-expand-lg navbar-light fixed-top py-3" data-navbar-on-scroll="data-navbar-on-scroll">
-        <div class="container"><a class="navbar-brand" href="index.html"><span class="text-primary fs-3 ms-2 fw-bolder">en</span><span class="fw-thin text-300 fs-3">surance</span></a>
-          <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-          <div class="collapse navbar-collapse pt-4 pt-lg-0" id="navbarSupportedContent">
-            <p class="mb-0 ms-auto text-light fs-0 fw-normal"><i class="fas fa-phone-alt me-2"></i>Call Us Now <a class="text-light" href="tel:+604-680-9785">+215(362)4579</a></p>
-            <ul class="navbar-nav ms-auto border-bottom border-lg-bottom-0 pt-2 pt-lg-0">
-              <li class="nav-item px-2"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-              <li class="nav-item px-2"><a class="nav-link" href="#products">Products</a></li>
-              <li class="nav-item px-2"><a class="nav-link" href="#news">News &amp; Blog</a></li>
-              <li class="nav-item px-2"><a class="nav-link" href="#contact">Contact us</a></li>
-            </ul>
-            <div class="d-flex mt-2 align-items-center mt-lg-0">
-              <div class="dropdown">
-                <button class="btn btn-sm d-flex mx-2" id="dropdownMenuButton1" type="submit" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-search text-primary"></i></button>
-                <div class="dropdown-menu dropdown-menu-lg-end p-0 rounded" aria-labelledby="dropdownMenuButton1" style="top:55px">
-                  <form>
-                    <input class="form-control form-search-control border-100" type="search" placeholder="Search" aria-label="Search" />
-                  </form>
-                </div>
-              </div><a href="#!"> <i class="fas fa-user text-primary"> </i></a>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <app-navbar-element></app-navbar-element>    
+      <app-product-element></app-product-element>
+      <router-outlet></router-outlet>
       <section class="py-0">
         <div class="bg-holder" style="background-image:url(assets/img/illustrations/bg.png);background-position:left center;background-size:auto 816px;">
         </div>
@@ -113,116 +92,9 @@
           </div>
         </div>
       </section>
-      <section id="products">
-        <div class="bg-holder d-none d-md-block" style="background-image:url(./assets/img/illustrations/bg-car-insurance.png);background-position:0 200px;background-size:100% 45%;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="bg-holder d-none d-md-block" style="background-image:url(./assets/img/illustrations/bg-left.png);background-position:left;background-size:15% 100%;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="bg-holder d-none d-xl-block  mt-11" style="background-image:url(./assets/img/illustrations/circle.png);background-position:18% 49%;;background-size:auto;">
-        </div>
-        <!--/.bg-holder-->
-
-        <div class="container-lg">
-          <div class="row flex-center py-8 py-md-10">
-            <div class="col-12 mt-6">
-              <div class="d-flex align-items-start">
-                <div class="nav flex-column nav-tab" id="nav-tab" role="tablist" aria-orientation="vertical"><a class="circle-hover-wrapper nav-link mb-lg-4 active" id="nav-car-tab" href="#!" data-bs-toggle="tab" data-bs-target="#nav-car" role="tab" aria-controls="nav-car" aria-selected="true">
-                    <div class="icon-box"><img class="car-insurance-icon" src="./assets/img/icons/car.png" alt="..." /><img class="car-insurance-icon car-insurance-icon-hover" src="./assets/img/icons/car-hover.png" alt="..." /></div>
-                  </a><a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-home-tab" href="#!" data-bs-toggle="tab" data-bs-target="#nav-home" role="tab" aria-controls="nav-home" aria-selected="false">
-                    <div class="icon-box"><img class="car-insurance-icon" src="./assets/img/icons/home.png" alt="..." /><img class="car-insurance-icon car-insurance-icon-hover" src="./assets/img/icons/home-hover.png" alt="..." /></div>
-                  </a><a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-paw-tab" href="#!" data-bs-toggle="tab" data-bs-target="#nav-paw" role="tab" aria-controls="nav-paw" aria-selected="false">
-                    <div class="icon-box"><img class="car-insurance-icon" src="./assets/img/icons/paw.png" alt="..." /><img class="car-insurance-icon car-insurance-icon-hover" src="./assets/img/icons/paw-hover.png" alt="..." /></div>
-                  </a><a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-plane-tab" href="#!" data-bs-toggle="tab" data-bs-target="#nav-plane" role="tab" aria-controls="nav-plane" aria-selected="false">
-                    <div class="icon-box"><img class="car-insurance-icon" src="./assets/img/icons/plane.png" alt="..." /><img class="car-insurance-icon car-insurance-icon-hover" src="./assets/img/icons/plane-hover.png" alt="..." /></div>
-                  </a></div>
-                <div class="tab-content w-100" id="nav-tabContent">
-                  <div class="tab-pane fade show active" id="nav-car" role="tabpanel" aria-labelledby="nav-car-tab">
-                    <div class="row align-items-center offset-sm-1 g-3">
-                      <div class="col-md-6 col-xl-4 order-1 order-md-0">
-                        <h2 class="text-light mb-md-5">Car Insurance</h2>
-                        <p class="text-400">Make a plan for the emergence of life. We protect your most precious assets, allowing you to devote your time and energy to more essential things in life.</p>
-                        <p class="text-400 mt-3">Discover the most appropriate fit for you and your Family.</p><a class="btn btn-primary btn-ensurance mt-5" href="#!"><span class="fas fa-chevron-right fa-xs btn-icon"></span><span class="btn-text">Learn more</span></a>
-                      </div>
-                      <div class="col-md-6 col-xl-8 text-end">
-                        <div class="img-shape"><img class="feature-img" src="./assets/img/gallery/car.png" alt="..." /></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
-                    <div class="row align-items-center offset-sm-1 g-3">
-                      <div class="col-md-6 col-xl-4 order-1 order-md-0">
-                        <h2 class="text-light mb-md-5">Home Insurance</h2>
-                        <p class="text-400">Make a plan for the emergence of life. We protect your most precious assets, allowing you to devote your time and energy to more essential things in life.</p>
-                        <p class="text-400 mt-3">Discover the most appropriate fit for you and your Family.</p><a class="btn btn-primary btn-ensurance mt-5" href="#!"><span class="fas fa-chevron-right fa-xs btn-icon"></span><span class="btn-text">Learn more</span></a>
-                      </div>
-                      <div class="col-md-6 col-xl-8 text-end">
-                        <div class="img-shape"><img class="feature-img" src="./assets/img/gallery/home.png" alt="..." /></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="nav-paw" role="tabpanel" aria-labelledby="nav-paw-tab">
-                    <div class="row align-items-center offset-sm-1 g-3">
-                      <div class="col-md-6 col-xl-4 order-1 order-md-0">
-                        <h2 class="text-light mb-md-5">Pet Insurance</h2>
-                        <p class="text-400">Make a plan for the emergence of life. We protect your most precious assets, allowing you to devote your time and energy to more essential things in life.</p>
-                        <p class="text-400 mt-3">Discover the most appropriate fit for you and your Family.</p><a class="btn btn-primary btn-ensurance mt-5" href="#!"><span class="fas fa-chevron-right fa-xs btn-icon"></span><span class="btn-text">Learn more</span></a>
-                      </div>
-                      <div class="col-md-6 col-xl-8 text-end">
-                        <div class="img-shape"><img class="feature-img" src="./assets/img/gallery/pets.png" alt="..." /></div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="tab-pane fade" id="nav-plane" role="tabpanel" aria-labelledby="nav-plane-tab">
-                    <div class="row align-items-center offset-sm-1 g-3">
-                      <div class="col-md-6 col-xl-4 order-1 order-md-0">
-                        <h2 class="text-light mb-md-5">Travel Insurance</h2>
-                        <p class="text-400">Make a plan for the emergence of life. We protect your most precious assets, allowing you to devote your time and energy to more essential things in life.</p>
-                        <p class="text-400 mt-3">Discover the most appropriate fit for you and your Family.</p><a class="btn btn-primary btn-ensurance mt-5" href="#!"><span class="fas fa-chevron-right fa-xs btn-icon"></span><span class="btn-text">Learn more</span></a>
-                      </div>
-                      <div class="col-md-6 col-xl-8 text-end">
-                        <div class="img-shape"><img class="feature-img" src="./assets/img/gallery/travel.png" alt="..." /></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="row offset-xl-2">
-            <div class="col-12">
-              <div class="mb-3 mb-md-5">
-                <h2 class="text-light mb-7 text-center text-sm-start">Best Services</h2>
-              </div>
-              <div class="row">
-                <div class="col-sm-6 col-lg-3 mb-6 text-center text-sm-start"><img class="shadow-icon" src="./assets/img/icons/support.png" height="60" alt="..." />
-                  <h4 class="mt-4 fw-normal text-200">24x7 Support</h4>
-                  <p class="text-400 mb-md-0">Client is our most <br> important priority</p>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-6 text-center text-sm-start"><img class="shadow-icon" src="./assets/img/icons/edit.png" height="60" alt="..." />
-                  <h4 class="mt-4 fw-normal text-200">Easy Claim System</h4>
-                  <p class="text-400 mb-md-0">Express your desires <br>and needs to us</p>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-6 text-center text-sm-start"><img class="shadow-icon" src="./assets/img/icons/money.png" height="60" alt="..." />
-                  <h4 class="mt-4 fw-normal text-200">Easy installments</h4>
-                  <p class="text-400 mb-md-0">It's quick, safe, and simple. Select several methods of payment</p>
-                </div>
-                <div class="col-sm-6 col-lg-3 mb-6 text-center text-sm-start"><img class="shadow-icon" src="./assets/img/icons/security.png" height="60" alt="..." />
-                  <h4 class="mt-4 fw-normal text-200">Strongly Secured</h4>
-                  <p class="text-400 mb-md-0">Food is made and delivered directly to your home.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <!-- ============================================-->
+         <!-- ============================================-->
       <!-- <section> begin ============================-->
+        
       <section class="py-8">
 
         <div class="container-fluid px-0">
@@ -527,6 +399,7 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="./vendors/prism/prism.js"></script>
     <script src="./assets/js/theme.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
   </body>
 

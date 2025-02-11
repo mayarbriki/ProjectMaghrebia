@@ -1,24 +1,33 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Injector, Inject } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-
+import { createCustomElement } from '@angular/elements'; // Add this import
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LayoutComponent } from './layout/layout.component';
 import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { ProductComponent } from './product/product.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavbarComponent,
     LayoutComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
+         ProductComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
-  ],
+  ],  
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(@Inject(Injector) private injector: Injector) {
+    const navbarElement = createCustomElement(NavbarComponent, { injector });
+    customElements.define('app-navbar-element', navbarElement);
+  }
+ }

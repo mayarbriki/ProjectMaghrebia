@@ -21005,15 +21005,18 @@ html[dir=rtl] .googlemap .gm-style-iw.gm-style-iw-c button[title=Close] {
   min-height: 100%;
   top: 0;
   left: 0;
-  background-size: cover;
-  background-position: center;
+  background-color: #f0f0f0; /* Fallback color */
+  background-image: url(./assets/img/illustrations/bg.png);
+  background-size: auto 816px;
+  background-position: left center;
+  background-repeat: no-repeat;
   overflow: hidden;
   will-change: transform, opacity, filter;
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  background-repeat: no-repeat;
   z-index: 0;
 }
+
 .bg-holder.bg-right {
   left: auto;
   right: 0;

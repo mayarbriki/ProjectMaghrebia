@@ -97,6 +97,21 @@
         }
       }
     }
+    .navbar {
+      transition: background-color 0.3s ease;
+    }
+    
+    .scrolled {
+      background-color: rgb(0, 0, 54) !important;
+    }
+    
+    .scrolled .nav-link,
+    .scrolled .text-300,
+    .scrolled span,
+    .scrolled i,
+    .scrolled a {
+      color: white !important;
+    }
   }
   
   

@@ -1,21 +1,12 @@
 <!DOCTYPE html>
 <html lang="en-US" dir="ltr">
-
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-
-  <!-- ===============================================-->
   <!--    Document Title-->
-  <!-- ===============================================-->
   <title>Ensurance | Landing &amp; Corporate Template</title>
-
-
-  <!-- ===============================================-->
   <!--    Favicons-->
-  <!-- ===============================================-->
   <link rel="apple-touch-icon" sizes="180x180" href="./assets/img/favicons/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="./assets/img/favicons/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="./assets/img/favicons/favicon-16x16.png">
@@ -23,34 +14,22 @@
   <link rel="manifest" href="./assets/img/favicons/manifest.json">
   <meta name="msapplication-TileImage" content="./assets/img/favicons/mstile-150x150.png">
   <meta name="theme-color" content="#ffffff">
-
-
-  <!-- ===============================================-->
   <!--    Stylesheets-->
-  <!-- ===============================================-->
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
   <link href="./vendors/prism/prism.css" rel="stylesheet">
   <link href="./assets/css/theme.css" rel="stylesheet" />
   <link href="./assets/css/user.css" rel="stylesheet" />
-
 </head>
-
-
   <body>
-
-    <!-- ===============================================-->
     <!--    Main Content-->
-    <!-- ===============================================-->
     <main class="main" id="top">
       <app-navbar-element></app-navbar-element>    
-     
       <router-outlet></router-outlet>
       <section class="py-0">
         <div class="bg-holder" style="background-image:url(assets/img/illustrations/bg.png);background-position:left center;background-size:auto 816px;">
         </div>
         <!--/.bg-holder-->
-
         <div class="container">
           <div class="row align-items-center min-vh-100">
             <div class="col-md-7 col-xl-7 pt-9 text-md-start text-center">
@@ -92,13 +71,12 @@
           </div>
         </div>
       </section>
-         <!-- ============================================-->
       <!-- <section> begin ============================-->
         <app-product></app-product>
         <router-outlet></router-outlet>
-
+        <app-blog></app-blog>
+        <router-outlet></router-outlet>
       <section class="py-8">
-
         <div class="container-fluid px-0">
           <div class="row g-0">
             <div class="col-12 col-xxl-11 offset-xxl-1">
@@ -182,88 +160,11 @@
           </div>
         </div>
         <!-- end of .container-->
-
       </section>
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
-
-
-      <!-- ============================================-->
       <!-- <section> begin ============================-->
-      <section id="news">
-
-        <div class="container">
-          <div class="row">
-            <h2 class="text-light text-center my-5">Recent News</h2>
-          </div>
-          <div class="row flex-center h-100 circle-blend circle-blend-left circle-primary">
-            <div class="col-12">
-              <div class="row align-items-center circle-blend circle-blend-right circle-warning">
-                <div class="col-md-6 col-lg-4 mb-4">
-                  <div class="card p-3 h-100 card-soft-primary">
-                    <div class="card-body">
-                      <div class="d-flex flex-between-center">
-                        <p class="fw-normal mb-0 text-400">24 July, 2021</p>
-                        <h6><span class="badge rounded-pill text-primary" style="background:#224E8F;">Thoughts</span></h6>
-                      </div>
-                      <h5 class="fw-bold fs-2 text-200 my-3">A pandemic may cause life insurance coverage</h5>
-                      <p class="text-400">In the aftermath of the Covid epidemic, life insurance firms have been more cautious and have tightened underwriting standards for policies with large cash values.......</p><a class="link-primary" href="#!">
-                        <svg class="bi bi-arrow-right text-primary" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
-                        </svg></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                  <div class="card p-3 h-100 card-soft-primary">
-                    <div class="card-body">
-                      <div class="d-flex flex-between-center">
-                        <p class="fw-normal mb-0 text-400">29 July, 2021</p>
-                        <h6><span class="badge rounded-pill text-primary" style="background:#224E8F;">Health</span></h6>
-                      </div>
-                      <h5 class="fw-bold fs-2 text-200 my-3">Top 10 health insurance companies in the Germany</h5>
-                      <p class="text-400">There are numerous private healthcare insurance experts in Germany. Insurance protects against financial loss and reduces uncertainty. It ensures safety and security.......</p><a class="link-primary" href="#!">
-                        <svg class="bi bi-arrow-right text-primary" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
-                        </svg></a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mb-4">
-                  <div class="card p-3 h-100 card-soft-primary">
-                    <div class="card-body">
-                      <div class="d-flex flex-between-center">
-                        <p class="fw-normal mb-0 text-400">15 August, 2021</p>
-                        <h6><span class="badge rounded-pill text-primary" style="background:#224E8F;">Life</span></h6>
-                      </div>
-                      <h5 class="fw-bold fs-2 text-200 my-3">Why do you need several life insurance policies?</h5>
-                      <p class="text-400">In the event of the insured's death, life insurance protects the nominees financially. It is possible to have several life insurance policies with various insurance providers.......</p><a class="link-primary" href="#!">
-                        <svg class="bi bi-arrow-right text-primary" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"></path>
-                        </svg></a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="my-5 text-center text-sm-end"><a class="link-primary" href="#!">View all
-                  <svg class="bi bi-arrow-right" xmlns="http://www.w3.org/2000/svg" width="21" height="21" fill="currentColor" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"> </path>
-                  </svg></a></div>
-            </div>
-          </div>
-        </div>
-        <!-- end of .container-->
-
-      </section>
+     
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
-
-
-      <!-- ============================================-->
       <!-- <section> begin ============================-->
       <section class="py-0">
 
@@ -278,18 +179,10 @@
           </div>
         </div>
         <!-- end of .container-->
-
       </section>
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
-
-
-      <!-- ============================================-->
       <!-- <section> begin ============================-->
       <section id="contact">
-
         <div class="container">
           <div class="row">
             <h2 class="text-light text-center mb-8">Contact Us</h2>
@@ -310,15 +203,8 @@
           </div>
         </div>
         <!-- end of .container-->
-
       </section>
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
-
-
-      <!-- ============================================-->
       <!-- <section> begin ============================-->
       <section class="py-0">
 
@@ -348,15 +234,8 @@
           </div>
         </div>
         <!-- end of .container-->
-
       </section>
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
-
-
-      <!-- ============================================-->
       <!-- <section> begin ============================-->
       <section class="py-0 bg-black">
 
@@ -375,23 +254,11 @@
           </div>
         </div>
         <!-- end of .container-->
-
       </section>
       <!-- <section> close ============================-->
-      <!-- ============================================-->
-
-
     </main>
-    <!-- ===============================================-->
     <!--    End of Main Content-->
-    <!-- ===============================================-->
-
-
-
-
-    <!-- ===============================================-->
     <!--    JavaScripts-->
-    <!-- ===============================================-->
     <script src="./vendors/popper/popper.min.js"></script>
     <script src="./vendors/bootstrap/bootstrap.min.js"></script>
     <script src="./vendors/anchorjs/anchor.min.js"></script>
@@ -402,7 +269,5 @@
     <script src="./vendors/prism/prism.js"></script>
     <script src="./assets/js/theme.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
   </body>
-
 </html>

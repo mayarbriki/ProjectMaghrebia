@@ -8,6 +8,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { ProductComponent } from './product/product.component';
+import { BlogComponent } from './blog/blog.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { ProductComponent } from './product/product.component';
     LayoutComponent,
     HomeComponent,
     HeaderComponent,
-         ProductComponent
+         ProductComponent,
+         BlogComponent
   ],
   imports: [
     BrowserModule,
@@ -34,5 +36,7 @@ export class AppModule {
     // Convert ProductComponent to a custom element
     const productElement = createCustomElement(ProductComponent, { injector });
     customElements.define('app-product', productElement);
+    const blogElement = createCustomElement(BlogComponent, { injector });
+    customElements.define('app-blog', blogElement);
   }
  }

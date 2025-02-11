@@ -27,7 +27,12 @@ import { ProductComponent } from './product/product.component';
 })
 export class AppModule {
   constructor(@Inject(Injector) private injector: Injector) {
+    // Convert NavbarComponent to a custom element
     const navbarElement = createCustomElement(NavbarComponent, { injector });
     customElements.define('app-navbar-element', navbarElement);
+
+    // Convert ProductComponent to a custom element
+    const productElement = createCustomElement(ProductComponent, { injector });
+    customElements.define('app-product', productElement);
   }
  }

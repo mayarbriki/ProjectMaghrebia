@@ -12,6 +12,7 @@ import { BlogComponent } from './blog/blog.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { BlogDetailComponent } from './blog-detail/blog-detail.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,11 +23,11 @@ import { CommonModule } from '@angular/common';
     HeaderComponent,
          ProductComponent,
          BlogComponent,
+         BlogDetailComponent,
   ],
   imports: [
     BrowserModule,
     CommonModule,
-
     AppRoutingModule,
     RouterModule
   ],  

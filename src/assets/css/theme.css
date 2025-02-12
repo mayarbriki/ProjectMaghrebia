@@ -7,61 +7,7 @@
 /*                                  Utilities                                 */
 /* -------------------------------------------------------------------------- */
 :root {
-  --ensurance-blue: #186BE8;
-  --ensurance-indigo: #1C16AF;
-  --ensurance-purple: #6f42c1;
-  --ensurance-pink: #D032D0;
-  --ensurance-red: #D65025;
-  --ensurance-orange: #fd7e14;
-  --ensurance-yellow: #D7AE20;
-  --ensurance-green: #3DBB59;
-  --ensurance-teal: #20c997;
-  --ensurance-cyan: #5EDCD4;
-  --ensurance-white: #fff;
-  --ensurance-gray: #627E84;
-  --ensurance-gray-dark: #536468;
-  --ensurance-gray-black: #000;
-  --ensurance-gray-100: #DBE4E7;
-  --ensurance-gray-200: #CDD8DA;
-  --ensurance-gray-300: #B5CACE;
-  --ensurance-gray-400: #93AFB6;
-  --ensurance-gray-500: #76979E;
-  --ensurance-gray-600: #627E84;
-  --ensurance-gray-700: #5B7075;
-  --ensurance-gray-800: #536468;
-  --ensurance-gray-900: #445356;
-  --ensurance-gray-1000: #384345;
-  --ensurance-gray-1100: #313839;
-  --ensurance-gray-white: #fff;
-  --ensurance-primary: #5EDCD4;
-  --ensurance-secondary: #186BE8;
-  --ensurance-success: #3DBB59;
-  --ensurance-info: #1C16AF;
-  --ensurance-warning: #D7AE20;
-  --ensurance-danger: #D65025;
-  --ensurance-light: #DBE4E7;
-  --ensurance-dark: #313839;
-  --ensurance-primary-rgb: 94, 220, 212;
-  --ensurance-secondary-rgb: 24, 107, 232;
-  --ensurance-success-rgb: 61, 187, 89;
-  --ensurance-info-rgb: 28, 22, 175;
-  --ensurance-warning-rgb: 215, 174, 32;
-  --ensurance-danger-rgb: 214, 80, 37;
-  --ensurance-light-rgb: 219, 228, 231;
-  --ensurance-dark-rgb: 49, 56, 57;
-  --ensurance-white-rgb: 255, 255, 255;
-  --ensurance-black-rgb: 0, 0, 0;
-  --ensurance-body-color-rgb: 91, 112, 117;
-  --ensurance-body-bg-rgb: 255, 255, 255;
-  --ensurance-font-sans-serif: "Raleway", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --ensurance-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  --ensurance-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
-  --ensurance-body-font-family: Raleway, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
-  --ensurance-body-font-size: 1rem;
-  --ensurance-body-font-weight: 400;
-  --ensurance-body-line-height: 1.45;
-  --ensurance-body-color: #5B7075;
-  --ensurance-body-bg: #fff;
+  --ensurance-body-bg: #ffffff; /* White color */
 }
 
 :root, :root.light, :root .light {
@@ -651,7 +597,7 @@ body {
   text-align: var(--ensurance-body-text-align);
   background-color: var(--ensurance-body-bg);
   -webkit-text-size-adjust: 100%;
-  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: rgb(249, 249, 249);
 }
 
 hr {
@@ -19855,8 +19801,6 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   position: relative;
-  background-color: #222222;
-  background-image: url("../img/building.png");
 }
 
 pre,

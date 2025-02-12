@@ -12,6 +12,6 @@ export class ProductDetailComponent {
     console.error('Image failed to load:', event);
   }
   constructor(private sanitizer: DomSanitizer) {
-    this.imagePath = this.sanitizer.bypassSecurityTrustResourceUrl("./assets/img/illustrations/393shots_so-removebg-preview.png");
+    this.imagePath = this.sanitizer.bypassSecurityTrustResourceUrl("/assets/img/illustrations/393shots_so-removebg-preview.png");
   }
 }

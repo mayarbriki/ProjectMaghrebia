@@ -13,6 +13,10 @@ import { ProductDetailComponent } from './product-detail/product-detail.componen
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { BlogDetailComponent } from './blog-detail/blog-detail.component';
+import { FeedbackComponent } from './feedback/feedback.component';
+import { FooterComponent } from './footer/footer.component';
+import { HomeadminComponent } from './homeadmin/homeadmin.component';
+import { NotificationsComponent } from './notifications/notifications.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +28,11 @@ import { BlogDetailComponent } from './blog-detail/blog-detail.component';
          ProductComponent,
          BlogComponent,
          BlogDetailComponent,
+         FeedbackComponent,
+        
+         FooterComponent,
+                   HomeadminComponent,
+                   NotificationsComponent,
   ],
   imports: [
     BrowserModule,

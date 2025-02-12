@@ -598,6 +598,7 @@ body {
   background-color: var(--ensurance-body-bg);
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgb(249, 249, 249);
+  
 }
 
 hr {
@@ -20123,9 +20124,10 @@ ul {
 }
 
 .card-soft-primary {
-  background: rgba(24, 107, 232, 0.08);
-  border: 1px solid rgba(24, 107, 232, 0.4);
+  background-color: #224E8F; /* Darker background color */
+  color: #224E8F; /* Light text color for better contrast */
 }
+
 
 /* -------------------------------------------------------------------------- */
 /*                               Browser Fixing                               */

@@ -19,7 +19,12 @@ export class AppComponent implements OnInit {
         this.isProductPage = false;
       }
     });
+    const spinner = document.getElementById('loading-spinner');
+    if (spinner) {
+      spinner.style.display = 'none';
+    }
   }
+  
   title = 'FrontOfficeMaghrebia';
   showNavbar: boolean = true; // Set this based on your logic
 

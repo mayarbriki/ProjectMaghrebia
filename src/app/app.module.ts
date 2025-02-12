@@ -9,34 +9,31 @@ import { HomeComponent } from './home/home.component';
 import { HeaderComponent } from './header/header.component';
 import { ProductComponent } from './product/product.component';
 import { BlogComponent } from './blog/blog.component';
-
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
+    ProductDetailComponent ,
     NavbarComponent,
     LayoutComponent,
     HomeComponent,
     HeaderComponent,
          ProductComponent,
-         BlogComponent
+         BlogComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    CommonModule,
+
+    AppRoutingModule,
+    RouterModule
   ],  
   providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  constructor(@Inject(Injector) private injector: Injector) {
-    // Convert NavbarComponent to a custom element
-    const navbarElement = createCustomElement(NavbarComponent, { injector });
-    customElements.define('app-navbar-element', navbarElement);
-
-    // Convert ProductComponent to a custom element
-    const productElement = createCustomElement(ProductComponent, { injector });
-    customElements.define('app-product', productElement);
-    const blogElement = createCustomElement(BlogComponent, { injector });
-    customElements.define('app-blog', blogElement);
-  }
+  
+ 
  }

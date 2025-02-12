@@ -1,0 +1,100 @@
+<div class="sidebar" data-color="white" data-active-color="danger">
+    <div class="sidebar-wrapper">
+      <div class="logo">
+        <a href="http://www.creative-tim.com" class="simple-text logo-mini">
+          <div class="logo-image-small">
+            <img src="assets/img/angular2-logo.png" alt="Angular Logo">
+          </div>
+        </a>
+        <a href="https://www.creative-tim.com" class="simple-text logo-normal">
+          Creative Tim 
+        </a>
+      </div>
+      <ul class="nav">
+        <li *ngFor="let menuItem of menuItems" routerLinkActive="active" class="{{menuItem.class}}">
+          <a [routerLink]="[menuItem.path]">
+            <i class="nc-icon {{menuItem.icon}}"></i>
+            <p>{{menuItem.title}}</p>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <style>/* Sidebar */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1;
+      width: 260px;
+      background: #fff;
+      box-shadow: 0 16px 38px -12px rgba(0, 0, 0, 0.56), 0 4px 25px 0 rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(0, 0, 0, 0.2);
+    }
+    
+    /* Sidebar Wrapper */
+    .sidebar-wrapper {
+      position: relative;
+      height: calc(100vh - 75px);
+      overflow: auto;
+      width: 100%;
+      z-index: 4;
+    }
+    
+    /* Logo Section */
+    .sidebar-wrapper .logo {
+      padding: 15px 0;
+      margin: 0;
+      display: block;
+      position: relative;
+      z-index: 4;
+      text-align: center;
+    }
+    
+    .sidebar-wrapper .logo .logo-image-small {
+      width: 30px;
+      height: 30px;
+      display: inline-block;
+      margin-left: 15px;
+    }
+    
+    .sidebar-wrapper .logo .logo-normal {
+      display: inline-block;
+      font-size: 18px;
+      color: #3C4858;
+      padding: 7px 0;
+      margin-left: 10px;
+    }
+    
+    /* Navigation Menu */
+    .sidebar-wrapper .nav {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .sidebar-wrapper .nav li {
+      width: 100%;
+      list-style: none;
+    }
+    
+    .sidebar-wrapper .nav li a {
+      padding: 10px 15px;
+      display: flex;
+      align-items: center;
+      color: #3C4858;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+    
+    .sidebar-wrapper .nav li a:hover {
+      background-color: #f44336;
+      color: #fff;
+    }
+    
+    .sidebar-wrapper .nav li a:hover i {
+      color: #fff;
+    }
+    
+    </style>
+    

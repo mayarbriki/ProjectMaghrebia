@@ -17,6 +17,8 @@ import { FeedbackComponent } from './feedback/feedback.component';
 import { FooterComponent } from './footer/footer.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { NotificationsComponent } from './notifications/notifications.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { ProductadminComponent } from './productadmin/productadmin.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,6 +35,8 @@ import { NotificationsComponent } from './notifications/notifications.component'
          FooterComponent,
                    HomeadminComponent,
                    NotificationsComponent,
+                   SidebarComponent,
+                   ProductadminComponent,
   ],
   imports: [
     BrowserModule,

@@ -9,6 +9,9 @@ import { BlogDetailComponent } from './blog-detail/blog-detail.component';
 import { FeedbackComponent } from './feedback/feedback.component';
 import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { ProductadminComponent } from './productadmin/productadmin.component';
+import { BlogadminComponent } from './blogadmin/blogadmin.component';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },  // Empty path redirects to home
@@ -20,8 +23,12 @@ const routes: Routes = [
   { path: 'app-blog-detail', component: BlogDetailComponent },
   { path: 'app-feedback', component: FeedbackComponent },
   { path: 'app-homeadmin', component: HomeadminComponent },
-
   { path: '  app-sidebar', component: SidebarComponent },
+
+  { path: '    app-productadmin', component: ProductadminComponent },
+  { path: '      app-blogadmin', component: BlogadminComponent },
+
+  { path: '      app-login', component: LoginComponent },
 
 
 

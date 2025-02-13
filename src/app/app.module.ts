@@ -19,6 +19,9 @@ import { HomeadminComponent } from './homeadmin/homeadmin.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { ProductadminComponent } from './productadmin/productadmin.component';
+import { BlogadminComponent } from './blogadmin/blogadmin.component';
+import { LoginComponent } from './login/login.component';
+import { ReactiveFormsModule } from '@angular/forms';
 @NgModule({
   declarations: [
     AppComponent,
@@ -37,12 +40,17 @@ import { ProductadminComponent } from './productadmin/productadmin.component';
                    NotificationsComponent,
                    SidebarComponent,
                    ProductadminComponent,
+                   BlogadminComponent,
+                   LoginComponent,
+                   
   ],
   imports: [
     BrowserModule,
     CommonModule,
     AppRoutingModule,
-    RouterModule
+    RouterModule,
+    ReactiveFormsModule,
+  
   ],  
   providers: [],
   bootstrap: [AppComponent]

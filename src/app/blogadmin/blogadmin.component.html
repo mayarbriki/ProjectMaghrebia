@@ -1,0 +1,102 @@
+<div class="container">
+    <h2>Blog Management</h2>
+  
+    <!-- Button to Show Add Blog Modal -->
+    <button class="btn btn-success mb-4" (click)="showAddBlogModal()">Add a Blog</button>
+  
+    <!-- Blog List -->
+    <div class="blog-list">
+      <h3>Blog List</h3>
+      <div class="row">
+        <div class="col-md-4 mb-4" *ngFor="let blog of blogs; let i = index">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">{{ blog.title }}</h5>
+              <p class="card-text">{{ blog.description }}</p>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong>Author:</strong> {{ blog.author }}</li>
+                <li class="list-group-item"><strong>Date:</strong> {{ blog.date | date }}</li>
+                <li class="list-group-item"><strong>Category:</strong> {{ blog.category }}</li>
+              </ul>
+              <div class="mt-3">
+                <button class="btn btn-primary btn-sm" (click)="editBlog(i)">Edit</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteBlog(i)">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <style>/* Card Styling */
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+    }
+    
+    .card:hover {
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    .card-title {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .card-text {
+      font-size: 14px;
+      color: #555;
+    }
+    
+    .list-group-item {
+      border: none;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    
+    /* Button Styling */
+    .btn-success {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      font-size: 16px;
+    }
+    
+    .btn-success:hover {
+      background-color: #218838;
+    }
+    
+    .btn-primary {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+    
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 14px;
+    }
+    
+    .btn-danger:hover {
+      background-color: #a71d2a;
+    }</style>

@@ -1,0 +1,45 @@
+<ng-scrollbar style="height: calc(100vh - 88px)" visibility="hover" orientation="vertical">
+  <app-card [showHeader]="false" cardClass="user-card" [padding]="20">
+    <div class="flex align-items-center">
+      <div class="flex-shrink-0">
+        <img src="assets/images/user/avatar-1.jpg" alt="user-image" class="user-avatar" />
+      </div>
+      <div class="flex-grow-1 user-details">
+        <h6>Haddad Ayoub</h6>
+        <small>Administrator</small>
+      </div>
+      <div class="user-setting">
+        <a href="javascript:" [matMenuTriggerFor]="menu" class="text-muted">
+          <svg class="pc-icon">
+            <use xlink:href="assets/fonts/custom-icon.svg#custom-sort-outline"></use>
+          </svg>
+        </a>
+        <mat-menu #menu="matMenu" [overlapTrigger]="false" yPosition="below" xPosition="after">
+          @for (list of accountList; track $index) {
+            <button mat-menu-item>
+              <a href="javascript:" class="text-muted">
+                <i class="{{ list.icon }} f-18 m-r-10"></i>
+                <span class="mat-body">{{ list.title }}</span>
+              </a>
+            </button>
+          }
+        </mat-menu>
+      </div>
+    </div>
+  </app-card>
+  <div class="navbar-content">
+    <ul class="nav coded-inner-navbar" (click)="fireOutClick()" aria-hidden="true">
+      @for (item of menus(); track item) {
+        @if (item.type === 'group') {
+          <app-menu-group-vertical [item]="item"></app-menu-group-vertical>
+        }
+        @if (item.type === 'collapse') {
+          <app-menu-collapse [item]="item"></app-menu-collapse>
+        }
+        @if (item.type === 'item') {
+          <app-menu-item [item]="item"></app-menu-item>
+        }
+      }
+    </ul>
+  </div>
+</ng-scrollbar>

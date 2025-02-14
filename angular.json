@@ -25,7 +25,10 @@
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss", "src/app/@theme/styles/material-overrides.scss"],
+            "styles": [
+              "src/styles.scss",
+              "src/app/@theme/styles/material-overrides.scss"
+            ],
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
@@ -51,18 +54,50 @@
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
+            },
+            "staging": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "2mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "2kb",
+                  "maximumError": "4kb"
+                }
+              ],
+              "outputHashing": "all",
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "sourceMap": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "able-pro-angular-free:build"
+          },
           "configurations": {
             "production": {
-              "buildTarget": "able-pro-angular-free:build:production"
+              "browserTarget": "able-pro-angular-free:build:production"
             },
             "development": {
-              "buildTarget": "able-pro-angular-free:build:development"
+              "browserTarget": "able-pro-angular-free:build:development"
+            },
+            "staging": {
+              "browserTarget": "able-pro-angular-free:build:staging"
             }
           },
           "defaultConfiguration": "development"
@@ -70,7 +105,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "able-pro-angular-free:build"
+            "browserTarget": "able-pro-angular-free:build"
           }
         },
         "test": {

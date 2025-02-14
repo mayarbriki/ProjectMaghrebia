@@ -1,4 +1,5 @@
-@import '../../../styles/theme-palette-colors.scss';
+@use "sass:map";
+@use '../../../styles/theme-palette-colors.scss';
 
 ::ng-deep.dropdown-notification {
   min-width: 450px !important;
@@ -74,12 +75,12 @@
 
   .user-followers {
     margin: 16px 0px;
-    color: map-get($grey-theme, contrast, 500);
+    color: map.get(theme-palette-colors.$grey-theme, contrast, 500);
   }
 
   .upgrade-button {
-    background: map-get($yellow-theme, 500) !important;
-    color: map-get($grey-theme, contrast, 800) !important;
+    background: map.get(theme-palette-colors.$yellow-theme, 500) !important;
+    color: map.get(theme-palette-colors.$grey-theme, contrast, 800) !important;
 
     &.mdc-button {
       border-radius: 20px;

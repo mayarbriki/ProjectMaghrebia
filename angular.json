@@ -84,24 +84,24 @@
           },
           "defaultConfiguration": "production"
         },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "able-pro-angular-free:build"
-          },
-          "configurations": {
-            "production": {
-              "browserTarget": "able-pro-angular-free:build:production"
-            },
-            "development": {
-              "browserTarget": "able-pro-angular-free:build:development"
-            },
-            "staging": {
-              "browserTarget": "able-pro-angular-free:build:staging"
-            }
-          },
-          "defaultConfiguration": "development"
-        },
+      "serve": {
+  "builder": "@angular-devkit/build-angular:dev-server",
+  "options": {
+    "buildTarget": "able-pro-angular-free:build"
+  },
+  "configurations": {
+    "production": {
+      "buildTarget": "able-pro-angular-free:build:production"
+    },
+    "development": {
+      "buildTarget": "able-pro-angular-free:build:development"
+    },
+    "staging": {
+      "buildTarget": "able-pro-angular-free:build:staging"
+    }
+  },
+  "defaultConfiguration": "development"
+},
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {

@@ -1,0 +1,103 @@
+<div class="row widget-chart p-t-25">
+  <!-- Total Users -->
+  <div class="col-md-6 col-xxl-3">
+    <app-card [showHeader]="false">
+      <div class="flex align-item-center">
+        <div class="flex-shrink-0">
+          <div class="avatar avatar-s bg-primary-50 text-primary-500">
+            <i class="ti ti-users f-20"></i>
+          </div>
+        </div>
+        <div class="flex-grow-1 card-head">
+          <h5 class="m-b-0 f-w-600">Total Users</h5>
+        </div>
+      </div>
+      <apx-chart [series]="totalUsersChart.series!" [chart]="totalUsersChart.chart!" [xaxis]="totalUsersChart.xaxis!" [colors]="totalUsersChart.colors!"></apx-chart>
+      <div class="text-end">
+        <h5 class="m-b-5">950</h5>
+        <h6 class="text-primary-500 m-b-0"><i class="ti ti-arrow-up-right"></i> 15% Growth</h6>
+      </div>
+    </app-card>
+  </div>
+
+  <!-- User Growth Rate -->
+  <div class="col-md-6 col-xxl-3">
+    <app-card [showHeader]="false">
+      <h5 class="m-b-0 f-w-600">User Growth Rate</h5>
+      <apx-chart [series]="userGrowthChart.series!" [chart]="userGrowthChart.chart!" [xaxis]="userGrowthChart.xaxis!" [colors]="userGrowthChart.colors!"></apx-chart>
+    </app-card>
+  </div>
+
+  <!-- Active vs Inactive Users -->
+  <div class="col-md-6 col-xxl-3">
+    <app-card [showHeader]="false">
+      <h5 class="m-b-0 f-w-600">Active vs Inactive Users</h5>
+      <apx-chart [series]="activeUsersChart.series!" [chart]="activeUsersChart.chart!" [labels]="activeUsersChart.labels!" [colors]="activeUsersChart.colors!"></apx-chart>
+    </app-card>
+  </div>
+
+  <!-- User Roles Distribution -->
+  <div class="col-md-6 col-xxl-3">
+    <app-card [showHeader]="false">
+      <h5 class="m-b-0 f-w-600">User Roles</h5>
+      <apx-chart [series]="userRolesChart.series!" [chart]="userRolesChart.chart!" [labels]="userRolesChart.labels!" [colors]="userRolesChart.colors!"></apx-chart>
+    </app-card>
+  </div>
+
+  <!-- Login Trends -->
+  <div class="col-md-6">
+    <app-card [showHeader]="false">
+      <h5 class="m-b-0 f-w-600">Login & Registration Trends</h5>
+      <apx-chart [series]="loginTrendsChart.series!" [chart]="loginTrendsChart.chart!" [xaxis]="loginTrendsChart.xaxis!" [colors]="loginTrendsChart.colors!"></apx-chart>
+    </app-card>
+  </div>
+
+  <!-- Account Status -->
+  <div class="col-md-6">
+    <app-card [showHeader]="false">
+      <h5 class="m-b-0 f-w-600">Account Status</h5>
+      <apx-chart [series]="accountStatusChart.series!" [chart]="accountStatusChart.chart!" [labels]="accountStatusChart.labels!" [colors]="accountStatusChart.colors!"></apx-chart>
+    </app-card>
+  </div>
+
+  <div class="col-md-6">
+    <app-card [showHeader]="false">
+      <div class="flex align-item-center justify-content-between">
+        <h5 class="m-b-0">User Roles</h5>
+        <a [matMenuTriggerFor]="menu" class="avatar avatar-s hover"><i class="ti ti-dots-vertical f-18"></i></a>
+      </div>
+      <apx-chart
+        [series]="[5, 50, 10, 15]"
+        [chart]="{ type: 'donut' }"
+        [colors]="['#4680FF', '#E58A00', '#2CA87F', '#b5ccff']"
+        [labels]="['Admins', 'Clients', 'Full-Time Job Users', 'Job Appliers']"
+        [plotOptions]="{ pie: { expandOnClick: true } }"
+        [fill]="{ opacity: 0.8 }"
+        [legend]="{ position: 'bottom' }"
+        [responsive]="[{ breakpoint: 600, options: { chart: { width: 300 } } }]"
+        [dataLabels]="{ enabled: false }"
+      >
+      </apx-chart>
+      <div class="row g-3 m-t-15">
+        <!-- Dynamically loop through user_roles -->
+        <div class="col-sm-6 m-t-15" *ngFor="let role of user_roles">
+          <div class="role-value">
+            <div class="flex align-item-center m-b-10">
+              <div class="flex-shrink-0">
+                <span class="p-5 block {{ role.background }} border-50"></span>
+              </div>
+              <div class="flex-grow-1 m-l-10">
+                <p class="m-b-0">{{ role.item }}</p>
+              </div>
+            </div>
+            <h6 class="m-b-0 f-w-600">
+              {{ role.value }} 
+              <small class="text-muted"><i class="ti ti-chevrons-up"></i> {{ role.number }}</small>
+            </h6>
+          </div>
+        </div>
+      </div>
+    </app-card>
+  </div>
+  
+</div>

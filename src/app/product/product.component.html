@@ -1,0 +1,133 @@
+<head>    
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <!-- <link href="vendors/prism/prism.css" rel="stylesheet"> -->
+  <link href="C:\Users\med ayoub\Downloads\ProjectMaghrebia-BackOffice\ProjectMaghrebia-BackOffice\src\assets\css\theme.css" rel="stylesheet" />
+  <link href="C:\Users\med ayoub\Downloads\ProjectMaghrebia-BackOffice\ProjectMaghrebia-BackOffice\src\assets\css\user.css" rel="stylesheet" />
+</head>
+<section id="products">
+  <!-- Background Images -->
+  <div class="bg-holder d-none d-md-block" style="background-image:url(assets/img/illustrations/bg-car-insurance.png);background-position:0 200px;background-size:100% 45%;">
+  </div>
+
+  <div class="bg-holder d-none d-md-block" style="background-image:url(assets/img/illustrations/bg-left.png);background-position:left;background-size:15% 100%;">
+  </div>
+
+  <div class="bg-holder d-none d-xl-block mt-11" style="background-image:url(assets/img/illustrations/circle.png);background-position:18% 49%;background-size:auto;">
+  </div>
+
+  <!-- Container -->
+  <div class="container-lg">
+    <div class="row flex-center py-8 py-md-10">
+      <div class="col-12 mt-6">
+        <div class="d-flex align-items-start">
+
+          <!-- Sidebar Navigation -->
+          <div class="nav flex-column nav-tab" id="nav-tab" role="tablist">
+            
+            <a class="circle-hover-wrapper nav-link mb-lg-4 active" id="nav-car-tab" data-bs-toggle="tab"
+               data-bs-target="#nav-car" role="tab">
+              <div class="icon-box">
+                <img class="car-insurance-icon" src="assets/img/icons/car.png" alt="Car Insurance">
+              </div>
+            </a>
+
+            <a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-home-tab" data-bs-toggle="tab"
+               data-bs-target="#nav-home" role="tab">
+              <div class="icon-box">
+                <img class="car-insurance-icon" src="assets/img/icons/home.png" alt="Home Insurance">
+              </div>
+            </a>
+
+            <a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-paw-tab" data-bs-toggle="tab"
+               data-bs-target="#nav-paw" role="tab">
+              <div class="icon-box">
+                <img class="car-insurance-icon" src="assets/img/icons/paw.png" alt="Pet Insurance">
+              </div>
+            </a>
+
+            <a class="circle-hover-wrapper nav-link mb-lg-4" id="nav-plane-tab" data-bs-toggle="tab"
+               data-bs-target="#nav-plane" role="tab">
+              <div class="icon-box">
+                <img class="car-insurance-icon" src="assets/img/icons/plane.png" alt="Travel Insurance">
+              </div>
+            </a>
+          </div>
+
+          <!-- Insurance Content -->
+          <div class="tab-content w-100" id="nav-tabContent">
+            
+            <!-- Car Insurance -->
+            <div class="tab-pane fade show active" id="nav-car">
+              <div class="row align-items-center offset-sm-1 g-3">
+                <div class="col-md-6 col-xl-4">
+                  <h2 class="text-light mb-md-5">Car Insurance</h2>
+                  <p class="text-400">Protect your vehicle against accidents, theft, and natural disasters.</p>
+                  <p class="text-400 mt-3">Find the best coverage that suits your needs.</p>
+                  <button (click)="navigateToProductDetail('car-insurance')" class="btn btn-primary btn-ensurance mt-5">
+                    <span class="fas fa-chevron-right fa-xs btn-icon"></span> <span class="btn-text">Learn More</span>
+                  </button>
+                </div>
+                <div class="col-md-6 col-xl-8 text-end">
+                  <div class="img-shape"><img class="feature-img" src="assets/img/gallery/car.png" alt="Car Insurance"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Home Insurance -->
+            <div class="tab-pane fade" id="nav-home">
+              <div class="row align-items-center offset-sm-1 g-3">
+                <div class="col-md-6 col-xl-4">
+                  <h2 class="text-light mb-md-5">Home Insurance</h2>
+                  <p class="text-400">Secure your home and valuables with our comprehensive plans.</p>
+                  <p class="text-400 mt-3">Ensure peace of mind with the right coverage.</p>
+                  <button (click)="navigateToProductDetail('home-insurance')" class="btn btn-primary btn-ensurance mt-5">
+                    <span class="fas fa-chevron-right fa-xs btn-icon"></span> <span class="btn-text">Learn More</span>
+                  </button>
+                </div>
+                <div class="col-md-6 col-xl-8 text-end">
+                  <div class="img-shape"><img class="feature-img" src="assets/img/gallery/home.png" alt="Home Insurance"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pet Insurance -->
+            <div class="tab-pane fade" id="nav-paw">
+              <div class="row align-items-center offset-sm-1 g-3">
+                <div class="col-md-6 col-xl-4">
+                  <h2 class="text-light mb-md-5">Pet Insurance</h2>
+                  <p class="text-400">Give your furry friends the best healthcare coverage.</p>
+                  <p class="text-400 mt-3">Affordable plans tailored for your pet’s needs.</p>
+                  <button (click)="navigateToProductDetail('pet-insurance')" class="btn btn-primary btn-ensurance mt-5">
+                    <span class="fas fa-chevron-right fa-xs btn-icon"></span> <span class="btn-text">Learn More</span>
+                  </button>
+                </div>
+                <div class="col-md-6 col-xl-8 text-end">
+                  <div class="img-shape"><img class="feature-img" src="assets/img/gallery/pets.png" alt="Pet Insurance"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Travel Insurance -->
+            <div class="tab-pane fade" id="nav-plane">
+              <div class="row align-items-center offset-sm-1 g-3">
+                <div class="col-md-6 col-xl-4">
+                  <h2 class="text-light mb-md-5">Travel Insurance</h2>
+                  <p class="text-400">Stay protected while exploring the world with our plans.</p>
+                  <p class="text-400 mt-3">Get peace of mind for your journeys.</p>
+                  <button (click)="navigateToProductDetail('travel-insurance')" class="btn btn-primary btn-ensurance mt-5">
+                    <span class="fas fa-chevron-right fa-xs btn-icon"></span> <span class="btn-text">Learn More</span>
+                  </button>
+                </div>
+                <div class="col-md-6 col-xl-8 text-end">
+                  <div class="img-shape"><img class="feature-img" src="assets/img/gallery/travel.png" alt="Travel Insurance"></div>
+                </div>
+              </div>
+            </div>
+
+          </div> <!-- End tab-content -->
+        </div> <!-- End flex -->
+      </div>
+    </div>
+  </div>
+</section>

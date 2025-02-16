@@ -1,0 +1,24 @@
+.app-container {
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 84px;
+  min-height: calc(100vh - 146px);
+}
+
+::ng-deep {
+  @media only screen and (max-width: 1024px) {
+    .mat-drawer-content {
+      .app-container {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+    }
+  }
+}
+
+.maghrebia-logo {
+  width: 150px;   // Adjust width as needed
+  height: auto;   // Maintain aspect ratio
+  display: block; // Ensure it aligns properly in the layout
+}
+

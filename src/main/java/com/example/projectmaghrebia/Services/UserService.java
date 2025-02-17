@@ -5,7 +5,7 @@ import com.example.projectmaghrebia.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,7 +16,28 @@ import java.util.Optional;
 public class UserService implements IUserService {
     @Autowired
     private UserRepository userRepository;
-    private  PasswordEncoder passwordEncoder;
+
+    @Override
+    public User registerUser(User user) {
+        return null;
+    }
+
+    @Override
+    public Optional<User> authenticateUser(String username, String password) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findByUsername(String username) {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return Optional.empty();
+    }
+    //private  PasswordEncoder passwordEncoder;
+    /*
     @Override
     public User registerUser(User user) {
         // Encode the password before saving
@@ -43,5 +64,5 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
-    }
+    }*/
 }

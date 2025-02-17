@@ -1,4 +1,5 @@
 package com.example.projectmaghrebia.Configurations;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,10 +16,24 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v2/api-docs",
+            "/swagger-resources",
+            "/swagger-resources/**",
+            "/configuration/ui",
+            "/configuration/security",
+            "/swagger-ui.html",
+            "/webjars/**",
+            // Swagger UI 3 (OpenAPI)
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers(SWAGGER_WHITELIST).permitAll() // Swagger endpoints
                         .requestMatchers("/", "/home").permitAll() // Public endpoints
                         .anyRequest().authenticated() // All other endpoints require authentication
                 )
@@ -26,7 +41,8 @@ public class SecurityConfig {
                         .loginPage("/login") // Custom login page
                         .permitAll()
                 )
-                .logout((logout) -> logout.permitAll()); // Allow logout
+                .logout((logout) -> logout.permitAll())
+                .csrf(csrf -> csrf.disable()); // Disable CSRF for Swagger UI
 
         return http.build();
     }
@@ -48,9 +64,9 @@ public class SecurityConfig {
 
         return new InMemoryUserDetailsManager(user, admin);
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }

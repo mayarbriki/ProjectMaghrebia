@@ -1,1 +1,142 @@
-<p>incidents works!</p>
+
+<link href="../../../../assets/FrontOffice/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../../../../assets/FrontOffice/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/animate/animate.min.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/venobox/venobox.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/css/style.css" rel="stylesheet">
+
+<div class="container">
+    <h2>Incident Management</h2>
+  
+    <!-- Buttons to switch between Add and Modify -->
+    <div class="text-center mb-3">
+      <button class="btn btn-success" (click)="isModifyMode = false">Add Incident</button>
+      <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedIncident">Modify Incident</button>
+    </div>
+  
+    <!-- Conditional display of forms -->
+    <div *ngIf="!isModifyMode">
+      <!-- Add Incident Form -->
+      <h3>Add New Incident</h3>
+      <form (submit)="addIncident(); $event.preventDefault()">
+        <div class="form-group">
+          <label>Reporter ID:</label>
+          <input type="text" class="form-control" [(ngModel)]="newIncident.reporter_id" name="reporter_id" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Linked Property ID:</label>
+          <input type="text" class="form-control" [(ngModel)]="newIncident.linked_property" name="linked_property" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Category:</label>
+          <select class="form-control" [(ngModel)]="newIncident.category" name="category">
+            <option value="ACCIDENT">Accident</option>
+            <option value="THEFT">Theft</option>
+            <option value="NATURAL_DISASTER">Natural Disaster</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label>Details:</label>
+          <input class="form-control" [(ngModel)]="newIncident.details" name="details" required/>
+        </div>
+  
+        <div class="form-group">
+          <label>Occurrence Date:</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="newIncident.occurrence_date" name="occurrence_date" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Resolution Status:</label>
+          <select class="form-control" [(ngModel)]="newIncident.resolution_status" name="resolution_status">
+            <option value="PENDING">Pending</option>
+            <option value="INVESTIGATING">Investigating</option>
+            <option value="RESOLVED">Resolved</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label>Evidence (URL):</label>
+          <input type="text" class="form-control" [(ngModel)]="newIncident.evidence" name="evidence" />
+        </div>
+  
+        <button type="submit" class="btn btn-primary mt-2">Add Incident</button>
+      </form>
+    </div>
+  
+    <div *ngIf="isModifyMode">
+      <!-- Modify Incident Form -->
+      <h3>Modify Incident</h3>
+      <form (submit)="modifyIncident(); $event.preventDefault()">
+        <div class="form-group">
+          <label>Reporter ID:</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedIncident!.reporter_id" name="reporter_id" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Linked Property ID:</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedIncident!.linked_property" name="linked_property" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Category:</label>
+          <select class="form-control" [(ngModel)]="selectedIncident!.category" name="category">
+            <option value="ACCIDENT">Accident</option>
+            <option value="THEFT">Theft</option>
+            <option value="NATURAL_DISASTER">Natural Disaster</option>
+            <option value="OTHER">Other</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label>Details:</label>
+          <textarea class="form-control" [(ngModel)]="selectedIncident!.details" name="details" required></textarea>
+        </div>
+  
+        <div class="form-group">
+          <label>Occurrence Date:</label>
+          <input type="datetime-local" class="form-control" [(ngModel)]="selectedIncident!.occurrence_date" name="occurrence_date" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Resolution Status:</label>
+          <select class="form-control" [(ngModel)]="newIncident.resolution_status" name="resolution_status">
+            <option value="PENDING_REVIEW">Pending Review</option>
+            <option value="INVESTIGATING">Investigating</option>
+            <option value="RESOLVED">Resolved</option>
+          </select>
+          
+        </div>
+  
+        <div class="form-group">
+          <label>Evidence (URL):</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedIncident!.evidence" name="evidence" />
+        </div>
+  
+        <button type="submit" class="btn btn-warning mt-2">Modify Incident</button>
+      </form>
+    </div>
+  
+    <!-- Incident Cards for Modification -->
+    <div class="row mt-4">
+      <h3>Existing Incidents</h3>
+      <div class="col-lg-4 col-md-6" *ngFor="let incident of incidents">
+        <div class="card p-3">
+          <h4>{{ incident.category }}</h4>
+          <p><strong>Details:</strong> {{ incident.details }}</p>
+          <p><strong>Occurrence:</strong> {{ incident.occurrence_date }}</p>
+          <p><strong>Status:</strong> {{ incident.resolution_status }}</p>
+          <button class="btn btn-info" (click)="selectIncident(incident)">Modify</button>
+          <button class="btn btn-danger mt-2" (click)="deleteIncident(incident.incident_id)">Delete</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  

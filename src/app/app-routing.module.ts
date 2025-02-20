@@ -1,43 +1,67 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-// Project imports
+// Front-Office Import
+import { AllTemplateFrontComponent } from './front-office/all-template-front/all-template-front.component';
+
+// Back-Office Imports
 import { AdminComponent } from './demo/layout/admin';
 import { EmptyComponent } from './demo/layout/empty';
-import { HomeComponent } from './home/home.component';
-import { NavbarComponent } from './navbar/navbar.component';
-import { ProductComponent } from './product/product.component';
-import { BlogComponent } from './blog/blog.component';
-import { ProductDetailComponent } from './product-detail/product-detail.component';
-import { BlogDetailComponent } from './blog-detail/blog-detail.component';
-import { FeedbackComponent } from './feedback/feedback.component';
-import { HomeadminComponent } from './homeadmin/homeadmin.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { ProductadminComponent } from './productadmin/productadmin.component';
-import { BlogadminComponent } from './blogadmin/blogadmin.component';
-import { LoginComponent } from './login/login.component';
 import DashboardComponent from './demo/pages/dashboard/dashboard.component';
 import SamplePageComponent from './demo/pages/other/sample-page/sample-page.component';
 import { ContratsComponent } from './@theme/pages/contrats/contrats.component';
 import { ArticlesComponent } from './@theme/pages/articles/articles.component';
 import { AssesementsComponent } from './@theme/pages/assesements/assesements.component';
 import { BlogsComponent } from './@theme/pages/blogs/blogs.component';
-import { ClaimsComponent } from './@theme/pages/claims/claims.component';
+import { ClaimsComponent } from './front-office/claims/claims.component';
 import { IncidentsComponent } from './@theme/pages/incidents/incidents.component';
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
 import { NewsComponent } from './@theme/pages/news/news.component';
 import { PropertiesComponent } from './@theme/pages/properties/properties.component';
+import { MessageComponent } from './message/message.component';
+import { SigninComponent } from './front-office/register/signin/signin.component';
+import { SignupComponent } from './front-office/register/signup/signup.component';
+import { ServicesComponent } from './front-office/services/services.component';
 
+// Combined Routes
 const routes: Routes = [
+  // Front-Office Routes
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    component: AllTemplateFrontComponent,  // Front-Office as Default Route
+  },
+
+  {
+    path: 'message', // New route for the message component
+    component: MessageComponent
   },
   {
-    path: '',
+    path: 'signin', // New route for the message component
+    component: SigninComponent
+  },
+  {
+    path: 'signup', // New route for the message component
+    component: SignupComponent
+  },
+  {
+    path: 'claims', // New route for the message component
+    component: ClaimsComponent
+  },
+  {
+    path: 'Services', // New route for the message component
+    component: ServicesComponent
+  },
+
+  // Back-Office Routes
+  {
+    path: 'admin',
     component: AdminComponent, // Admin Layout with Sidebar
     children: [
+      {
+        path: 'admin',
+        redirectTo: 'dashboard',
+        pathMatch: 'full'
+      },
       {
         path: 'dashboard',
         loadComponent: () => import('./demo/pages/dashboard/dashboard.component').then(m => DashboardComponent)
@@ -51,43 +75,44 @@ const routes: Routes = [
         loadComponent: () => import('./demo/pages/other/sample-page/sample-page.component').then(m => SamplePageComponent)
       },
       {
-        path: 'contracts',  
+        path: 'contracts',
         component: ContratsComponent
       },
       {
-        path: 'articles',  
+        path: 'articles',
         component: ArticlesComponent
       },
       {
-        path: 'assesements',  
+        path: 'assesements',
         component: AssesementsComponent
       },
       {
-        path: 'blogs',  
+        path: 'blogs',
         component: BlogsComponent
       },
       {
-        path: 'claims',  
+        path: 'claims',
         component: ClaimsComponent
       },
       {
-        path: 'incidents',  
+        path: 'incidents',
         component: IncidentsComponent
       },
       {
-        path: 'joboffers',  
+        path: 'joboffers',
         component: JoboffersComponent
       },
       {
-        path: 'news',  
+        path: 'news',
         component: NewsComponent
       },
       {
-        path: 'properties',  
+        path: 'properties',
         component: PropertiesComponent
       },
     ]
   },
+  // Authentication Routes
   {
     path: 'auth',
     component: EmptyComponent,
@@ -98,23 +123,13 @@ const routes: Routes = [
       }
     ]
   },
-  { path: 'home', component: HomeComponent },
-  { path: 'nav-bar', component: NavbarComponent },
-  { path: 'app-product', component: ProductComponent },
-  { path: 'app-blog', component: BlogComponent },
-  { path: 'product-detail/:type', component: ProductDetailComponent },
-  { path: 'app-blog-detail', component: BlogDetailComponent },
-  { path: 'app-feedback', component: FeedbackComponent },
-  { path: 'app-homeadmin', component: HomeadminComponent },
-  { path: 'app-sidebar', component: SidebarComponent },
-  { path: 'app-productadmin', component: ProductadminComponent },
-  { path: 'app-blogadmin', component: BlogadminComponent },
-  { path: 'app-login', component: LoginComponent },
-
-  // Wildcard route to handle unknown paths
-  { path: '**', redirectTo: 'home' }
+  // Wildcard Route (Redirect to Front-Office)
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
+  }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

@@ -1,1 +1,116 @@
-<p>properties works!</p>
+<link href="../../../../assets/FrontOffice/css/style.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Libraries CSS Files -->
+<link href="../../../../assets/FrontOffice/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/animate/animate.min.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/venobox/venobox.css" rel="stylesheet">
+<link href="../../../../assets/FrontOffice/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"><div class="container">
+    <h2>Property Management</h2>
+  
+    <!-- Buttons to switch between Add and Modify -->
+    <div class="text-center mb-3">
+      <button class="btn btn-success" (click)="isModifyMode = false">Add Property</button>
+      <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedProperty">Modify Property</button>
+    </div>
+  
+    <!-- Conditional display of forms -->
+    <div *ngIf="!isModifyMode">
+      <!-- Add Property Form -->
+      <h3>Add New Property</h3>
+      <form (submit)="addProperty(); $event.preventDefault()">
+        <div class="form-group">
+          <label>Category:</label>
+          <input type="text" class="form-control" [(ngModel)]="newProperty.category" name="category" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Address:</label>
+          <input type="text" class="form-control" [(ngModel)]="newProperty.address" name="address" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Insurance Value:</label>
+          <input type="number" class="form-control" [(ngModel)]="newProperty.insurance_value" name="insurance_value" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Policy Type:</label>
+          <select class="form-control" [(ngModel)]="newProperty.policy_type" name="policy_type">
+            <option value="COMPREHENSIVE">Comprehensive</option>
+            <option value="STANDARD">Standard</option>
+            <option value="LIABILITY">Liability</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label>Status:</label>
+          <select class="form-control" [(ngModel)]="newProperty.status" name="status">
+            <option value="ACTIVE">Active</option>
+            <option value="PENDING_REVIEW">Pending Review</option>
+            <option value="DEACTIVATED">Deactivated</option>
+          </select>
+        </div>
+  
+        <button type="submit" class="btn btn-primary mt-2">Add Property</button>
+      </form>
+    </div>
+  
+    <div *ngIf="isModifyMode">
+      <!-- Modify Property Form -->
+      <h3>Modify Property</h3>
+      <form (submit)="modifyProperty(); $event.preventDefault()">
+        <div class="form-group">
+          <label>Category:</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedProperty!.category" name="category" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Address:</label>
+          <input type="text" class="form-control" [(ngModel)]="selectedProperty!.address" name="address" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Insurance Value:</label>
+          <input type="number" class="form-control" [(ngModel)]="selectedProperty!.insurance_value" name="insurance_value" required />
+        </div>
+  
+        <div class="form-group">
+          <label>Policy Type:</label>
+          <select class="form-control" [(ngModel)]="selectedProperty!.policy_type" name="policy_type">
+            <option value="COMPREHENSIVE">Comprehensive</option>
+            <option value="STANDARD">Standard</option>
+            <option value="LIABILITY">Liability</option>
+          </select>
+        </div>
+  
+        <div class="form-group">
+          <label>Status:</label>
+          <select class="form-control" [(ngModel)]="selectedProperty!.status" name="status">
+            <option value="ACTIVE">Active</option>
+            <option value="PENDING_REVIEW">Pending Review</option>
+            <option value="DEACTIVATED">Deactivated</option>
+          </select>
+        </div>
+  
+        <button type="submit" class="btn btn-warning mt-2">Modify Property</button>
+      </form>
+    </div>
+  
+    <!-- Property Cards for Modification -->
+    <div class="row mt-4">
+      <h3>Existing Properties</h3>
+      <div class="col-lg-4 col-md-6" *ngFor="let property of properties">
+        <div class="card p-3">
+          <h4>{{ property.category }}</h4>
+          <p><strong>Address:</strong> {{ property.address }}</p>
+          <p><strong>Insurance:</strong> ${{ property.insurance_value }}</p>
+          <p><strong>Status:</strong> {{ property.status }}</p>
+          <button class="btn btn-info" (click)="selectProperty(property)">Modify</button>         
+          <button class="btn btn-danger mt-2" (click)="deleteProperty(property.property_id)">Delete</button>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  

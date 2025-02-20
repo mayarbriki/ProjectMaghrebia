@@ -12,7 +12,7 @@ export const menus: Navigation[] = [
         title: 'Users List',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard',
+        url: '/admin',
         icon: '#custom-status-up'
       }
     ]
@@ -28,7 +28,7 @@ export const menus: Navigation[] = [
         title: 'Contracts',
         type: 'item',
         classes: 'nav-item',
-        url: '/contracts',
+        url: '/admin/contracts',
         icon: '#custom-shield',
         //target: true,
         breadcrumbs: false
@@ -38,7 +38,7 @@ export const menus: Navigation[] = [
         title: 'Incidents',
         type: 'item',
         classes: 'nav-item',
-        url: '/incidents',
+        url: '/admin/incidents',
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false
@@ -48,7 +48,7 @@ export const menus: Navigation[] = [
         title: 'Claims',
         type: 'item',
         classes: 'nav-item',
-        url: '/claims',
+        url: '/admin/claims',
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false
@@ -58,7 +58,7 @@ export const menus: Navigation[] = [
         title: 'Assesements',
         type: 'item',
         classes: 'nav-item',
-        url: '/assesements',
+        url: '/admin/assesements',
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false
@@ -68,7 +68,7 @@ export const menus: Navigation[] = [
         title: 'Properties',
         type: 'item',
         classes: 'nav-item',
-        url: '/properties',
+        url: '/admin/properties',
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false
@@ -86,7 +86,7 @@ export const menus: Navigation[] = [
         title: 'Blogs',
         type: 'item',
         classes: 'nav-item',
-        url: '/blogs',
+        url: '/admin/blogs',
         icon: '#custom-text-block'
       },
       {
@@ -94,7 +94,7 @@ export const menus: Navigation[] = [
         title: 'Articles',
         type: 'item',
         classes: 'nav-item',
-        url: '/articles',
+        url: '/admin/articles',
         icon: '#custom-mouse-circle',
         //target: true,
       }
@@ -213,15 +213,15 @@ export const menus: Navigation[] = [
         title: 'Health clients',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard',
+        url: '/admin/product',
         icon: '#custom-status-up'
       },
       {
         id: 'Dashboard',
-        title: 'vihucles',
+        title: 'vehicules',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard',
+        url: '/admin/dashboard',
         icon: '#custom-status-up'
       },
       {
@@ -229,7 +229,7 @@ export const menus: Navigation[] = [
         title: 'real estate',
         type: 'item',
         classes: 'nav-item',
-        url: '/dashboard',
+        url: '/admin/dashboard',
         icon: '#custom-status-up'
       }
     ]

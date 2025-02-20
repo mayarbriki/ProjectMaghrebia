@@ -1,13 +1,27 @@
-import { Component } from '@angular/core';
-import { NavLeftComponent } from "../../layouts/toolbar/toolbar-left/toolbar-left.component";
-import { NavRightComponent } from "../../layouts/toolbar/toolbar-right/toolbar-right.component";
+import { Component, OnInit, inject } from '@angular/core';
+import { MessageService } from 'src/app/message.service';
 
 @Component({
   selector: 'app-contrats',
-  imports: [NavLeftComponent, NavRightComponent],
+  standalone: true,
   templateUrl: './contrats.component.html',
-  styleUrl: './contrats.component.scss'
+  styleUrls: ['./contrats.component.scss']
 })
-export class ContratsComponent {
+export class ContratsComponent implements OnInit {
+  private messageService = inject(MessageService);
+  message: string = '';
 
+  ngOnInit() {
+    console.log('Fetching message...');
+
+    this.messageService.getMessage().subscribe(
+      response => {
+        console.log('Message received:', response);
+        this.message = response;
+      },
+      error => {
+        console.error('Error fetching message:', error);
+      }
+    );
+  }
 }

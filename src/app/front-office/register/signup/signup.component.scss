@@ -1,0 +1,123 @@
+/* Sign In & Sign Up Section */
+#signin, #signup {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #f9f9f9, #e0e0e0);
+}
+
+/* Card Styling */
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 15px 40px rgba(0, 0, 0, 0.2);
+}
+
+.card-body {
+    padding: 40px;
+}
+
+.card-body form {
+    text-align: center;
+}
+
+/* Form Input Styling */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #0e1b4d;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.form-control {
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.form-control:focus {
+    border-color: #2226f8;
+    box-shadow: 0 0 8px rgba(34, 38, 248, 0.2);
+    outline: none;
+}
+
+/* Button Styling */
+.btn-primary {
+    background: #2226f8;
+    border: none;
+    padding: 12px 20px;
+    font-size: 18px;
+    border-radius: 8px;
+    transition: background 0.3s ease-in-out, transform 0.3s ease-in-out;
+    color: #fff;
+    font-weight: 600;
+}
+
+.btn-primary:hover {
+    background: #1a1fd1;
+    transform: translateY(-2px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* Links */
+p a {
+    color: #2226f8;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s ease-in-out;
+}
+
+p a:hover {
+    color: #1a1fd1;
+    text-decoration: underline;
+}
+
+/* Additional Styling for Better Spacing and Alignment */
+.section-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.section-header h2 {
+    font-size: 36px;
+    color: #0e1b4d;
+    margin-bottom: 10px;
+}
+
+.section-header p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .card-body {
+        padding: 30px;
+    }
+
+    .section-header h2 {
+        font-size: 28px;
+    }
+
+    .section-header p {
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        font-size: 16px;
+        padding: 10px 15px;
+    }
+}

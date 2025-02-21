@@ -22,16 +22,7 @@
       <!-- Add Incident Form -->
       <h3>Add New Incident</h3>
       <form (submit)="addIncident(); $event.preventDefault()">
-        <div class="form-group">
-          <label>Reporter ID:</label>
-          <input type="text" class="form-control" [(ngModel)]="newIncident.reporter_id" name="reporter_id" required />
-        </div>
-  
-        <div class="form-group">
-          <label>Linked Property ID:</label>
-          <input type="text" class="form-control" [(ngModel)]="newIncident.linked_property" name="linked_property" required />
-        </div>
-  
+
         <div class="form-group">
           <label>Category:</label>
           <select class="form-control" [(ngModel)]="newIncident.category" name="category">
@@ -74,15 +65,7 @@
       <!-- Modify Incident Form -->
       <h3>Modify Incident</h3>
       <form (submit)="modifyIncident(); $event.preventDefault()">
-        <div class="form-group">
-          <label>Reporter ID:</label>
-          <input type="text" class="form-control" [(ngModel)]="selectedIncident!.reporter_id" name="reporter_id" required />
-        </div>
-  
-        <div class="form-group">
-          <label>Linked Property ID:</label>
-          <input type="text" class="form-control" [(ngModel)]="selectedIncident!.linked_property" name="linked_property" required />
-        </div>
+
   
         <div class="form-group">
           <label>Category:</label>

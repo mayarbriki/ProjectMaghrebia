@@ -22,6 +22,7 @@ import { MessageComponent } from './message/message.component';
 import { SigninComponent } from './front-office/register/signin/signin.component';
 import { SignupComponent } from './front-office/register/signup/signup.component';
 import { ServicesComponent } from './front-office/services/services.component';
+import { ProductsComponent } from './front-office/products/products.component';
 
 // Combined Routes
 const routes: Routes = [
@@ -50,6 +51,10 @@ const routes: Routes = [
   {
     path: 'Services', // New route for the message component
     component: ServicesComponent
+  },
+  {
+    path: 'products', // New route for the message component
+    component: ProductsComponent
   },
 
   // Back-Office Routes

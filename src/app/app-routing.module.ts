@@ -12,7 +12,7 @@ import SamplePageComponent from './demo/pages/other/sample-page/sample-page.comp
 import { ContratsComponent } from './@theme/pages/contrats/contrats.component';
 import { ArticlesComponent } from './@theme/pages/articles/articles.component';
 import { AssesementsComponent } from './@theme/pages/assesements/assesements.component';
-import { BlogsComponent } from './@theme/pages/blogs/blogs.component';
+import { BlogsComponent } from '../app/front-office/blogs/blogs.component';
 import { ClaimsComponent } from './front-office/claims/claims.component';
 import { IncidentsComponent } from './@theme/pages/incidents/incidents.component';
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
@@ -55,6 +55,10 @@ const routes: Routes = [
   {
     path: 'products', // New route for the message component
     component: ProductsComponent
+  },
+  {
+    path:'blogs',
+    component:BlogsComponent
   },
 
   // Back-Office Routes

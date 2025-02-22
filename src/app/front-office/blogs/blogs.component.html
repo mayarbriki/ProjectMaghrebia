@@ -1,1 +1,82 @@
-<p>blogs works!</p>
+<div class="container">
+  <h2 class="text-center">Blog Management</h2>
+
+  <!-- Buttons to Switch Between Add and Modify -->
+  <div class="text-center mb-3">
+    <button class="btn btn-success me-2" (click)="isModifyMode = false">Add Blog</button>
+    <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedBlog">Modify Blog</button>
+  </div>
+
+  <!-- Add / Modify Blog Form -->
+  <div class="card p-3 mb-4">
+    <h3 class="text-center">{{ isModifyMode ? 'Modify Blog' : 'Add New Blog' }}</h3>
+    <form (submit)="isModifyMode ? modifyBlog() : addBlog(); $event.preventDefault()">
+      
+      <div class="mb-2">
+        <label>Title:</label>
+        <input *ngIf="!isModifyMode" type="text" [(ngModel)]="newBlog.title" name="title" class="form-control" required />
+        <input *ngIf="isModifyMode" type="text" [(ngModel)]="selectedBlog!.title" name="title" class="form-control" required />
+      </div>
+
+      <div class="mb-2">
+        <label>Author:</label>
+        <input *ngIf="!isModifyMode" type="text" [(ngModel)]="newBlog.author" name="author" class="form-control" required />
+        <input *ngIf="isModifyMode" type="text" [(ngModel)]="selectedBlog!.author" name="author" class="form-control" required />
+      </div>
+
+      <div class="mb-2">
+        <label>Content:</label>
+        <textarea *ngIf="!isModifyMode" [(ngModel)]="newBlog.content" name="content" class="form-control" required></textarea>
+        <textarea *ngIf="isModifyMode" [(ngModel)]="selectedBlog!.content" name="content" class="form-control" required></textarea>
+      </div>
+
+      <div class="mb-2">
+        <label>Category:</label>
+        <select *ngIf="!isModifyMode" [(ngModel)]="newBlog.type" name="type" class="form-select">
+          <option value="NEWS">News</option>
+          <option value="ARTICLE">Article</option>
+        </select>
+        <select *ngIf="isModifyMode" [(ngModel)]="selectedBlog!.type" name="type" class="form-select">
+          <option value="NEWS">News</option>
+          <option value="ARTICLE">Article</option>
+        </select>
+      </div>
+
+      <div class="mb-2">
+        <label>Upload Image:</label>
+        <input type="file" (change)="onFileSelected($event)" class="form-control" />
+      </div>
+
+      <button type="submit" class="btn btn-primary">{{ isModifyMode ? 'Update Blog' : 'Add Blog' }}</button>
+      <button *ngIf="isModifyMode" type="button" class="btn btn-secondary ms-2" (click)="isModifyMode = false">Cancel</button>
+    </form>
+  </div>
+
+  <!-- Blog List -->
+  <h3 class="text-center">Blog List</h3>
+  <table class="table table-bordered text-center">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Category</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let blog of blogs">
+        <td>{{ blog.title }}</td>
+        <td>{{ blog.author }}</td>
+        <td>{{ blog.type }}</td>
+        <td>
+          <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" width="50" />
+        </td>
+        <td>
+          <button class="btn btn-warning me-2" (click)="selectBlog(blog)">Modify</button>
+          <button class="btn btn-danger" (click)="blog.id ? deleteBlog(blog.id) : null">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

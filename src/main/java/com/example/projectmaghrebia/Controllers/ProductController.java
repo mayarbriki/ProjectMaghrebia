@@ -17,24 +17,38 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/products")
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
 
     @Autowired
     private IProductService productService;
     @Autowired
     private FileStorageService fileStorageService;
-    @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    @GetMapping("/products")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+
+        // Base URL for serving images
+        String baseUrl = "http://localhost:6060/upload-dir/";
+
+        // Update each product to have a full image URL
+        products.forEach(product -> {
+            if (product.getFileName() != null && !product.getFileName().isEmpty()) {
+                product.setFileName(baseUrl + product.getFileName());
+            }
+        });
+
+        return ResponseEntity.ok().body(products);
     }
+
 
     @GetMapping("/{id}")
     public Optional<Product> getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
     }
 
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Create a new product",
             description = "Creates a new product with an optional image file",
@@ -69,7 +83,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.createProduct(product));
     }
 
-    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping(value = "products/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(
             summary = "Update a product",
             description = "Updates an existing product by ID with an optional image file",
@@ -108,7 +122,7 @@ public class ProductController {
         return ResponseEntity.ok(productService.updateProduct(id, productDetails));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/products/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }

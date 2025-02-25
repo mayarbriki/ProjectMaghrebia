@@ -5,8 +5,6 @@
     <div class="container">
 
       <div id="logo" class="pull-left">
-        <!-- Uncomment below if you prefer to use a text logo -->
-        <!-- <h1><a href="#main">C<span>o</span>nf</a></h1>-->
         <a href="#" class="scrollto"><img src="../../../assets/FrontOffice/img/maghrebia (2).png" alt="" title=""></a>
       </div>
 
@@ -16,16 +14,37 @@
           <li><a href="#about">About</a></li>
           <li><a href="/claims">Claims</a></li>
           <li><a href="#contracts">Contracts</a></li>
-          <li><a href="#properties ">Properties</a></li>
+          <li><a href="#properties">Properties</a></li>
           <li><a href="#sponsors">Sponsors</a></li>
           <li><a href="/signin">News</a></li>
-          <li><a href="/signup">SignUp</a></li>
           <li><a href="/services">Services</a></li>
-          <li class="buy-tickets"><a href="/signin">Login</a></li>
+
+          <!-- Conditional rendering -->
+          <ng-container *ngIf="!isAuthenticated; else profileMenu">
+            <li><a href="/signup">SignUp</a></li>
+            <li class="buy-tickets"><a href="/signin">Login</a></li>
+          </ng-container>
+
+          <ng-template #profileMenu>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img src="/assets/FrontOffice/img/user-profile.png" alt="Profile" width="30" height="30" class="rounded-circle">
+                {{ user?.username }}
+              </a>
+              <ul class="dropdown-menu">
+                <li><span class="dropdown-item-text"><strong>Username:</strong> {{ user?.username }}</span></li>
+                <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+              </ul>
+            </li>
+          </ng-template>
+          
+          
+
         </ul>
       </nav><!-- #nav-menu-container -->
     </div>
   </header><!-- #header -->
+
 
   <!--==========================
     Intro Section

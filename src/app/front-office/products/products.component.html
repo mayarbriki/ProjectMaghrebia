@@ -70,7 +70,7 @@
         <td>{{ product.description }}</td>
         <td>{{ product.category }}</td>
         <td>
-          <img *ngIf="product.fileName" [src]="'http://localhost:6060/uploads/' + product.fileName" width="50" />
+          <img *ngIf="product.fileName" [src]="product.fileName" width="100" />
         </td>
         <td>
           <button (click)="selectProduct(product)">Modify</button>

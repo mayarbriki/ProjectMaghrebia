@@ -5,7 +5,6 @@ import com.example.projectmaghrebia.Repositories.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,46 +13,20 @@ import java.util.Optional;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserService implements IUserService {
+
     @Autowired
     private UserRepository userRepository;
 
     @Override
     public User registerUser(User user) {
-        return null;
-    }
-
-    @Override
-    public Optional<User> authenticateUser(String username, String password) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> findByUsername(String username) {
-        return Optional.empty();
-    }
-
-    @Override
-    public Optional<User> findById(Long id) {
-        return Optional.empty();
-    }
-    //private  PasswordEncoder passwordEncoder;
-    /*
-    @Override
-    public User registerUser(User user) {
-        // Encode the password before saving
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
-
-        // Save and return the user
+        // Directly save the password without encoding (NOT SECURE)
         return userRepository.save(user);
     }
 
     @Override
     public Optional<User> authenticateUser(String username, String password) {
         Optional<User> userOptional = userRepository.findByUsername(username);
-        return userOptional.filter(user ->
-                passwordEncoder.matches(password, user.getPassword())
-        );
+        return userOptional.filter(user -> user.getPassword().equals(password)); // Plain-text password check
     }
 
     @Override
@@ -64,5 +37,5 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
-    }*/
+    }
 }

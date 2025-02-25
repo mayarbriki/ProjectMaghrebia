@@ -13,12 +13,13 @@ import { ContractsComponent } from "../contracts/contracts.component";
 import { PropertiesComponent } from '../properties/properties.component';
 import { IncidentsComponent } from "../incidents/incidents.component";
 import { BlogsComponent } from '../blogs/blogs.component';
+import { ProductDisplayComponent } from 'src/app/product-display/product-display.component';
 
 @Component({
   selector: 'app-all-template-front',
   templateUrl: './all-template-front.component.html',
   styleUrls: ['./all-template-front.component.css'],
-  imports: [HeaderFrontComponent, RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent]
+  imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent]
 })
 export class AllTemplateFrontComponent {
 

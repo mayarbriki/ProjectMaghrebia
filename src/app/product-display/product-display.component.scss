@@ -1,0 +1,167 @@
+/* Main carousel container */
+.carousel-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    max-width: 1200px; /* Increased from 800px */
+    margin: 0 auto;
+    padding: 0 60px; /* Increased padding for larger arrows */
+  }
+  
+  /* Products container to enable overflow handling */
+  .carousel-products-container {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* Horizontal row of products */
+  .carousel-products {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 25px; /* Increased gap between cards */
+    width: 100%;
+    transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
+  }
+  
+  /* Navigation buttons */
+  .carousel-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50px; /* Larger buttons */
+    height: 50px;
+    background-color: blue;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 24px; /* Larger font */
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: absolute;
+    z-index: 10;
+  }
+  
+  .carousel-btn:hover {
+    background-color: darkblue;
+    transform: scale(1.05);
+    transition: all 0.2s ease;
+  }
+  
+  .carousel-btn.left {
+    left: 10px;
+  }
+  
+  .carousel-btn.right {
+    right: 10px;
+  }
+  
+  .carousel-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  /* Product card styling - significantly larger */
+  .product-card {
+    flex: 0 0 auto;
+    width: 300px; /* Increased from 200px */
+    font-size: 16px; /* Larger font */
+    padding: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    transition: transform 0.3s ease;
+    height: auto; /* Allow height to adjust to content */
+    min-height: 380px; /* Set minimum height */
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+  }
+  
+  .product-card img {
+    width: 100%;
+    height: 180px; /* Taller images */
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 12px;
+  }
+  
+  .card-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Allow card body to grow and fill space */
+    justify-content: space-between; /* Space content evenly */
+  }
+  
+  .card-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-top: 8px;
+    margin-bottom: 10px;
+    color: #333;
+  }
+  
+  .card-text {
+    font-size: 14px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    color: #666;
+    /* Ensure text doesn't get cut off */
+    overflow: visible;
+    text-overflow: initial;
+    display: block;
+    /* Allow up to 4 lines of text */
+    max-height: 5.6em; /* 4 lines x 1.4 line height */
+  }
+  
+  .badge {
+    display: inline-block;
+    font-size: 12px;
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    font-weight: 500;
+    margin-top: auto; /* Push badge to bottom if there's space */
+  }
+  
+  .badge-primary {
+    background-color: #007bff;
+  }
+  
+  .badge-success {
+    background-color: #28a745;
+  }
+  
+  .badge-info {
+    background-color: #17a2b8;
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 992px) {
+    .product-card {
+      width: 250px;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .carousel-container {
+      padding: 0 50px;
+    }
+    
+    .product-card {
+      width: 220px;
+      min-height: 320px;
+    }
+    
+    .product-card img {
+      height: 150px;
+    }
+  }

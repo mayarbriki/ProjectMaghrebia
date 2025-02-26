@@ -55,10 +55,10 @@ export const menus: Navigation[] = [
       },
       {
         id: 'register',
-        title: 'Assesements',
+        title: 'Assessements',
         type: 'item',
         classes: 'nav-item',
-        url: '/admin/assesements',
+        url: '/admin/assessments',
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false

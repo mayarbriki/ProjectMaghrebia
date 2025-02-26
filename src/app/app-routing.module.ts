@@ -4,7 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 // Front-Office Imports
 import { AllTemplateFrontComponent } from './front-office/all-template-front/all-template-front.component';
 import { BlogsComponent } from '../app/front-office/blogs/blogs.component';
-import { ClaimsComponent } from './front-office/claims/claims.component';
 import { MessageComponent } from './message/message.component';
 import { SigninComponent } from './front-office/register/signin/signin.component';
 import { SignupComponent } from './front-office/register/signup/signup.component';
@@ -12,6 +11,12 @@ import { ServicesComponent } from './front-office/services/services.component';
 import { ProductsComponent } from './front-office/products/products.component';
 import { ProductDisplayComponent } from './product-display/product-display.component';
 import { FeedbackComponent } from './feedback/feedback.component';
+import { AddClaimComponentFront } from './front-office/claims/add-claim-front/add-claim-front.component';
+import { ListClaimComponentFront } from '../app/front-office/claims/list-claim-front/list-claim-front.component';
+import { ModifyClaimComponentFront } from '../app/front-office/claims/modify-claim-front/modify-claim-front.component';
+import { ViewClaimComponentFront } from '../app/front-office/claims/view-claim-front/view-claim-front.component';
+
+
 
 // Back-Office Imports
 import { AdminComponent } from './demo/layout/admin';
@@ -72,8 +77,20 @@ const routes: Routes = [
   },
   {
     path: 'claims', // New route for the message component
-    component: ClaimsComponent
+    component: ListClaimComponentFront
   },
+  {path: 'claimsFront/AddClaim', // New route for the message component
+  component: AddClaimComponentFront
+  },
+
+  { path: 'claimsFront/EditClaim/:id', 
+    component: ModifyClaimComponentFront 
+  },
+
+  { path: 'claimsFront/DetailsClaim/:id', 
+    component: ViewClaimComponentFront
+  },
+
   {
     path: 'Services', // New route for the message component
     component: ServicesComponent

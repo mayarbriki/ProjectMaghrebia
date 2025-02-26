@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Claim } from '../../../../models/claim.model';
+import { ClaimService } from 'src/app/claim.service';
 
 @Component({
   selector: 'app-add-assessment',
@@ -28,11 +29,26 @@ export class AddAssessmentComponent implements OnInit {
   statusOptions = Object.values(StatusAssessment);
   decisionOptions = Object.values(FinalDecision);
   selectedFiles: File[] = [];
+  claims: Claim[] = [];
 
-  constructor(private assessmentService: AssessmentService, private router: Router) {}
+  constructor(private assessmentService: AssessmentService, private router: Router,private claimService: ClaimService) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.loadClaims(); // ✅ Récupérer les claims au démarrage
+  }
 
+  // ✅ Récupérer les claims depuis l'API
+  private loadClaims(): void {
+    this.claimService.getAllClaims().subscribe(
+      (data: Claim[]) => {
+        this.claims = data;
+      },
+      (error: any) => {
+        console.error('Erreur lors du chargement des claims', error);
+      }
+    );
+  }
+  
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
@@ -40,13 +56,23 @@ export class AddAssessmentComponent implements OnInit {
     }
   }
 
+  
   onSubmit(): void {
     const formData = new FormData();
-    formData.append("assessmentDate", this.assessment.assessmentDate.toISOString());
-    formData.append("findings", this.assessment.findings);
+      // Convert string dates to Date objects before calling toISOString()
+      const assessmentDate = this.assessment.assessmentDate instanceof Date 
+      ? this.assessment.assessmentDate 
+      : new Date(this.assessment.assessmentDate);
+    
+    const submissionDate = this.assessment.submissionDate instanceof Date 
+      ? this.assessment.submissionDate 
+      : new Date(this.assessment.submissionDate);
+
+      formData.append("assessmentDate", assessmentDate.toISOString());
+      formData.append("findings", this.assessment.findings);
     formData.append("statusAssessment", this.assessment.statusAssessment);
     formData.append("finalDecision", this.assessment.finalDecision);
-    formData.append("submissionDate", this.assessment.submissionDate.toISOString());
+  formData.append("submissionDate", submissionDate.toISOString());    formData.append("claimId", this.assessment.claim.idClaim); // ✅ Ajouter l'ID du claim sélectionné
 
     this.selectedFiles.forEach((file) => {
       formData.append("assessmentDocuments", file);

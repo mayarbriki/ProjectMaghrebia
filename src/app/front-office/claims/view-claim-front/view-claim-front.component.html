@@ -1,0 +1,24 @@
+<div *ngIf="claim" class="view-claim-container">
+    <h3>Claim Details</h3>
+    <div class="claim-detail">
+      <p><strong>Full Name:</strong> {{ claim.fullName }}</p>
+      <p><strong>Claim Name:</strong> {{ claim.claimName }}</p>
+      <p><strong>Submission Date:</strong> {{ claim.submissionDate | date }}</p>
+      <p><strong>Status:</strong> {{ claim.statusClaim }}</p>
+      <p><strong>Reason:</strong> {{ claim.claimReason }}</p>
+      <p><strong>Description:</strong> {{ claim.description }}</p>
+      <p><strong>Documents:</strong></p>
+      <ul>
+        <li *ngFor="let file of claim.supportingDocuments">
+          <a href="{{ file.url }}" target="_blank">{{ file }}</a>
+        </li>
+      </ul>
+    </div>
+    
+<!-- Buttons for Edit and Delete -->
+<div class="action-buttons">
+    <button class="btn btn-warning" (click)="editClaim()">Edit</button>
+    <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
+  </div>
+</div>
+  

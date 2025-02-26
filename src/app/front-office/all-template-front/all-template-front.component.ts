@@ -8,7 +8,10 @@ import { SponsorsComponent } from '../sponsors/sponsors.component';
 import { ByTicketsComponent } from '../by-tickets/by-tickets.component';
 import { ConferenceComponent } from '../conference/conference.component';
 import { HomeFrontComponent } from '../home-front/home-front.component';
-import { ClaimsComponent } from '../claims/claims.component';
+import { ListClaimComponentFront } from '../claims/list-claim-front/list-claim-front.component';
+import { AddClaimComponentFront } from '../claims/add-claim-front/add-claim-front.component';
+import { ModifyClaimComponentFront } from '../claims/modify-claim-front/modify-claim-front.component';
+import { ViewClaimComponentFront } from '../claims/view-claim-front/view-claim-front.component';
 import { ContractsComponent } from "../contracts/contracts.component";
 import { PropertiesComponent } from '../properties/properties.component';
 import { IncidentsComponent } from "../incidents/incidents.component";
@@ -19,7 +22,10 @@ import { ProductDisplayComponent } from 'src/app/product-display/product-display
   selector: 'app-all-template-front',
   templateUrl: './all-template-front.component.html',
   styleUrls: ['./all-template-front.component.css'],
-  imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent]
+  imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, 
+            FooterFrontComponent, SponsorsComponent, 
+            ListClaimComponentFront, AddClaimComponentFront, ModifyClaimComponentFront,ViewClaimComponentFront,
+            ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent]
 })
 export class AllTemplateFrontComponent {
 

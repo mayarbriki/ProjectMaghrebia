@@ -1,0 +1,22 @@
+.feedback-container {
+    width: 400px;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  input, button {
+    display: block;
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .success {
+    color: green;
+  }
+  
+  .error {
+    color: red;
+  }
+  

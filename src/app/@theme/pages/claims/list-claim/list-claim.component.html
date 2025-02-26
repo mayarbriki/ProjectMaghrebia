@@ -1,0 +1,50 @@
+<div class="list-claim-container">
+    <div class="header-container">
+        <h3>List of Claims</h3>
+        <div class="header-actions">
+            <!-- Recherche avancée -->
+            <input 
+                type="text" 
+                placeholder="Search Claims" 
+                [(ngModel)]="searchQuery" 
+                (input)="applySearch()" 
+                class="search-input" />
+
+            <!-- Tri -->
+            <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
+                <option value="name">Sort by Claim Name</option>
+                <option value="date">Sort by Date</option>
+            </select>
+
+            <!-- Bouton Ajouter une réclamation -->
+            <button class="btn btn-success" (click)="navigateToAddClaim()"> Add Claim</button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Claim Name</th>
+                <th>Submission Date</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let claim of filteredClaims; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ claim.fullName }}</td>
+                <td>{{ claim.claimName }}</td>
+                <td>{{ claim.submissionDate | date:'yyyy-MM-dd' }}</td>
+                <td>{{ claim.statusClaim }}</td>
+                <td class="actions">
+                    <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">View</button>
+                    <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)">Edit</button>
+                    <button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">Delete</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

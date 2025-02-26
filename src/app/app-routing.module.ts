@@ -24,6 +24,10 @@ import { SignupComponent } from './front-office/register/signup/signup.component
 import { ServicesComponent } from './front-office/services/services.component';
 import { ProductsComponent } from './front-office/products/products.component';
 import { ProductDisplayComponent } from './product-display/product-display.component';
+import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
+import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
+import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
+import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
 
 // Combined Routes
 const routes: Routes = [
@@ -108,8 +112,21 @@ const routes: Routes = [
       },
       {
         path: 'claims',
-        component: ClaimsComponent
+        component: ListClaimComponent
       },
+      {
+        path: 'claims/AddClaim',
+        component: AddClaimComponent
+      },
+      {
+        path: 'claims/EditClaim/:id',
+        component: ModifyClaimComponent
+      },
+      {
+        path: 'claims/DetailsClaim/:id',
+        component: ViewClaimComponent
+      },
+
       {
         path: 'incidents',
         component: IncidentsComponent

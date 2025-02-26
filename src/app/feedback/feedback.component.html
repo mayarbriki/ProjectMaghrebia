@@ -1,0 +1,27 @@
+<div class="feedback-container">
+    <h2>Submit Feedback</h2>
+  
+    <form (submit)="submitFeedback()">
+      <div>
+        <label>Content:</label>
+        <input type="text" [(ngModel)]="content" required />
+      </div>
+  
+      <div>
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" [(ngModel)]="rating" min="1" max="5">
+        
+      </div>
+  
+      <div>
+        <label>Image:</label>
+        <input type="file" (change)="onFileChange($event)" />
+      </div>
+  
+      <button type="submit">Submit</button>
+    </form>
+  
+    <p *ngIf="successMessage" class="success">{{ successMessage }}</p>
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  </div>
+  

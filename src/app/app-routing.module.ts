@@ -24,6 +24,7 @@ import { SignupComponent } from './front-office/register/signup/signup.component
 import { ServicesComponent } from './front-office/services/services.component';
 import { ProductsComponent } from './front-office/products/products.component';
 import { ProductDisplayComponent } from './product-display/product-display.component';
+import { FeedbackComponent } from './feedback/feedback.component';
 
 // Combined Routes
 const routes: Routes = [
@@ -31,6 +32,10 @@ const routes: Routes = [
   {
     path: '',
     component: AllTemplateFrontComponent,  // Front-Office as Default Route
+  },
+  {
+    path: 'app-feedback',
+    component: FeedbackComponent,  // Front-Office as Default Route
   },
 
   {

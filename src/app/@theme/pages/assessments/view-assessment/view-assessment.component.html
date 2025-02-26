@@ -1,0 +1,25 @@
+<div *ngIf="assessment" class="view-assessment-container">
+    <h3>Assessment Details</h3>
+    <div class="assessment-detail">
+      <p><strong>Assessment ID:</strong> {{ assessment.idAssessment }}</p>
+      <p><strong>Assessment Date:</strong> {{ assessment.assessmentDate | date }}</p>
+      <p><strong>Findings:</strong> {{ assessment.findings }}</p>
+      <p><strong>Status:</strong> {{ assessment.statusAssessment }}</p>
+      <p><strong>Final Decision:</strong> {{ assessment.finalDecision }}</p>
+      <p><strong>Submission Date:</strong> {{ assessment.submissionDate | date }}</p>
+      
+      <p><strong>Documents:</strong></p>
+      <ul>
+        <li *ngFor="let file of assessment.assessmentDocuments">
+          <a href="{{ file }}" target="_blank">{{ file }}</a>
+        </li>
+      </ul>
+    </div>
+  
+    <!-- Buttons for Edit and Delete -->
+    <div class="action-buttons">
+      <button class="btn btn-warning" (click)="editAssessment()">Edit</button>
+      <button class="btn btn-danger" (click)="deleteAssessment()">Delete</button>
+    </div>
+  </div>
+  

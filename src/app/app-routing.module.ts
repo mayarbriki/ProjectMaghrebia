@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule } from '@angular/core'; 
 import { RouterModule, Routes } from '@angular/router';
 
 // Front-Office Imports
@@ -32,7 +32,11 @@ import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.com
 import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
 import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
 
-//////Assessments Back-Office
+// Assessments Back-Office
+import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
+import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
+import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
+import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
 
 const routes: Routes = [
   // Front-Office Routes
@@ -100,7 +104,10 @@ const routes: Routes = [
       { path: 'claims/EditClaim/:id', component: ModifyClaimComponent },
       { path: 'claims/DetailsClaim/:id', component: ViewClaimComponent },
       /////// Assessment Routes Back-Office
-
+      { path: 'assessments', component: ListAssessmentComponent },
+      { path: 'assessments/AddAssessment', component: AddAssessmentComponent },
+      { path: 'assessments/EditAssessment/:id', component: ModifyAssessmentComponent },
+      { path: 'assessments/ViewAssessment/:id', component: ViewAssessmentComponent },
       { path: 'incidents', component: IncidentsComponent },
       { path: 'joboffers', component: JoboffersComponent },
       { path: 'news', component: NewsComponent },

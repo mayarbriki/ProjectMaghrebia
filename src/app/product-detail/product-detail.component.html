@@ -1,0 +1,23 @@
+<app-header-front></app-header-front>
+<router-outlet></router-outlet>
+
+<div class="product-container">
+    <link rel="stylesheet" href="../../assets/FrontOffice/css/style.css">
+  <div *ngIf="product" class="product-card">
+    <div *ngIf="safeImageUrl" class="card-img-container">
+      <img [src]="safeImageUrl" alt="{{ product.name }}" class="product-image">
+    </div>
+    <div class="card-body">
+      <h2 class="product-title">{{ product.name }}</h2>
+      <p class="product-description">{{ product.description }}</p>
+      <span class="badge" [ngClass]="{
+        'badge-primary': product.category === 'HEALTHCARE',
+        'badge-success': product.category === 'REALESTATE',
+        'badge-info': product.category === 'VEHICULE'
+      }">{{ product.category }}</span>
+         <button class="feedback-btn" (click)="openFeedbackModal(product)">
+            💬
+          </button>
+    </div>
+  </div>
+</div>

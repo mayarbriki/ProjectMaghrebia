@@ -18,6 +18,10 @@
               'badge-success': product.category === 'REALESTATE',
               'badge-info': product.category === 'VEHICULE'
             }">{{ product.category }}</span>
+     <button class="details-btn" (click)="viewProductDetails(product.idProduct)">
+        View Product Details
+    </button>
+    
           </div>
         </div>
       </div>
@@ -27,4 +31,5 @@
     <button class="carousel-btn right" (click)="nextSlide()" [disabled]="transitionInProgress">
       &#10095;
     </button>
+    
   </div>

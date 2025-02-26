@@ -12,6 +12,7 @@
 body {
   background: #fff;
   color: #2f3138;
+  padding-top: 20px;
   font-family: "Open Sans", sans-serif;
 }
 
@@ -213,10 +214,16 @@ h6 {
 /* Nav Menu Essentials */
 
 .nav-menu,
-.nav-menu * {
-  margin-top: 28px;
-  padding: 0;
+#nav-menu-container {
+  display: flex;
+  align-items: center;
+}
+
+.nav-menu {
   list-style: none;
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 
 .nav-menu ul {
@@ -271,10 +278,7 @@ h6 {
 
 /* Nav Meu Container */
 
-#nav-menu-container {
-  float: right;
-  margin: 0;
-}
+
 
 /* Nav Meu Styling */
 
@@ -1926,4 +1930,34 @@ html, body {
   #subscribe button {
     margin-top: 10px;
   }
+}
+
+.dropdown-item {
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
+.dropdown-item-text {
+  display: block;
+  padding: 8px 15px;
+}
+
+/* Login button styling */
+.buy-tickets a {
+  background-color: #ff3366;
+  padding: 8px 20px !important;
+  border-radius: 50px;
+  margin-left: 10px;
+  color: white !important; /* Ensure text is visible */
+}
+
+.buy-tickets a:hover {
+  background-color: #e62958;
+  color: white !important;
+}
+
+/* Profile image alignment */
+.nav-link img {
+  margin-right: 5px;
+  vertical-align: middle;
 }

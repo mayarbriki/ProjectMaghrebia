@@ -1,11 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Product, ProductService } from '../product.service';
 import { CommonModule } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
+import { FeedbackComponent } from '../feedback/feedback.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-display',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule , FeedbackComponent],
   templateUrl: './product-display.component.html',
   styleUrl: './product-display.component.scss'
 })
@@ -16,7 +19,7 @@ export class ProductDisplayComponent implements OnInit {
   transitionInProgress: boolean = false;
   translateX: number = 0;
   
-  constructor(private productService: ProductService) {}
+  constructor(private productService: ProductService , private dialog :MatDialog, private router:Router) {}
   
   ngOnInit(): void {
     this.productService.getProducts().subscribe((data) => {
@@ -78,4 +81,12 @@ export class ProductDisplayComponent implements OnInit {
   isCurrentlyVisible(index: number): boolean {
     return index >= this.currentIndex && index < this.currentIndex + this.itemsPerPage;
   }
+ 
+  viewProductDetails(productId: number | undefined): void {
+    if (productId !== undefined) {
+      this.router.navigate(['/product', productId]);  // ✅ Navigate to product details page
+    }
+  }
+  
+
 }

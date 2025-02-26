@@ -25,30 +25,63 @@ import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component
 import { NewsComponent } from './@theme/pages/news/news.component';
 import { PropertiesComponent } from './@theme/pages/properties/properties.component';
 
-//////Claims Back-Office
+import { ProductDetailComponent } from './product-detail/product-detail.component';
+import { HeaderFrontComponent } from './front-office/header-front/header-front.component';
 import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
 import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
 import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
 import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
 
 //////Assessments Back-Office
-import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
-import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
-import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
-import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
 
 const routes: Routes = [
   // Front-Office Routes
-  { path: '', component: AllTemplateFrontComponent },
-  { path: 'app-feedback', component: FeedbackComponent },
-  { path: 'message', component: MessageComponent },
-  { path: 'app-product-display', component: ProductDisplayComponent },
-  { path: 'signin', component: SigninComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'claims', component: ClaimsComponent },
-  { path: 'services', component: ServicesComponent },
-  { path: 'products', component: ProductsComponent },
-  { path: 'blogs', component: BlogsComponent },
+  {
+    path: '',
+    component: AllTemplateFrontComponent,  // Front-Office as Default Route
+  },
+  {
+    path: 'app-header-front',
+    component: HeaderFrontComponent,  // Front-Office as Default Route
+  },
+  {
+    path: 'app-feedback',
+    component: FeedbackComponent,  // Front-Office as Default Route
+  },
+  { path: 'product/:id', component: ProductDetailComponent },  // ✅ Route for product details
+
+  {
+    path: 'message', // New route for the message component
+    component: MessageComponent
+  },
+  {
+    path: 'app-product-display',
+    component: ProductDisplayComponent
+  },
+  {
+    path: 'signin', // New route for the message component
+    component: SigninComponent
+  },
+  {
+    path: 'signup', // New route for the message component
+    component: SignupComponent
+  },
+  {
+    path: 'claims', // New route for the message component
+    component: ClaimsComponent
+  },
+  {
+    path: 'Services', // New route for the message component
+    component: ServicesComponent
+  },
+  {
+    path: 'products', // New route for the message component
+    component: ProductsComponent
+  },
+  {
+    path:'blogs',
+    component:BlogsComponent
+  },
 
   // Back-Office Routes
   {
@@ -67,11 +100,6 @@ const routes: Routes = [
       { path: 'claims/EditClaim/:id', component: ModifyClaimComponent },
       { path: 'claims/DetailsClaim/:id', component: ViewClaimComponent },
       /////// Assessment Routes Back-Office
-      { path: 'assessments', component: ListAssessmentComponent },
-      { path: 'assesements/AddAssesement', component: AddAssessmentComponent },
-      { path: 'assesements/EditAssesement/:id', component: ModifyAssessmentComponent},
-      { path: 'assesements/DetailsAssesement/:id', component: ViewAssessmentComponent },
-
 
       { path: 'incidents', component: IncidentsComponent },
       { path: 'joboffers', component: JoboffersComponent },

@@ -1,11 +1,15 @@
 .add-claim-container {
   max-width: 900px;
-  margin: 20px auto;
-  padding: 20px;
+  margin: 120px auto;
+  padding: 30px;
   background-color: #f9f9f9;
   border-radius: 10px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 80px; /* Add space between the header and content */
+  padding-bottom: 60px; /* Ensure there's enough space between content and footer */
+  margin-bottom: 40px; /* Provide space for footer */
+
   
   h3 {
     text-align: center;

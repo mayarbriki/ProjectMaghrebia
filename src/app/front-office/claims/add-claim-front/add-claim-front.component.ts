@@ -4,6 +4,8 @@ import { Claim, StatusClaim } from '../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
+import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   templateUrl: './add-claim-front.component.html',
   styleUrls: ['./add-claim-front.component.scss'],
   standalone: true, 
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
 })
 export class AddClaimComponentFront implements OnInit {
   claim: Claim = {

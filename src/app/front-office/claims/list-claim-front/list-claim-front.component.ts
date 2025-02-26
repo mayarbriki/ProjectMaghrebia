@@ -4,6 +4,8 @@ import { Claim } from '../../../models/claim.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
+import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 
 
 @Component({
@@ -11,7 +13,7 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './list-claim-front.component.html',
   styleUrls: ['./list-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
 })
 export class ListClaimComponentFront implements OnInit {
   claims: Claim[] = [];

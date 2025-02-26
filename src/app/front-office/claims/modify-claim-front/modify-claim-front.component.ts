@@ -4,13 +4,15 @@ import { ClaimService } from '../../../claim.service';
 import { Claim, StatusClaim } from '../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
+import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 
 @Component({
   selector: 'app-modify-claim-front',
   templateUrl: './modify-claim-front.component.html',
   styleUrls: ['./modify-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
 })
 export class ModifyClaimComponentFront implements OnInit {
   claim: Claim = {

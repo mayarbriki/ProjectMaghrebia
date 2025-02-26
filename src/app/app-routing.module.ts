@@ -15,6 +15,8 @@ import { AddClaimComponentFront } from './front-office/claims/add-claim-front/ad
 import { ListClaimComponentFront } from '../app/front-office/claims/list-claim-front/list-claim-front.component';
 import { ModifyClaimComponentFront } from '../app/front-office/claims/modify-claim-front/modify-claim-front.component';
 import { ViewClaimComponentFront } from '../app/front-office/claims/view-claim-front/view-claim-front.component';
+import { ListAssessmentComponentFront } from '../app/front-office/assessments/list-assessment-front/list-assessment-front.component';
+import { ViewAssessmentComponentFront } from '../app/front-office/assessments/view-assessment-front/view-assessment-front.component';
 
 
 
@@ -76,7 +78,7 @@ const routes: Routes = [
     component: SignupComponent
   },
   {
-    path: 'claims', // New route for the message component
+    path: 'claims', 
     component: ListClaimComponentFront
   },
   {path: 'claimsFront/AddClaim', // New route for the message component
@@ -91,6 +93,14 @@ const routes: Routes = [
     component: ViewClaimComponentFront
   },
 
+  {path: 'assessments', 
+  component: ListAssessmentComponentFront
+  },
+
+  {path: 'assessmentsFront/ViewAssessment/:id', 
+    component: ViewAssessmentComponentFront
+  },
+  
   {
     path: 'Services', // New route for the message component
     component: ServicesComponent

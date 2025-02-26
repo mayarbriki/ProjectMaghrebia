@@ -20,17 +20,22 @@ import DashboardComponent from './demo/pages/dashboard/dashboard.component';
 import SamplePageComponent from './demo/pages/other/sample-page/sample-page.component';
 import { ContratsComponent } from './@theme/pages/contrats/contrats.component';
 import { ArticlesComponent } from './@theme/pages/articles/articles.component';
-import { AssesementsComponent } from './@theme/pages/assesements/assesements.component';
 import { IncidentsComponent } from './@theme/pages/incidents/incidents.component';
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
 import { NewsComponent } from './@theme/pages/news/news.component';
 import { PropertiesComponent } from './@theme/pages/properties/properties.component';
 
-// Claims Management (Merged from Local)
+//////Claims Back-Office
 import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
 import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
 import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
 import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
+
+//////Assessments Back-Office
+import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
+import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
+import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
+import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
 
 const routes: Routes = [
   // Front-Office Routes
@@ -55,12 +60,19 @@ const routes: Routes = [
       { path: 'sample-page', loadComponent: () => import('./demo/pages/other/sample-page/sample-page.component').then(m => SamplePageComponent) },
       { path: 'contracts', component: ContratsComponent },
       { path: 'articles', component: ArticlesComponent },
-      { path: 'assesements', component: AssesementsComponent },
       { path: 'blogs', component: BlogsComponent },
+      /////// Claim Routes Back-Office
       { path: 'claims', component: ListClaimComponent },
       { path: 'claims/AddClaim', component: AddClaimComponent },
       { path: 'claims/EditClaim/:id', component: ModifyClaimComponent },
       { path: 'claims/DetailsClaim/:id', component: ViewClaimComponent },
+      /////// Assessment Routes Back-Office
+      { path: 'assessments', component: ListAssessmentComponent },
+      { path: 'assesements/AddAssesement', component: AddAssessmentComponent },
+      { path: 'assesements/EditAssesement/:id', component: ModifyAssessmentComponent},
+      { path: 'assesements/DetailsAssesement/:id', component: ViewAssessmentComponent },
+
+
       { path: 'incidents', component: IncidentsComponent },
       { path: 'joboffers', component: JoboffersComponent },
       { path: 'news', component: NewsComponent },

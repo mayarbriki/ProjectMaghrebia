@@ -1,6 +1,9 @@
 package com.example.projectmaghrebia.Services;
 
+import com.example.projectmaghrebia.Entities.Status;
 import com.example.projectmaghrebia.Entities.Transaction;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,4 +18,6 @@ public interface ITransactionService {
 
 
     Transaction confirmTransaction(Long transactionId);
+    long countTransactionsByStatus(Status status);
+    BigDecimal sumValidatedTransactionsAmount();
 }

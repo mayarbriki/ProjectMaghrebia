@@ -1,11 +1,15 @@
 package com.example.projectmaghrebia.Services;
 
 import com.example.projectmaghrebia.Entities.Contract;
+import com.example.projectmaghrebia.Entities.Payment_frequency;
 import com.example.projectmaghrebia.Repositories.ContractRepositories;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -32,23 +36,42 @@ public class ContractService implements IContractService {
 
     @Override
     public Contract createContract(Contract contract) {
+        if (contract.getContract_id() != null && contract.getContract_id() == 0) {
+            contract.setContract_id(null); // ✅ Let Hibernate generate the ID
+        }
+
+        // ✅ Ensure declared_amount is not null
+        if (contract.getAmount() == null) {
+            contract.setAmount(BigDecimal.ZERO);
+        }
+
+        BigDecimal calculatedAmount = calculateInsurance(contract.getAmount(), contract.getPayment_type());
+        contract.setAmount(calculatedAmount);
+
         return contractRepositories.save(contract);
     }
 
     @Override
+    @Transactional
     public Contract updateContract(Long id, Contract contractDetails) {
-        Contract contract = contractRepositories.findById(id)
+        Contract contract = contractRepositories.findByIdForUpdate(id)
                 .orElseThrow(() -> new RuntimeException("Contract not found"));
 
         contract.setUser_id(contractDetails.getUser_id());
         contract.setContract_type(contractDetails.getContract_type());
         contract.setStart_date(contractDetails.getStart_date());
         contract.setEnd_date(contractDetails.getEnd_date());
-        contract.setStatus(contractDetails.getStatus());
-        contract.setAmount(contractDetails.getAmount());
         contract.setPayment_type(contractDetails.getPayment_type());
         contract.setSigned_document(contractDetails.getSigned_document());
         contract.setUpdated_at(new java.sql.Timestamp(System.currentTimeMillis()));
+
+        // ✅ Ensure declared_amount is not null
+        if (contractDetails.getAmount() == null) {
+            contractDetails.setAmount(BigDecimal.ZERO);
+        }
+
+        BigDecimal calculatedAmount = calculateInsurance(contractDetails.getAmount(), contractDetails.getPayment_type());
+        contract.setAmount(calculatedAmount);
 
         return contractRepositories.save(contract);
     }
@@ -58,23 +81,44 @@ public class ContractService implements IContractService {
         contractRepositories.deleteById(id);
     }
 
-    // ✅ Tâche planifiée : vérifie les contrats expirant dans 24h et envoie des emails
-    @Scheduled(cron = "0 0 8 * * ?") // S'exécute tous les jours à 8h du matin
+    @Scheduled(cron = "0 0 8 * * ?")
     public void checkExpiringContracts() {
         Date now = new Date();
 
-        // Calculer la date +24 heures
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(now);
         calendar.add(Calendar.HOUR, 24);
         Date next24Hours = calendar.getTime();
 
-        // Récupérer les contrats qui expirent dans les 24 heures
         List<Contract> expiringContracts = contractRepositories.findExpiringContracts(now, next24Hours);
 
-        // Envoyer un email de rappel pour chaque contrat
         for (Contract contract : expiringContracts) {
             emailService.sendReminderEmail("client@example.com", contract.getContract_id(), contract.getContract_type());
+        }
+    }
+
+    public BigDecimal calculateInsurance(BigDecimal declaredAmount, Payment_frequency paymentFrequency) {
+        if (declaredAmount == null) {
+            declaredAmount = BigDecimal.ZERO; // ✅ Default value
+        }
+
+        BigDecimal insuranceBase;
+
+        if (declaredAmount.compareTo(BigDecimal.valueOf(10000)) >= 0) {
+            insuranceBase = BigDecimal.valueOf(500);
+        } else {
+            insuranceBase = declaredAmount.multiply(BigDecimal.valueOf(0.05));
+        }
+
+        switch (paymentFrequency) {
+            case MONTHLY:
+                return insuranceBase.divide(BigDecimal.valueOf(12), RoundingMode.HALF_UP);
+            case YEARLY:
+                return insuranceBase;
+            case ONE_TIME:
+                return insuranceBase.multiply(BigDecimal.valueOf(1.1));
+            default:
+                return insuranceBase;
         }
     }
 }

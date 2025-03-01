@@ -1,5 +1,6 @@
 package com.example.projectmaghrebia.Controllers;
 
+import com.example.projectmaghrebia.Entities.Status;
 import com.example.projectmaghrebia.Entities.Transaction;
 import com.example.projectmaghrebia.Entities.Contract;
 import com.example.projectmaghrebia.Services.ITransactionService;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -53,22 +55,28 @@ public class TransactionController {
     }
 
     @PostMapping
-    @Operation(summary = "Create a new transaction with contract association", description = "Creates a new transaction and associates it with a contract if provided")
+    @Operation(summary = "Create a new transaction with contract association", description = "Creates a new transaction and associates it with a contract")
     public ResponseEntity<?> createTransaction(@Valid @RequestBody Transaction transaction,
-                                               @RequestParam(required = false) Long contractId) {
-        if (contractId != null) {
-            Optional<Contract> contractOptional = contractService.getContractById(contractId);
-            if (contractOptional.isEmpty()) {
-                return ResponseEntity.status(404)
-                        .body("{\"message\": \"Contract not found\", \"contractId\": " + contractId + "}");
-            }
-            transaction.setContract(contractOptional.get()); // Associate contract with transaction
+                                               @RequestParam Long contractId) { // Require contractId
+        Optional<Contract> contractOptional = contractService.getContractById(contractId);
+        if (contractOptional.isEmpty()) {
+            return ResponseEntity.status(404)
+                    .body("{\"message\": \"Contract not found\", \"contractId\": " + contractId + "}");
         }
 
+        transaction.setContract(contractOptional.get());
         Transaction createdTransaction = transactionService.createTransaction(transaction);
-        return ResponseEntity
-                .created(URI.create("/transactions/" + createdTransaction.getTransaction_id()))
+        return ResponseEntity.created(URI.create("/transactions/" + createdTransaction.getTransaction_id()))
                 .body(createdTransaction);
+    }
+    @GetMapping("/count/{status}")
+    public long countTransactions(@PathVariable Status status) {
+        return transactionService.countTransactionsByStatus(status);
+    }
+
+    @GetMapping("/sumValidatedAmount")
+    public BigDecimal sumValidatedTransactionsAmount() {
+        return transactionService.sumValidatedTransactionsAmount();
     }
 
     @PutMapping("/transactions/{id}")

@@ -1,5 +1,6 @@
 package com.example.projectmaghrebia.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,9 +35,9 @@ public class Transaction {
     private Timestamp created_at;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JoinColumn(name = "contract_contract_id")
+    @JsonBackReference // ✅ Prevents infinite loop
     private Contract contract;
-
 
 
 }

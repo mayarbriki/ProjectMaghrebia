@@ -66,11 +66,11 @@ public class ContractController {
 
     // ✅ Create a new contract
     @PostMapping
-    @Operation(summary = "Create a new contract", description = "Creates a new contract and saves it in the database")
-    public ResponseEntity<Contract> createContract(@Valid @RequestBody Contract contract) {
-        Contract createdContract = contractService.createContract(contract);
-        return ResponseEntity.created(URI.create("/contracts/" + createdContract.getContract_id()))
-                .body(createdContract);
+
+    public ResponseEntity<?> createContract(@RequestBody Contract contract) {
+        System.out.println("Received contract: " + contract); // ✅ Log incoming request
+        Contract savedContract = contractService.createContract(contract);
+        return ResponseEntity.ok(savedContract);
     }
 
     // ✅ Update contract

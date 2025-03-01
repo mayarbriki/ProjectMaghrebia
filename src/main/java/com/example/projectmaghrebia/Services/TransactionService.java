@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
@@ -138,4 +139,12 @@ public class TransactionService implements ITransactionService {
         smsService.sendSMS(smsMessage, "24483221"); // Replace XXXXXXXX with actual user phone number
 
     }
+    public long countTransactionsByStatus(Status status) {
+        return transactionRepository.countByStatus(status);
+    }
+
+    public BigDecimal sumValidatedTransactionsAmount() {
+        return transactionRepository.sumAmountByStatus(Status.COMPLETED);
+    }
+
 }

@@ -18,6 +18,8 @@ public class Contract {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contract_id;
+@Version
+private Long version;
 
     private Long user_id;
     private String contract_type;
@@ -25,6 +27,9 @@ public class Contract {
     private Date end_date;
     private String status;
     private BigDecimal amount;
+    @Column(name = "risk_score")
+    private String riskScore;
+
 
     @Enumerated(EnumType.STRING)
     private Payment_frequency payment_type;
@@ -36,4 +41,3 @@ public class Contract {
     @OneToMany(mappedBy = "contract", cascade = CascadeType.ALL)
     private Set<Transaction> transactions;
 }
-

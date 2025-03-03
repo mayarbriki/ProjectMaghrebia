@@ -10,6 +10,7 @@ import { Product, ProductService } from 'src/app/product.service';
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss'],
 })
+
 export class ProductsComponent implements OnInit {
   products: Product[] = [];
   selectedProduct: Product | null = null;

@@ -19,12 +19,14 @@ import { PropertiesComponent } from '../properties/properties.component';
 import { IncidentsComponent } from "../incidents/incidents.component";
 import { BlogsComponent } from '../blogs/blogs.component';
 import { ProductDisplayComponent } from 'src/app/product-display/product-display.component';
+import { BlogDetailComponent } from 'src/app/blog-detail/blog-detail.component';
 import { ListAssessmentComponent } from 'src/app/@theme/pages/assessments/list-assessment/list-assessment.component';
 
 @Component({
   selector: 'app-all-template-front',
   templateUrl: './all-template-front.component.html',
   styleUrls: ['./all-template-front.component.css'],
+  imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent , BlogDetailComponent]
   imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, 
             FooterFrontComponent, SponsorsComponent, 
             ListClaimComponentFront, AddClaimComponentFront, ModifyClaimComponentFront,ViewClaimComponentFront,

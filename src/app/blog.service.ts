@@ -51,4 +51,8 @@ export class BlogService {
   deleteBlog(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+  getBlogById(id: number): Observable<Blog> {
+    return this.http.get<Blog>(`${this.apiUrl}/${id}`);
+  }
+  
 }

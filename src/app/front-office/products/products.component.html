@@ -1,9 +1,9 @@
 <div class="container">
     <h2>Product Management</h2>
-  
+    <link rel="stylesheet" href="">
     <!-- Buttons to switch between Add and Modify -->
     <div class="text-center mb-3">
-      <button class="btn btn-success" (click)="isModifyMode = false">Add Product</button>
+      <button type="button" class="btn btn-outline-primary" (click)="isModifyMode = false">Add Product</button>
       <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedProduct">Modify Product</button>
     </div>
   

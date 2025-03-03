@@ -38,6 +38,8 @@ import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.
 import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
 import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
 import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
+import { BlogDetailComponent } from './blog-detail/blog-detail.component';
+import { FeedbackAdminComponent } from './feedback-admin/feedback-admin.component';
 
 // Assessments Back-Office
 import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
@@ -65,6 +67,8 @@ const routes: Routes = [
     path: 'message', // New route for the message component
     component: MessageComponent
   },
+  { path: 'app-blog-detail', component: BlogDetailComponent },
+
   {
     path: 'app-product-display',
     component: ProductDisplayComponent
@@ -105,14 +109,8 @@ const routes: Routes = [
     path: 'Services', // New route for the message component
     component: ServicesComponent
   },
-  {
-    path: 'products', // New route for the message component
-    component: ProductsComponent
-  },
-  {
-    path:'blogs',
-    component:BlogsComponent
-  },
+  
+  
 
   // Back-Office Routes
   {
@@ -125,6 +123,15 @@ const routes: Routes = [
       { path: 'contracts', component: ContratsComponent },
       { path: 'articles', component: ArticlesComponent },
       { path: 'blogs', component: BlogsComponent },
+      {
+        path: 'products', // New route for the message component
+        component: ProductsComponent
+      },
+      {
+        path: 'app-feedback-admin',
+        component:FeedbackAdminComponent
+      },
+
       /////// Claim Routes Back-Office
       { path: 'claims', component: ListClaimComponent },
       { path: 'claims/AddClaim', component: AddClaimComponent },

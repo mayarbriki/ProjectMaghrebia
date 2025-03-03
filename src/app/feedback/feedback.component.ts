@@ -27,15 +27,19 @@ export class FeedbackComponent {
   }
 
   submitFeedback() {
+    console.log('Before submitting:', this.content, this.rating, this.imageFile);
+  
     this.feedbackService.addFeedback(this.content, this.rating, this.imageFile).subscribe({
       next: (response) => {
-        this.successMessage = 'Feedback submitted successfully!';
-        this.errorMessage = '';
+        console.log('Feedback submitted:', response);
+        this.successMessage = 'Feedback added successfully!';
       },
       error: (error) => {
+        console.error('Error submitting feedback:', error);
         this.errorMessage = 'Error submitting feedback.';
-        this.successMessage = '';
       },
     });
   }
+  
+  
 }

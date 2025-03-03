@@ -213,15 +213,15 @@ export const menus: Navigation[] = [
         title: 'Health clients',
         type: 'item',
         classes: 'nav-item',
-        url: '/admin/product',
+        url: '/admin/products',
         icon: '#custom-status-up'
       },
       {
         id: 'Dashboard',
-        title: 'vehicules',
+        title: 'FeedBack',
         type: 'item',
         classes: 'nav-item',
-        url: '/admin/dashboard',
+        url: '/admin/app-feedback-admin',
         icon: '#custom-status-up'
       },
       {
@@ -229,7 +229,7 @@ export const menus: Navigation[] = [
         title: 'real estate',
         type: 'item',
         classes: 'nav-item',
-        url: '/admin/dashboard',
+        url: 'app-products',
         icon: '#custom-status-up'
       }
     ]

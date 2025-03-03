@@ -1,0 +1,9 @@
+<div class="blog-container">
+    <div *ngFor="let blog of blogs" class="blog-card">
+      <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image"/>
+      <h2>{{ blog.title }}</h2>
+      <p><strong>Author:</strong> {{ blog.author }}</p>
+      <p>{{ blog.content | slice:0:100 }}...</p>
+    </div>
+  </div>
+  

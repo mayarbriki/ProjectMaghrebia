@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../../../claim.service';
+import { AssessmentService } from '../../../../assessment.service'; // Import du service d'évaluation
 import { Claim } from '../../../../models/claim.model';
+import { Assessment } from '../../../../models/assessment.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -18,7 +20,11 @@ export class ListClaimComponent implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'id';
 
-  constructor(private claimService: ClaimService, private router: Router) {}
+  constructor(
+    private claimService: ClaimService, 
+    private assessmentService: AssessmentService, // Ajout du service d'évaluation
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.fetchClaims();
@@ -31,7 +37,7 @@ export class ListClaimComponent implements OnInit {
         this.filteredClaims = data;
       },
       (error) => {
-        console.error(' Error fetching claims:', error);
+        console.error('Error fetching claims:', error);
       }
     );
   }
@@ -70,7 +76,7 @@ export class ListClaimComponent implements OnInit {
     if (confirm('Are you sure you want to delete this claim?')) {
       this.claimService.deleteClaim(id).subscribe(() => {
         this.claims = this.claims.filter(claim => claim.idClaim !== id);
-        this.applySearch(); // Reapply search after deletion
+        this.applySearch();
       }, (error) => {
         console.error('Error deleting claim:', error);
       });
@@ -80,4 +86,28 @@ export class ListClaimComponent implements OnInit {
   navigateToAddClaim(): void {
     this.router.navigate(['admin/claims/AddClaim']);
   }
+
+ 
+  viewAssessment(idClaim: string): void {
+    this.claimService.getClaimById(idClaim).subscribe(
+      (claim) => {
+        if (claim && claim.assessment) {
+          const idAssessment = claim.assessment.idAssessment;
+          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]); 
+        } else {
+          alert('No assessment found for this claim.');
+        }
+      },
+      (error) => {
+        console.error('Error fetching claim:', error);
+        if (error.status === 404) {
+          alert('Claim not found.');
+        } else {
+          alert('Server error. Please try again later.');
+        }
+      }
+    );
+  }
+  
+  
 }

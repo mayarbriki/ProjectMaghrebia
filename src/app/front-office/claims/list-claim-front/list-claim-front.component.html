@@ -41,7 +41,7 @@
                 <td>{{ claim.submissionDate | date:'yyyy-MM-dd' }}</td>
                 <td>{{ claim.statusClaim }}</td>
                 <td class="actions">
-                    <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">View</button>
+                    <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">More Details</button>
                     <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)">Edit</button>
                     <button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">Delete</button>
                     <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>

@@ -147,7 +147,23 @@
         &:hover {
           background-color: #c82333;
         }
+  
       }
+      &.btn-info {
+              background-color: #17a2b8;
+              color: #fff;
+
+              &:hover {
+                  background-color: #138496;
+              }
+          }&.btn-info {
+            background-color: #17a2b8;
+            color: #fff;
+
+            &:hover {
+                background-color: #138496;
+            }
+        }
     }
   }
   

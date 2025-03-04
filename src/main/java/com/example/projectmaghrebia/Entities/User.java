@@ -1,8 +1,10 @@
 package com.example.projectmaghrebia.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Entity
@@ -31,6 +33,5 @@ public class User {
 @Enumerated(EnumType.STRING)
     private Role role; // e.g., "ADMIN", "CUSTOMER", "AGENT"
     private String image ;
-
 
 }

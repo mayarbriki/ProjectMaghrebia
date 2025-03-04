@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
-@CrossOrigin(origins = "http://localhost:4200") // Allow requests from Angular
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -24,6 +25,10 @@ public class UserController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    // Add BCryptPasswordEncoder
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> registerUser(
             @RequestParam("username") String username,
@@ -31,16 +36,17 @@ public class UserController {
             @RequestParam("email") String email,
             @RequestParam("phoneNumber") String phoneNumber,
             @RequestParam("address") String address,
-            @RequestParam(value = "role", required = false) Role role, // Optional role
+            @RequestParam(value = "role", required = false) Role role,
             @RequestParam(value = "file", required = false) MultipartFile file) {
 
         if (role == null) {
-            role = Role.CUSTOMER; // Default role
+            role = Role.CUSTOMER;
         }
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        // Encrypt the password before saving
+        user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
         user.setAddress(address);
@@ -58,13 +64,16 @@ public class UserController {
 
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestParam String username, @RequestParam String password) {
-        Optional<User> authenticatedUser = userService.authenticateUser(username, password);
+        Optional<User> userOptional = userService.findByUsername(username);
 
-        if (authenticatedUser.isPresent()) {
-            return ResponseEntity.ok(authenticatedUser.get()); // Return User object
-        } else {
-            return ResponseEntity.status(401).body("Invalid credentials"); // Return error message
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            // Compare raw password with encrypted password
+            if (passwordEncoder.matches(password, user.getPassword())) {
+                return ResponseEntity.ok(user);
+            }
         }
+        return ResponseEntity.status(401).body("Invalid credentials");
     }
 
     @GetMapping("/{username}")

@@ -1,197 +1,210 @@
-/* Main carousel container */
-.feedback-btn {
-    width: 40px;  /* Equal width and height */
-    height: 40px;
-    border-radius: 50%;  /* Makes it a circle */
-    background-color: #007bff;  /* Blue background */
-    color: white;  /* White icon */
-    font-size: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);  /* Soft shadow */
-    padding: 0;
-    border: none; /* Remove border */
-    outline: none; /* Remove focus outline */
-    transition: background-color 0.3s ease, transform 0.2s ease;
-  }
-  
-  .feedback-btn:hover {
-    background-color: #0056b3; /* Darker blue on hover */
-    transform: scale(1.1); /* Slightly bigger */
-  }
-  
-  .feedback-btn:active {
-    transform: scale(0.95); /* Slight press effect */
-  }
 .carousel-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    width: 100%;
-    max-width: 1200px; /* Increased from 800px */
-    margin: 0 auto;
-    padding: 0 60px; /* Increased padding for larger arrows */
-  }
-  
-  /* Products container to enable overflow handling */
-  .carousel-products-container {
-    width: 100%;
-    overflow: hidden;
-  }
-  
-  /* Horizontal row of products */
-  .carousel-products {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 25px; /* Increased gap between cards */
-    width: 100%;
-    transition: transform 0.6s cubic-bezier(0.33, 1, 0.68, 1);
-  }
-  
-  /* Navigation buttons */
-  .carousel-btn {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 50px; /* Larger buttons */
-    height: 50px;
-    background-color: blue;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    font-size: 24px; /* Larger font */
-    cursor: pointer;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    position: absolute;
-    z-index: 10;
-  }
-  
-  .carousel-btn:hover {
-    background-color: darkblue;
-    transform: scale(1.05);
-    transition: all 0.2s ease;
-  }
-  
-  .carousel-btn.left {
-    left: 10px;
-  }
-  
-  .carousel-btn.right {
-    right: 10px;
-  }
-  
-  .carousel-btn:disabled {
-    background-color: #aaa;
-    cursor: not-allowed;
-  }
-  
-  /* Product card styling - significantly larger */
-  .product-card {
-    flex: 0 0 auto;
-    width: 300px; /* Increased from 200px */
-    font-size: 16px; /* Larger font */
-    padding: 15px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-    text-align: center;
-    transition: transform 0.3s ease;
-    height: auto; /* Allow height to adjust to content */
-    min-height: 380px; /* Set minimum height */
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .product-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
-  }
-  
-  .product-card img {
-    width: 100%;
-    height: 180px; /* Taller images */
-    object-fit: cover;
-    border-radius: 5px;
-    margin-bottom: 12px;
-  }
-  
-  .card-body {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1; /* Allow card body to grow and fill space */
-    justify-content: space-between; /* Space content evenly */
-  }
-  
-  .card-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-top: 8px;
-    margin-bottom: 10px;
-    color: #333;
-  }
-  
-  .card-text {
-    font-size: 14px;
-    margin-bottom: 12px;
-    line-height: 1.4;
-    color: #666;
-    /* Ensure text doesn't get cut off */
-    overflow: visible;
-    text-overflow: initial;
-    display: block;
-    /* Allow up to 4 lines of text */
-    max-height: 5.6em; /* 4 lines x 1.4 line height */
-  }
-  
-  .badge {
-    display: inline-block;
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 4px;
-    color: white;
-    font-weight: 500;
-    margin-top: auto; /* Push badge to bottom if there's space */
-  }
-  
-  .badge-primary {
-    background-color: #007bff;
-  }
-  
-  .badge-success {
-    background-color: #28a745;
-  }
-  
-  .badge-info {
-    background-color: #17a2b8;
-  }
-  
-  /* Media query for smaller screens */
-  @media (max-width: 992px) {
-    .product-card {
-      width: 250px;
-    }
-  }
-  
-  @media (max-width: 768px) {
-    .carousel-container {
-      padding: 0 50px;
-    }
-    
-    .product-card {
-      width: 220px;
-      min-height: 320px;
-    }
-    
-    .product-card img {
-      height: 150px;
-    }
-   
-      
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  overflow: visible;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
 
-      
+.carousel-products-container {
+  overflow: hidden;
+  padding: 10px 0;
+}
+
+.carousel-products {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.product-card {
+  position: relative;
+  flex: 0 0 260px;
+  margin-right: 30px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &.active {
+    display: block;
   }
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.2);
+  }
+}
+
+img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-bottom: 3px solid #17a2b8;
+}
+
+.card-body {
+  padding: 15px;
+  text-align: center;
+}
+
+.card-title {
+  font-size: 1.3em;
+  font-weight: 600;
+  color: #2c3e50;
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trending-inline-badge {
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  animation: pulse 2s infinite;
+}
+
+.trending-badge {
+  position: absolute;
+  top: 10px;
+  left: -40px;
+  background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+  color: #fff;
+  font-size: 0.9em;
+  font-weight: bold;
+  padding: 5px 40px;
+  transform: rotate(-45deg);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.card-text {
+  font-size: 0.95em;
+  color: #666;
+  margin: 0 0 10px;
+  line-height: 1.5;
+}
+
+.badge {
+  display: inline-block;
+  margin: 10px 0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 500;
+  transition: transform 0.2s ease;
+}
+
+.badge-primary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.badge-success {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.badge-info {
+  background-color: #17a2b8;
+  color: #fff;
+}
+
+.badge:hover {
+  transform: scale(1.1);
+}
+
+.details-btn {
+  background: linear-gradient(45deg, #17a2b8, #1abc9c);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1em;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
+
+  &:hover {
+    background: linear-gradient(45deg, #138496, #16a085);
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Arrows CSS (removed hover effect and transition) */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: linear-gradient(45deg, #007bff, #00c4ff);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  /* Removed transition property entirely */
+
+  &.left {
+    left: -60px;
+  }
+
+  &.right {
+    right: -60px;
+  }
+
+  /* No hover effect */
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    /* Removed transform: scale(1) to avoid any transition */
+  }
+}
+
+.loading {
+  text-align: center;
+  padding: 30px;
+  font-size: 1.2em;
+  color: #666;
+  background: #fff;
+  border-radius: 10px;
+  margin: 20px auto;
+  max-width: 300px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+  }
+}

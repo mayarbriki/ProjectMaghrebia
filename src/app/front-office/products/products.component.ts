@@ -21,6 +21,8 @@ export class ProductsComponent implements OnInit {
     name: '',
     description: '',
     category: 'VEHICULE', // Default category
+    price: 0, // Default price
+    views:0,
   };
 
   constructor(private productService: ProductService) {}
@@ -45,6 +47,7 @@ export class ProductsComponent implements OnInit {
     formData.append('name', this.newProduct.name);
     formData.append('description', this.newProduct.description);
     formData.append('category', this.newProduct.category.toUpperCase()); // Ensure UPPERCASE for Enum
+    formData.append('price', this.newProduct.price!.toString()); // Convert number to string
 
     if (this.selectedFile) {
       formData.append('file', this.selectedFile);
@@ -79,6 +82,8 @@ export class ProductsComponent implements OnInit {
     formData.append('name', this.selectedProduct.name);
     formData.append('description', this.selectedProduct.description);
     formData.append('category', this.selectedProduct.category.toUpperCase());
+    formData.append('price', this.selectedProduct.price!.toString()); // Convert number to string
+
 
     if (this.selectedFile) {
       formData.append('file', this.selectedFile);

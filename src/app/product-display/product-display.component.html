@@ -1,35 +1,49 @@
 <div class="carousel-container">
-    <!-- Left Arrow -->
-    <button class="carousel-btn left" (click)="prevSlide()" [disabled]="transitionInProgress">
-      &#10094;
-    </button>
+  <!-- Left Arrow -->
+  <button class="carousel-btn left" (click)="prevSlide()" [disabled]="transitionInProgress">
+    ❮
+  </button>
   
-    <!-- Products Container -->
-    <div class="carousel-products-container">
-      <div class="carousel-products" [style.transform]="'translateX(' + translateX + 'px)'">
-        <div class="product-card" *ngFor="let product of products; let i = index" 
-             [class.active]="isCurrentlyVisible(i)">
-          <img *ngIf="product.fileName" [src]="product.fileName" alt="Product Image">
-          <div class="card-body">
-            <h5 class="card-title">{{ product.name }}</h5>
-            <p class="card-text">{{ product.description }}</p>
-            <span class="badge" [ngClass]="{
+  <!-- Products Container -->
+  <div class="carousel-products-container">
+    <div class="carousel-products" [style.transform]="'translateX(' + translateX + 'px)'">
+      <div
+        class="product-card"
+        *ngFor="let product of products; let i = index"
+        [class.active]="isCurrentlyVisible(i)"
+      >
+        <div class="trending-badge" *ngIf="isTrendingProduct(product)">
+          Trending Product
+        </div>
+        <img *ngIf="product.fileName" [src]="product.fileName" alt="Product Image" />
+        <div class="card-body">
+          <h5 class="card-title">
+            {{ product.name }}
+            <span *ngIf="isTrendingProduct(product)" class="trending-inline-badge">Trending</span>
+          </h5>
+          <p class="card-text">{{ product.description }}</p>
+          <span
+            class="badge"
+            [ngClass]="{
               'badge-primary': product.category === 'HEALTHCARE',
               'badge-success': product.category === 'REALESTATE',
               'badge-info': product.category === 'VEHICULE'
-            }">{{ product.category }}</span>
-     <button class="details-btn" (click)="viewProductDetails(product.idProduct)">
-        View Product Details
-    </button>
-    
-          </div>
+            }"
+            >{{ product.category }}</span
+          >
+          <button class="details-btn" (click)="viewProductDetails(product.idProduct)">
+            View Product Details
+          </button>
         </div>
       </div>
     </div>
-  
-    <!-- Right Arrow -->
-    <button class="carousel-btn right" (click)="nextSlide()" [disabled]="transitionInProgress">
-      &#10095;
-    </button>
-    
   </div>
+  
+  <!-- Right Arrow -->
+  <button class="carousel-btn right" (click)="nextSlide()" [disabled]="transitionInProgress">
+    ❯
+  </button>
+</div>
+
+<!-- Loading State -->
+<div *ngIf="products.length === 0" class="loading">Loading products...</div>

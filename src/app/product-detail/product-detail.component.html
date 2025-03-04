@@ -2,22 +2,47 @@
 <router-outlet></router-outlet>
 
 <div class="product-container">
-    <link rel="stylesheet" href="../../assets/FrontOffice/css/style.css">
   <div *ngIf="product" class="product-card">
+    <!-- Image Section -->
     <div *ngIf="safeImageUrl" class="card-img-container">
       <img [src]="safeImageUrl" alt="{{ product.name }}" class="product-image">
     </div>
+
+    <!-- Content Section -->
     <div class="card-body">
       <h2 class="product-title">{{ product.name }}</h2>
       <p class="product-description">{{ product.description }}</p>
-      <span class="badge" [ngClass]="{
+      <span class="category-badge" [ngClass]="{
         'badge-primary': product.category === 'HEALTHCARE',
         'badge-success': product.category === 'REALESTATE',
         'badge-info': product.category === 'VEHICULE'
       }">{{ product.category }}</span>
-         <button class="feedback-btn" (click)="openFeedbackModal(product)">
-            💬
+
+      <!-- Payment Plans Buttons -->
+      <div class="payment-plans">
+        <h3 class="payment-plans-title">Payment Options</h3>
+        <div class="plan-buttons">
+          <button class="plan-btn" 
+                  *ngFor="let plan of product.paymentPlans" 
+                  (click)="selectPaymentPlan(plan)" 
+                  [ngClass]="{'selected': selectedPlan === plan}">
+            {{ plan.name }}
           </button>
+        </div>
+
+        <!-- Selected Plan Display -->
+        <div class="selected-plan" *ngIf="selectedPlan">
+          <p class="plan-details">
+            <span class="plan-name">{{ selectedPlan.name }}</span>: 
+            {{ selectedPlan.amount | currency }} / {{ selectedPlan.duration }} months
+          </p>
+        </div>
+      </div>
+
+      <!-- Feedback Button -->
+      <button class="feedback-btn" (click)="openFeedbackModal(product)" title="Leave Feedback">
+        💬
+      </button>
     </div>
   </div>
 </div>

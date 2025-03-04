@@ -8,6 +8,9 @@ export interface Product {
   description: string;
   category: string; // Enum category (sent as UPPERCASE string)
   fileName?: string; // Image file name stored on the backend
+  price?: number;
+  paymentPlans?: { name: string; amount: number; duration: number }[];
+  views?: number; // Add views
 }
 
 @Injectable({
@@ -36,5 +39,12 @@ export class ProductService {
   deleteProduct(id: number): Observable<any> {
     return this.http.delete(`${this.baseUrl}/${id}`);
   }
+  incrementViews(id: number): Observable<Product> {
+    return this.http.post<Product>(`${this.baseUrl}/${id}/increment-views`, {});
+}
+
+getMostViewedProduct(): Observable<Product> {
+    return this.http.get<Product>(`${this.baseUrl}/most-viewed`);
+}
   
 }

@@ -1,80 +1,138 @@
-.product-image {
-    width: 300px;
-    height: auto;
-    display: block;
-    margin: 10px 0;
-  }
-  /* Container styling */
 .product-container {
-    margin-top: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 70vh;
-    padding: 0 15px;
+  max-width: 500px; // Reduced from 800px
+  margin: 15px auto; // Reduced from 20px
+  padding: 15px; // Reduced from 20px
+}
+
+.product-card {
+  background: #fff;
+  border-radius: 8px; // Reduced from 12px
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Softer shadow
+  overflow: hidden;
+  transition: transform 0.2s ease;
+
+  &:hover {
+    transform: translateY(-3px); // Reduced from -5px
   }
-  
-  /* Card styling */
-  .product-card {
-    width: 400px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border-radius: 8px;
-    overflow: hidden;
-    background-color: white;
-    transition: transform 0.3s;
-  }
-  
-  .product-card:hover {
-    transform: translateY(-5px);
-  }
-  
-  /* Image container and image */
-  .card-img-container {
-    height: 250px;
-    overflow: hidden;
-  }
-  
+}
+
+.card-img-container {
+  width: 100%;
+  height: 200px; // Reduced from 300px
+  overflow: hidden;
+
   .product-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  
-  /* Card content */
-  .card-body {
-    padding: 20px;
-  }
-  
-  .product-title {
-    margin-top: 0;
-    color: #333;
-    font-size: 24px;
-  }
-  
-  .product-description {
-    color: #666;
-    margin-bottom: 20px;
-  }
-  
-  /* Badge styling */
-  .badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 14px;
-    display: inline-block;
-    font-weight: bold;
-    color: white;
-  }
-  
-  .badge-primary {
+}
+
+.card-body {
+  padding: 15px; // Reduced from 20px
+}
+
+.product-title {
+  font-size: 1.25rem; // Reduced from 1.75rem
+  margin: 0 0 8px; // Reduced from 10px
+  color: #333;
+}
+
+.product-description {
+  font-size: 0.9rem; // Reduced from 1rem
+  color: #666;
+  margin: 0 0 10px; // Reduced from 15px
+  line-height: 1.4; // Slightly tighter
+}
+
+.category-badge {
+  display: inline-block;
+  padding: 4px 8px; // Reduced from 6px 12px
+  border-radius: 16px; // Reduced from 20px
+  font-size: 0.8rem; // Reduced from 0.9rem
+  margin-bottom: 10px; // Reduced from 15px
+
+  &.badge-primary {
     background-color: #007bff;
+    color: #fff;
   }
-  
-  .badge-success {
+  &.badge-success {
     background-color: #28a745;
+    color: #fff;
   }
-  
-  .badge-info {
+  &.badge-info {
     background-color: #17a2b8;
+    color: #fff;
   }
- 
+}
+
+.payment-plans {
+  margin: 15px 0; // Reduced from 20px
+
+  .payment-plans-title {
+    font-size: 1rem; // Reduced from 1.25rem
+    color: #444;
+    margin-bottom: 10px; // Reduced from 15px
+    font-weight: 500;
+  }
+
+  .plan-buttons {
+    display: flex;
+    gap: 8px; // Reduced from 10px
+    flex-wrap: wrap;
+
+    .plan-btn {
+      background: #f8f9fa;
+      border: 1px solid #ddd;
+      border-radius: 6px; // Reduced from 8px
+      padding: 6px 12px; // Reduced from 8px 16px
+      font-size: 0.85rem; // Reduced from 0.95rem
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: #333;
+
+      &:hover {
+        background: #e9ecef;
+      }
+
+      &.selected {
+        background: #007bff;
+        color: #fff;
+        border-color: #007bff;
+      }
+    }
+  }
+
+  .selected-plan {
+    margin-top: 10px; // Reduced from 15px
+    padding: 8px; // Reduced from 10px
+    background: #f8f9fa;
+    border-radius: 6px; // Reduced from 8px
+
+    .plan-details {
+      margin: 0;
+      font-size: 0.9rem; // Reduced from 1rem
+      color: #555;
+
+      .plan-name {
+        font-weight: 600;
+        color: #333;
+      }
+    }
+  }
+}
+
+.feedback-btn {
+  background: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 50%;
+  width: 32px; // Reduced from 40px
+  height: 32px; // Reduced from 40px
+  font-size: 1rem; // Reduced from 1.2rem
+  cursor: pointer;
+  transition: background 0.3s ease;
+
+  &:hover {
+    background: #e9ecef;
+  }
+}

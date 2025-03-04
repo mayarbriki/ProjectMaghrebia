@@ -1,82 +1,88 @@
 <div class="container">
-    <h2>Product Management</h2>
-    <link rel="stylesheet" href="">
-    <!-- Buttons to switch between Add and Modify -->
-    <div class="text-center mb-3">
-      <button type="button" class="btn btn-outline-primary" (click)="isModifyMode = false">Add Product</button>
-      <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedProduct">Modify Product</button>
-    </div>
-  
-    <!-- Add Product Form -->
-    <div *ngIf="!isModifyMode">
-      <h3>Add New Product</h3>
-      <form (submit)="addProduct(); $event.preventDefault()">
-        <label>Name:</label>
-        <input type="text" [(ngModel)]="newProduct.name" name="name" required />
-  
-        <label>Description:</label>
-        <input type="text" [(ngModel)]="newProduct.description" name="description" required />
-  
-        <label>Category:</label>
-        <select [(ngModel)]="newProduct.category" name="category">
-            <option value="HEALTHCARE">HEALTHCARE</option>
-            <option value="REALESTATE">REALESTATE</option>
-            <option value="VEHICULE">VEHICULE</option>
-        </select>
-  
-        <label>Upload Image:</label>
-        <input type="file" (change)="onFileSelected($event)" />
-  
-        <button type="submit" class="btn btn-primary mt-2">Add Product</button>
-      </form>
-    </div>
-  
-    <!-- Modify Product Form -->
-    <div *ngIf="isModifyMode">
-      <h3>Modify Product</h3>
-      <form (submit)="modifyProduct(); $event.preventDefault()">
-        <label>Name:</label>
-        <input type="text" [(ngModel)]="selectedProduct!.name" name="name" required />
-  
-        <label>Description:</label>
-        <input type="text" [(ngModel)]="selectedProduct!.description" name="description" required />
-  
-        <label>Category:</label>
-        <select [(ngModel)]="selectedProduct!.category" name="category">
+  <h2>Product Management</h2>
+  <!-- Buttons to switch between Add and Modify -->
+  <div class="text-center mb-3">
+    <button type="button" class="btn btn-outline-primary" (click)="isModifyMode = false">Add Product</button>
+    <button class="btn btn-warning" (click)="isModifyMode = true" [disabled]="!selectedProduct">Modify Product</button>
+  </div>
+
+  <!-- Add Product Form -->
+  <div *ngIf="!isModifyMode">
+    <h3>Add New Product</h3>
+    <form (submit)="addProduct(); $event.preventDefault()">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="newProduct.name" name="name" required />
+
+      <label>Description:</label>
+      <input type="text" [(ngModel)]="newProduct.description" name="description" required />
+
+      <label>Price:</label>
+      <input type="number" step="0.01" [(ngModel)]="newProduct.price" name="price" required />
+
+      <label>Category:</label>
+      <select [(ngModel)]="newProduct.category" name="category">
           <option value="HEALTHCARE">HEALTHCARE</option>
           <option value="REALESTATE">REALESTATE</option>
           <option value="VEHICULE">VEHICULE</option>
-        </select>
-  
-        <label>Upload Image:</label>
-        <input type="file" (change)="onFileSelected($event)" />
-  
-        <button type="submit" class="btn btn-warning mt-2">Modify Product</button>
-      </form>
-    </div>
-  
-    <!-- Product List -->
-    <h3>Product List</h3>
-    <table>
-      <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Category</th>
-        <th>Image</th>
-        <th>Actions</th>
-      </tr>
-      <tr *ngFor="let product of products">
-        <td>{{ product.name }}</td>
-        <td>{{ product.description }}</td>
-        <td>{{ product.category }}</td>
-        <td>
-          <img *ngIf="product.fileName" [src]="product.fileName" width="100" />
-        </td>
-        <td>
-          <button (click)="selectProduct(product)">Modify</button>
-          <button (click)="product.idProduct ? deleteProduct(product.idProduct) : null">Delete</button>
-        </td>
-      </tr>
-    </table>
+      </select>
+
+      <label>Upload Image:</label>
+      <input type="file" (change)="onFileSelected($event)" />
+
+      <button type="submit" class="btn btn-primary mt-2">Add Product</button>
+    </form>
   </div>
-  
+
+  <!-- Modify Product Form -->
+  <div *ngIf="isModifyMode">
+    <h3>Modify Product</h3>
+    <form (submit)="modifyProduct(); $event.preventDefault()">
+      <label>Name:</label>
+      <input type="text" [(ngModel)]="selectedProduct!.name" name="name" required />
+
+      <label>Description:</label>
+      <input type="text" [(ngModel)]="selectedProduct!.description" name="description" required />
+
+      <label>Price:</label>
+      <input type="number" step="0.01" [(ngModel)]="selectedProduct!.price" name="price" required />
+
+      <label>Category:</label>
+      <select [(ngModel)]="selectedProduct!.category" name="category">
+        <option value="HEALTHCARE">HEALTHCARE</option>
+        <option value="REALESTATE">REALESTATE</option>
+        <option value="VEHICULE">VEHICULE</option>
+      </select>
+
+      <label>Upload Image:</label>
+      <input type="file" (change)="onFileSelected($event)" />
+
+      <button type="submit" class="btn btn-warning mt-2">Modify Product</button>
+    </form>
+  </div>
+
+  <!-- Product List -->
+  <h3>Product List</h3>
+  <table>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Price</th>
+      <th>Category</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
+    <tr *ngFor="let product of products">
+      <td>{{ product.name }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.price | currency }}</td>
+      <td>{{ product.category }}</td>
+      <td>
+        <img *ngIf="product.fileName" [src]="product.fileName" width="100" />
+      </td>
+      <td>
+        <button (click)="selectProduct(product)">Modify</button>
+        <button (click)="product.idProduct ? deleteProduct(product.idProduct) : null">Delete</button>
+      </td>
+    </tr>
+  </table>
+</div>

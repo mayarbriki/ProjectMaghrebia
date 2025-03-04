@@ -1,3 +1,8 @@
+<!-- Back Button -->
+<button class="btn btn-light back-btn" (click)="goBack()">Back
+  <i class="fa fa-arrow-left"></i> 
+</button>
+
 <div *ngIf="claim" class="view-claim-container">
     <h3>Claim Details</h3>
     <div class="claim-detail">
@@ -14,13 +19,11 @@
         </li>
       </ul>
     </div>
-    
-<!-- Buttons for Edit and Delete -->
-<div class="action-buttons">
-    <button class="btn btn-warning" (click)="editClaim()">Edit</button>
-    <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
-    <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>
-
-  </div>
-</div>
   
+    <!-- Buttons for Edit and Delete -->
+    <div class="action-buttons">
+        <button class="btn btn-warning" (click)="editClaim()">Edit</button>
+        <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
+        <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>
+    </div>
+</div>

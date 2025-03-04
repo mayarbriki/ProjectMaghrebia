@@ -85,4 +85,7 @@ export class ViewClaimComponent implements OnInit {
       }
     );
   }
+  goBack(): void {
+    this.router.navigate(['/admin/claims'], { relativeTo: this.route });
+  }
 }

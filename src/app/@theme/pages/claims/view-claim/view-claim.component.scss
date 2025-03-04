@@ -1,159 +1,182 @@
-.view-claim-container {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 30px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .view-claim-container h3 {
-    text-align: center;
-    margin-bottom: 30px;
-    color: #333;
-    font-size: 1.8em;
-    font-weight: 700;
-  }
-  
-  .claim-detail {
-    background-color: #fff;
-    padding: 25px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  }
-  
-  .claim-detail p {
-    margin: 15px 0;
-    font-size: 1.15em;
-    color: #555;
-  }
-  
-  .claim-detail p strong {
-    font-weight: 700;
-  }
-  
-  .claim-detail ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 20px;
-  }
-  
-  .claim-detail li {
-    margin-bottom: 10px;
-  }
-  
-  .claim-detail a {
-    color: #007bff;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .claim-detail a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-  }
-  
-  .claim-detail .status {
-    padding: 8px 15px;
-    font-weight: 600;
-    border-radius: 5px;
-    color: white;
-  }
-  
-  .claim-detail .status.pending {
-    background-color: #f0ad4e;
-  }
-  
-  .claim-detail .status.approved {
-    background-color: #5bc0de;
-  }
-  
-  .claim-detail .status.rejected {
-    background-color: #d9534f;
-  }
-  
-  .claim-detail .status.in-review {
-    background-color: #0275d8;
-  }
-  
-  .supporting-docs {
-    margin-top: 30px;
-  }
-  
-  .supporting-docs h4 {
-    font-size: 1.3em;
-    margin-bottom: 15px;
-  }
-  
-  .supporting-docs ul {
-    list-style-type: none;
-    padding-left: 0;
-  }
-  
-  .supporting-docs li {
-    margin-bottom: 10px;
-  }
-  
-  .supporting-docs a {
-    color: #28a745;
-    text-decoration: none;
-    font-size: 1.1em;
-    transition: color 0.3s ease;
-  }
-  
-  .supporting-docs a:hover {
-    color: #218838;
-    text-decoration: underline;
-  }
-  
-  .claim-description {
-    margin-top: 30px;
-    font-size: 1.1em;
-    color: #444;
-    line-height: 1.6;
-  }
-  .action-buttons {
-    display: flex;
-    justify-content: center; /* Center buttons horizontally */
-    gap: 20px; /* Space between the buttons */
-    margin-top: 30px;
-  
-    .btn {
-      padding: 10px 20px;
-      font-size: 1.1em;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background-color 0.3s ease;
-      font-weight: bold;
-  
-      &.btn-warning {
-        background-color: #ffc107;
-        color: black;
-  
-        &:hover {
-          background-color: #e0a800;
-        }
-      }
-  
-      &.btn-danger {
-        background-color: #dc3545;
-        color: white;
-  
-        &:hover {
-          background-color: #c82333;
-        }
-      }
-      &.btn-info {
-        background-color: #17a2b8;
-        color: #fff;
+.back-btn {
+  display: flex;
+  align-items: center;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  font-size: 1.1em;
+  cursor: pointer;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
 
-        &:hover {
-            background-color: #138496;
-        }
+  /* Hover effect */
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  i {
+    margin-right: 10px;
+    font-size: 1.2em;
+  }
+}
+
+.view-claim-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 30px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.view-claim-container h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #333;
+  font-size: 1.8em;
+  font-weight: 700;
+}
+
+.claim-detail {
+  background-color: #fff;
+  padding: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.claim-detail p {
+  margin: 15px 0;
+  font-size: 1.15em;
+  color: #555;
+}
+
+.claim-detail p strong {
+  font-weight: 700;
+}
+
+.claim-detail ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 20px;
+}
+
+.claim-detail li {
+  margin-bottom: 10px;
+}
+
+.claim-detail a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.claim-detail a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+.claim-detail .status {
+  padding: 8px 15px;
+  font-weight: 600;
+  border-radius: 5px;
+  color: white;
+}
+
+.claim-detail .status.pending {
+  background-color: #f0ad4e;
+}
+
+.claim-detail .status.approved {
+  background-color: #5bc0de;
+}
+
+.claim-detail .status.rejected {
+  background-color: #d9534f;
+}
+
+.claim-detail .status.in-review {
+  background-color: #0275d8;
+}
+
+.supporting-docs {
+  margin-top: 30px;
+}
+
+.supporting-docs h4 {
+  font-size: 1.3em;
+  margin-bottom: 15px;
+}
+
+.supporting-docs ul {
+  list-style-type: none;
+  padding-left: 0;
+}
+
+.supporting-docs li {
+  margin-bottom: 10px;
+}
+
+.supporting-docs a {
+  color: #28a745;
+  text-decoration: none;
+  font-size: 1.1em;
+  transition: color 0.3s ease;
+}
+
+.supporting-docs a:hover {
+  color: #218838;
+  text-decoration: underline;
+}
+
+.claim-description {
+  margin-top: 30px;
+  font-size: 1.1em;
+  color: #444;
+  line-height: 1.6;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  gap: 20px; /* Space between the buttons */
+  margin-top: 30px;
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 1.1em;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+
+    &.btn-warning {
+      background-color: #ffc107;
+      color: black;
+
+      &:hover {
+        background-color: #e0a800;
+      }
     }
+
+    &.btn-danger {
+      background-color: #dc3545;
+      color: white;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+    &.btn-info {
+      background-color: #17a2b8;
+      color: #fff;
+
+      &:hover {
+        background-color: #138496;
+      }
     }
   }
-  
-  
+}

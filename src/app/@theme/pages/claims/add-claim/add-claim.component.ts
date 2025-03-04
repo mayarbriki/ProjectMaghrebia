@@ -84,4 +84,8 @@ export class AddClaimComponent implements OnInit {
   onCancel(): void {
     this.router.navigate(['/admin/claims']);    
   }
+  goBack(): void {
+    this.router.navigate(['/admin/claims']);
+  }
+  
 }

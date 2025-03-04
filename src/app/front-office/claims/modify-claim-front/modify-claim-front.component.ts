@@ -102,4 +102,7 @@ export class ModifyClaimComponentFront implements OnInit {
       this.temporaryOtherClaimReason = '';
     }
   }
+  goBack(): void {
+    this.router.navigate(['/admin/claims'], { relativeTo: this.route });
+  }
 }

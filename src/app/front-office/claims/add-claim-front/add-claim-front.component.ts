@@ -86,4 +86,6 @@ export class AddClaimComponentFront implements OnInit {
   onCancel(): void {
     this.router.navigate(['/claims']);    
   }
+
+  
 }

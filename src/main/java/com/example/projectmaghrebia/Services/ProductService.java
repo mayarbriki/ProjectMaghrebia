@@ -52,4 +52,20 @@ public class ProductService implements IProductService {
         productRepository.deleteById(id);
     }
 
+    public Product incrementViews(Long id) {
+        return productRepository.findById(id)
+                .map(product -> {
+                    Long currentViews = product.getViews() != null ? product.getViews() : 0L;
+                    product.setViews(currentViews + 1);
+                    return productRepository.save(product);
+                })
+                .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
+    }
+
+    public Product getMostViewedProduct() {
+        // Add null check and optional handling
+        return productRepository.findTopByOrderByViewsDesc();
+
+    }
+
 }

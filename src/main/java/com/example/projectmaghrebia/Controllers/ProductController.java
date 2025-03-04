@@ -4,6 +4,7 @@ import com.example.projectmaghrebia.Entities.Category;
 import com.example.projectmaghrebia.Entities.Product;
 import com.example.projectmaghrebia.Services.FileStorageService;
 import com.example.projectmaghrebia.Services.IProductService;
+import com.example.projectmaghrebia.Services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,28 +25,34 @@ public class ProductController {
     @Autowired
     private IProductService productService;
     @Autowired
+    private ProductService ProductService;
+    @Autowired
     private FileStorageService fileStorageService;
+
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
-
-        // Base URL for serving images
         String baseUrl = "http://localhost:6060/upload-dir/";
-
-        // Update each product to have a full image URL
         products.forEach(product -> {
             if (product.getFileName() != null && !product.getFileName().isEmpty()) {
                 product.setFileName(baseUrl + product.getFileName());
             }
         });
-
         return ResponseEntity.ok().body(products);
     }
 
-
-    @GetMapping("/{id}")
-    public Optional<Product> getProductById(@PathVariable Long id) {
-        return productService.getProductById(id);
+    @GetMapping("/products/{id}")
+    public ResponseEntity<Product> getProductById(@PathVariable Long id) {
+        Optional<Product> productOptional = productService.getProductById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            String baseUrl = "http://localhost:6060/upload-dir/";
+            if (product.getFileName() != null && !product.getFileName().isEmpty()) {
+                product.setFileName(baseUrl + product.getFileName());
+            }
+            return ResponseEntity.ok(product);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping(value = "/products", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -58,22 +65,17 @@ public class ProductController {
             }
     )
     public ResponseEntity<Product> createProduct(
-            @Parameter(description = "Image file for the product")
             @RequestParam(value = "file", required = false) MultipartFile file,
-
-            @Parameter(description = "Product category", required = true)
             @RequestParam("category") Category category,
-
-            @Parameter(description = "Product description", required = true)
             @RequestParam("description") String description,
-
-            @Parameter(description = "Product name", required = true)
-            @RequestParam("name") String name) {
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price) {  // Added price parameter
 
         Product product = new Product();
         product.setCategory(category);
         product.setDescription(description);
         product.setName(name);
+        product.setPrice(price);  // Set price
 
         if (file != null && !file.isEmpty()) {
             String fileName = fileStorageService.store(file);
@@ -94,25 +96,18 @@ public class ProductController {
             }
     )
     public ResponseEntity<Product> updateProduct(
-            @Parameter(description = "ID of the product to update", required = true)
             @PathVariable Long id,
-
-            @Parameter(description = "Updated image file for the product")
             @RequestParam(value = "file", required = false) MultipartFile file,
-
-            @Parameter(description = "Updated product category", required = true)
             @RequestParam("category") Category category,
-
-            @Parameter(description = "Updated product description", required = true)
             @RequestParam("description") String description,
-
-            @Parameter(description = "Updated product name", required = true)
-            @RequestParam("name") String name) {
+            @RequestParam("name") String name,
+            @RequestParam("price") Double price) {  // Added price parameter
 
         Product productDetails = new Product();
         productDetails.setCategory(category);
         productDetails.setDescription(description);
         productDetails.setName(name);
+        productDetails.setPrice(price);  // Set price
 
         if (file != null && !file.isEmpty()) {
             String fileName = fileStorageService.store(file);
@@ -126,4 +121,23 @@ public class ProductController {
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
+    @PostMapping("/products/{id}/increment-views")
+    public ResponseEntity<Product> incrementViews(@PathVariable Long id) {
+        try {
+            Product updatedProduct = ProductService.incrementViews(id);
+            return ResponseEntity.ok(updatedProduct);
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/products/most-viewed")
+    public ResponseEntity<Product> getMostViewedProduct() {
+        Product mostViewedProduct = ProductService.getMostViewedProduct();
+        if (mostViewedProduct != null) {
+            return ResponseEntity.ok(mostViewedProduct);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

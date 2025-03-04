@@ -1,4 +1,4 @@
-/*package com.example.projectmaghrebia.Configurations;
+package com.example.projectmaghrebia.Configurations;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,5 +57,5 @@ public class SecurityConfig {
         source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
-}*/
+}
 

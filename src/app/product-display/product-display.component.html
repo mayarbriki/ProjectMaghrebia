@@ -11,7 +11,11 @@
         class="product-card"
         *ngFor="let product of products; let i = index"
         [class.active]="isCurrentlyVisible(i)"
-      >
+      ><button 
+    (click)="toggleBookmark(product)"
+    [class.bookmarked]="isBookmarked(product.idProduct)">
+    {{ isBookmarked(product.idProduct) ? 'Remove Bookmark' : 'Bookmark' }}
+  </button>
         <div class="trending-badge" *ngIf="isTrendingProduct(product)">
           Trending Product
         </div>

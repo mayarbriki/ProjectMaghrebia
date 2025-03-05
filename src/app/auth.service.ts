@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:8081/api/users'; // Backend API base URL
+  private apiUrl = 'http://localhost:8082/api/users'; // Backend API base URL
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
 
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
@@ -31,7 +31,7 @@ export class AuthService {
       formData.append("file", file);
     }
   
-    return this.http.post("http://localhost:8081/api/users/register", formData);
+    return this.http.post("http://localhost:8082/api/users/register", formData);
   }
 
   // Login user

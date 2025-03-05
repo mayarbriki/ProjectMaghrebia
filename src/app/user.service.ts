@@ -19,7 +19,7 @@ export interface User {
   providedIn: 'root'
 })
 export class UserService {
-  private baseUrl = 'http://localhost:8080/api/users'; // Spring Boot backend URL
+  private baseUrl = 'http://localhost:8082/api/users'; // Spring Boot backend URL
 
   constructor(private http: HttpClient) {}
 

@@ -130,4 +130,5 @@ export class ProductsComponent implements OnInit {
     this.isModifyMode = false;
     this.selectedProduct = null;
   }
+  
 }

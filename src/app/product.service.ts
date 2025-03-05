@@ -18,6 +18,7 @@ export interface Product {
 })
 export class ProductService {
   private baseUrl = 'http://localhost:6060/api/products';
+  private userUrl = 'http://localhost:8082/api/users'; // Add user API base URL
 
   constructor(private http: HttpClient) {}
 
@@ -45,6 +46,25 @@ export class ProductService {
 
 getMostViewedProduct(): Observable<Product> {
     return this.http.get<Product>(`${this.baseUrl}/most-viewed`);
+}
+getBookmarkedProducts(userId: number): Observable<number[]> {
+  return this.http.get<number[]>(`${this.userUrl}/${userId}/bookmarks`);
+}
+
+// Bookmark products
+bookmarkProducts(userId: number, productIds: number[]): Observable<string> {
+  return this.http.post<string>(
+    `${this.userUrl}/${userId}/bookmark`,
+    productIds
+  );
+}
+
+// Unbookmark a product
+unbookmarkProduct(userId: number, productId: number): Observable<void> {
+  return this.http.post<void>(
+    `${this.userUrl}/${userId}/unbookmark`,
+    { productId }
+  );
 }
   
 }

@@ -2,6 +2,7 @@ package com.example.projectmaghrebia.Controllers;
 
 import com.example.projectmaghrebia.Entities.Category;
 import com.example.projectmaghrebia.Entities.Product;
+import com.example.projectmaghrebia.Repositories.ProductRepository;
 import com.example.projectmaghrebia.Services.FileStorageService;
 import com.example.projectmaghrebia.Services.IProductService;
 import com.example.projectmaghrebia.Services.ProductService;
@@ -21,7 +22,8 @@ import java.util.Optional;
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:4200")
 public class ProductController {
-
+    @Autowired
+    private ProductRepository productRepository;
     @Autowired
     private IProductService productService;
     @Autowired
@@ -139,5 +141,10 @@ public class ProductController {
         }
         return ResponseEntity.notFound().build();
     }
-
+    // Optional: Bulk retrieval for multiple product IDs
+    @PostMapping("/bulk")
+    public ResponseEntity<List<Product>> getProductsByIds(@RequestBody List<Long> productIds) {
+        List<Product> products = productRepository.findAllById(productIds);
+        return ResponseEntity.ok(products);
+    }
 }

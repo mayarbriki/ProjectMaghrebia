@@ -64,4 +64,5 @@ public class Product {
                 })
                 .orElseGet(ArrayList::new); // Empty list if price is null or <= 0
     }
+
 }

@@ -1,8 +1,8 @@
 <div class="modify-claim-container">
     <!-- Back Button with Arrow only -->
-    <button type="button" class="btn btn-light back-btn" (click)="onBack()">
-        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" class="bi bi-arrow-left" viewBox="0 0 16 16">
-            <path d="M12.854 7.854a.5.5 0 0 1 0-.708L9.707 4.5H14a.5.5 0 0 1 0-1H9.707l3.147-3.146a.5.5 0 1 1-.708-.708l-4 4a.5.5 0 0 1 0 .708l4 4a.5.5 0 0 1 .708-.708z"/>
+    <button class="back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+            <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
         </svg>
     </button>
     
@@ -14,31 +14,43 @@
         <div class="form-group">
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" class="form-control" required [(ngModel)]="claim.fullName" name="fullName" #fullName="ngModel">
+            <div class="error-message" *ngIf="fullName.invalid && fullName.touched">
+                Full Name is required.
+            </div>
         </div>
 
         <!-- Claim Name -->
         <div class="form-group">
             <label for="claimName">Claim Name</label>
             <input type="text" id="claimName" class="form-control" required [(ngModel)]="claim.claimName" name="claimName" #claimName="ngModel">
+            <div class="error-message" *ngIf="claimName.invalid && claimName.touched">
+                Claim Name is required.
+            </div>
         </div>
 
         <!-- Submission Date -->
         <div class="form-group">
             <label for="submissionDate">Submission Date</label>
             <input type="date" id="submissionDate" class="form-control" required [(ngModel)]="claim.submissionDate" name="submissionDate" #submissionDate="ngModel">
+            <div class="error-message" *ngIf="submissionDate.invalid && submissionDate.touched">
+                Submission Date is required.
+            </div>
         </div>
-
 
         <!-- Claim Reason -->
         <div class="form-group">
             <label for="claimReason">Claim Reason</label>
-            <select id="claimReason" class="form-control" required [(ngModel)]="claim.claimReason" name="claimReason" (change)="checkClaimReason()">
+            <select id="claimReason" class="form-control" required [(ngModel)]="claim.claimReason" name="claimReason" #claimReason="ngModel" (change)="checkClaimReason()">
+                <option value="" disabled selected>Select a reason</option>
                 <option value="Accident">Accident</option>
                 <option value="Natural Disaster">Natural Disaster</option>
                 <option value="Property Damage">Property Damage</option>
                 <option value="Medical Expenses">Medical Expenses</option>
                 <option value="Other">Other</option>
             </select>
+            <div class="error-message" *ngIf="claimReason.invalid && claimReason.touched">
+                Please select a claim reason.
+            </div>
         </div>
 
         <!-- Other Claim Reason -->
@@ -50,7 +62,10 @@
         <!-- Description -->
         <div class="form-group">
             <label for="description">Claim Description</label>
-            <textarea id="description" class="form-control" required [(ngModel)]="claim.description" name="description"></textarea>
+            <textarea id="description" class="form-control" required [(ngModel)]="claim.description" name="description" #description="ngModel"></textarea>
+            <div class="error-message" *ngIf="description.invalid && description.touched">
+                Claim Description is required.
+            </div>
         </div>
 
         <!-- Supporting Documents -->
@@ -73,3 +88,11 @@
     </form>
 </div>
 <app-footer-front></app-footer-front>
+
+<style>
+    .error-message {
+        color: red;
+        font-size: 0.875rem;
+        margin-top: 5px;
+    }
+</style>

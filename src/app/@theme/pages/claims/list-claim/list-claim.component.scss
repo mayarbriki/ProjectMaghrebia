@@ -7,6 +7,51 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+  // Style spécifique pour la liste déroulante du statut des réclamations
+td select {
+    padding: 8px 12px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1em;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+
+    &:hover {
+        border-color: #007bff;
+    }
+
+    &:focus {
+        outline: none;
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+}
+
+// Changer la couleur en fonction du statut
+td select {
+    &.PENDING {
+        background-color: #ffc107;
+        color: #000;
+    }
+
+    &.APPROVED {
+        background-color: #28a745;
+        color: white;
+    }
+
+    &.REJECTED {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    &.IN_REVIEW {
+        background-color: #17a2b8;
+        color: white;
+    }
+}
+
   .header-container {
       display: flex;
       flex-direction: column; 

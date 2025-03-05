@@ -57,18 +57,48 @@ export class AddClaimComponentFront implements OnInit {
   onSubmit(): void {
     const formData = new FormData();
 
-    // Ensure submissionDate is a valid Date object
-    const submissionDate = new Date(this.claim.submissionDate); 
+    // Validation de la date de soumission
+    const submissionDate = new Date(this.claim.submissionDate);
     if (!(submissionDate instanceof Date) || isNaN(submissionDate.getTime())) {
       console.error("Invalid submissionDate");
       alert("Please provide a valid submission date.");
       return; 
     }
 
+    // Validation du nom complet
+    if (!this.claim.fullName || this.claim.fullName.trim().length === 0) {
+      alert("Full Name is required.");
+      return;
+    }
+
+    // Validation du nom de la réclamation
+    if (!this.claim.claimName || this.claim.claimName.trim().length === 0) {
+      alert("Claim Name is required.");
+      return;
+    }
+
+    // Validation de la raison de la réclamation
+    if (!this.claim.claimReason) {
+      alert("Claim Reason is required.");
+      return;
+    }
+
+    // Validation de la description
+    if (!this.claim.description || this.claim.description.trim().length === 0) {
+      alert("Claim Description is required.");
+      return;
+    }
+
+    // Si l'utilisateur a choisi 'Other' comme raison, vérifier la saisie de la raison personnalisée
+    if (this.claim.claimReason === 'Other' && !this.temporaryOtherClaimReason) {
+      alert("Please specify the other reason.");
+      return;
+    }
+
     formData.append("fullName", this.claim.fullName);
     formData.append("claimName", this.claim.claimName);
     formData.append("submissionDate", submissionDate.toISOString());  
-    formData.append("statusClaim", this.claim.statusClaim); // Statut est toujours PENDING au début
+    formData.append("statusClaim", this.claim.statusClaim);
     formData.append("claimReason", this.claim.claimReason);
     formData.append("description", this.claim.description);
 
@@ -80,12 +110,13 @@ export class AddClaimComponentFront implements OnInit {
     this.claimService.createClaim(formData).subscribe(response => {
       console.log('Claim created successfully', response);
       alert('Claim added successfully!');
-      this.router.navigate(['/claims']); // ✅ Redirection après succès
+      this.router.navigate(['/claims']);
     }, error => {
       console.error('Error creating claim', error);
       alert('Failed to create claim.');
     });
-  }
+}
+
 
   onCancel(): void {
     this.claim = {
@@ -103,7 +134,7 @@ export class AddClaimComponentFront implements OnInit {
     this.temporaryOtherClaimReason = '';
   }
 
-  onBack(): void {
+  goBack() : void {
     this.router.navigate(['/claims']);
   }
 }

@@ -6,6 +6,27 @@
     border-radius: 10px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    button.back {
+      background: none; /* No background color */
+      border: none; /* Remove the default border */
+      padding: 0; /* No padding */
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: flex-start; /* Align the icons to the left */
+    }
+    
+    button.back svg {
+      width: 24px; /* Adjust size of the icon */
+      height: 24px;
+      fill: currentColor; /* Use the current text color for the icon */
+      color: #34495e; /* Dark color for the icon */
+      transition: color 0.3s ease;
+    }
+    
+    button.back:hover svg {
+      color: #2980b9; /* Change icon color on hover */
+    }
     
     h3 {
       text-align: center;
@@ -55,6 +76,12 @@
         min-height: 120px;
       }
   
+      .file-upload-container {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Ensures that the button and input are on the same line */
+      }
+  
       .file-input {
         cursor: pointer;
         border: 2px dashed #007bff;
@@ -64,7 +91,7 @@
         text-align: center;
         font-size: 1.1em;
         color: #007bff;
-        
+  
         &:hover {
           border-color: #0056b3;
           background-color: #e9ecef;
@@ -73,8 +100,8 @@
   
       .button-group {
         display: flex;
-        flex-direction: column;
-        gap: 15px;
+        justify-content: center; /* Centers the buttons */
+        gap: 15px; /* Ensures spacing between the buttons */
       }
   
       button {
@@ -84,7 +111,7 @@
         cursor: pointer;
         font-size: 1.1em;
         transition: background-color 0.3s ease;
-        width: 100%;
+        width: auto; /* Ensures buttons are not stretched */
         font-weight: 600;
   
         &.btn-primary {
@@ -112,4 +139,3 @@
       }
     }
   }
-  

@@ -40,8 +40,15 @@
                 <td>{{ claim.fullName }}</td>
                 <td>{{ claim.claimName }}</td>
                 <td>{{ claim.submissionDate | date:'yyyy-MM-dd' }}</td>
-                <td>{{ claim.statusClaim }}</td>
-                <td class="actions">
+                <td>
+                    <select [(ngModel)]="claim.statusClaim" (change)="changeStatus(claim, claim.statusClaim)" class="form-control">
+                        <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                    </select>
+                    
+                </td>
+                
+                              
+                 <td class="actions">
                     <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                             <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>

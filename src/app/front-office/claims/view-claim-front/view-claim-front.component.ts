@@ -7,6 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx'; // Importation de la bibliothèque XLSX
 
 @Component({
   selector: 'app-view-claim-front',
@@ -31,6 +32,8 @@ export class ViewClaimComponentFront implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
+    claims: Claim[] = [];
+
 
   constructor(
     private claimService: ClaimService,
@@ -44,6 +47,8 @@ export class ViewClaimComponentFront implements OnInit {
       this.claimService.getClaimById(claimId).subscribe(
         (data) => {
           this.claim = data;
+          console.log('Claim data:', this.claim); // Afficher les données de la réclamation
+          console.log('Supporting documents:', this.claim.supportingDocuments); // Afficher les documents de support
         },
         (error) => {
           console.error('Error fetching claim details', error);
@@ -51,21 +56,35 @@ export class ViewClaimComponentFront implements OnInit {
       );
     }
   }
+  
 
-  editClaim(): void {
-    this.router.navigate([`/admin/claims/EditClaim/${this.claim.idClaim}`]);
+  isImage(url: string): boolean {
+    // Vérifier si l'URL est définie et si elle correspond à une image (par extension)
+    if (!url) return false; // Assurez-vous que l'URL existe
+    return /\.(jpg|jpeg|png|gif|bmp|webp)$/i.test(url);
+  }
+  
+  
+  editClaim(id: string): void {
+    this.router.navigate([`/claimsFront/EditClaim/${id}`]);
   }
 
-  deleteClaim(): void {
+  deleteClaim(id: string): void {
+    if (!id) {
+      console.error('Invalid claim ID');
+      return;
+    }
+  
     if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(this.claim.idClaim).subscribe(
-        () => {
-          this.router.navigate(['/admin/claims']);
-        },
-        (error) => {
-          console.error('Error deleting claim:', error);
-        }
-      );
+      this.claimService.deleteClaim(id).subscribe(() => {
+        // Filter out the deleted claim from the list
+        this.claims = this.claims.filter(claim => claim.idClaim !== id);
+  
+        // Navigate to the claims list (you can adjust the route path as needed)
+        this.router.navigate(['/claims']); // Example route
+      }, (error) => {
+        console.error('Error deleting claim:', error);
+      });
     }
   }
 
@@ -90,7 +109,7 @@ export class ViewClaimComponentFront implements OnInit {
     );
   }
 
-  // New method to download the claim details as PDF
+  // Nouvelle méthode pour télécharger les détails de la réclamation en PDF
   downloadPDF(): void {
     const doc = new jsPDF();
   
@@ -182,6 +201,86 @@ export class ViewClaimComponentFront implements OnInit {
     doc.save('claim-details.pdf');
   }
     
+  downloadExcel(): void {
+    // Formater la date de soumission pour s'assurer qu'elle est bien une Date
+    const submissionDate = this.claim.submissionDate instanceof Date
+      ? this.claim.submissionDate
+      : new Date(this.claim.submissionDate);
   
+    // Créer un tableau d'objets avec les informations de la réclamation
+    const claimData = [
+      { label: 'Full Name', value: this.claim.fullName },
+      { label: 'Claim Name', value: this.claim.claimName },
+      { label: 'Submission Date', value: submissionDate.toLocaleDateString() },
+      { label: 'Status', value: this.claim.statusClaim },
+      { label: 'Reason', value: this.claim.claimReason },
+      { label: 'Description', value: this.claim.description }
+    ];
   
+    // Ajouter une section pour les documents de soutien
+    const documents = this.claim.supportingDocuments.map((file, index) => ({
+      label: `Supporting Document ${index + 1}`,
+      value: file.url
+    }));
+  
+    // Combiner les données dans un seul tableau
+    const finalData = [...claimData, ...documents];
+  
+    // Créer une feuille Excel à partir des données
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(finalData.map(item => ({
+      'Field': item.label,
+      'Value': item.value
+    })));
+  
+    // Ajouter un titre à la feuille Excel
+    const title = 'Claim Details Report';
+    ws['!merges'] = [
+      { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } } // Fusionner les cellules de la première ligne
+    ];
+    ws['A1'] = { v: title, t: 's' }; // Ajouter le titre dans la première cellule
+    ws['A1'].s = { 
+      font: { bold: true, sz: 18, color: { rgb: 'FFFFFF' } }, // Titre en gras, taille 18, texte blanc
+      alignment: { horizontal: 'center', vertical: 'center' }, // Aligné au centre
+      fill: { fgColor: { rgb: '4CAF50' } } // Fond vert
+    };
+  
+    // Appliquer des styles aux autres cellules (ex: fond coloré pour les en-têtes)
+    const headerStyle = { 
+      font: { bold: true, sz: 12, color: { rgb: '000000' } }, // Textes des en-têtes en gras
+      fill: { fgColor: { rgb: 'D3D3D3' } }, // Fond gris clair pour les en-têtes
+      alignment: { horizontal: 'center' } // Aligné au centre
+    };
+  
+    // Définir les en-têtes de la feuille Excel
+    ws['A2'] = { v: 'Field', t: 's', s: headerStyle };
+    ws['B2'] = { v: 'Value', t: 's', s: headerStyle };
+  
+    // Appliquer des styles aux lignes suivantes
+    finalData.forEach((item, index) => {
+      const rowIndex = index + 3; // Commencer à la ligne 3 (après le titre et les en-têtes)
+      
+      // Style pour les données de la réclamation
+      const rowStyle = { 
+        font: { sz: 10, color: { rgb: '000000' } }, // Taille de police 10 et texte noir
+        alignment: { horizontal: 'left' } // Aligné à gauche
+      };
+  
+      // Appliquer les valeurs de la réclamation aux cellules
+      ws[`A${rowIndex}`] = { v: item.label, t: 's', s: rowStyle };
+      ws[`B${rowIndex}`] = { v: item.value, t: 's', s: rowStyle };
+    });
+  
+    // Créer un classeur Excel
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Claim Details');
+    
+    // Télécharger le fichier Excel
+    XLSX.writeFile(wb, 'claim-details.xlsx');
+  }
+  
+
+  goBack() : void {
+    this.router.navigate(['/claims']);
+  }
+
 }

@@ -1,41 +1,35 @@
 <!-- Back Button -->
-<button class="btn btn-light back-btn" (click)="goBack()">Back
-    <i class="fa fa-arrow-left"></i> 
-  </button>
+
   
 <div class="modify-claim-container">
+    <button class="back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+          <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+        </svg>
+      </button>
     <h3>Modify Claim</h3>
-    <form (ngSubmit)="onUpdate()" #modifyClaimForm="ngForm" class="p-4 border rounded shadow">
-
+    <form (ngSubmit)="onUpdate()" #modifyClaimForm="ngForm" class="claim-form">
         <!-- Full Name -->
         <div class="form-group">
-            <label for="fullName" class="font-weight-bold">Full Name</label>
-            <input type="text" id="fullName" class="form-control" required [(ngModel)]="claim.fullName" name="fullName">
+            <label for="fullName">Full Name</label>
+            <input type="text" id="fullName" class="form-control" required [(ngModel)]="claim.fullName" name="fullName" #fullName="ngModel">
         </div>
 
         <!-- Claim Name -->
         <div class="form-group">
-            <label for="claimName" class="font-weight-bold">Claim Name</label>
-            <input type="text" id="claimName" class="form-control" required [(ngModel)]="claim.claimName" name="claimName">
+            <label for="claimName">Claim Name</label>
+            <input type="text" id="claimName" class="form-control" required [(ngModel)]="claim.claimName" name="claimName" #claimName="ngModel">
         </div>
 
         <!-- Submission Date -->
         <div class="form-group">
-            <label for="submissionDate" class="font-weight-bold">Submission Date</label>
-            <input type="date" id="submissionDate" class="form-control" required [(ngModel)]="claim.submissionDate" name="submissionDate">
-        </div>
-
-        <!-- Status Claim -->
-        <div class="form-group">
-            <label for="statusClaim" class="font-weight-bold">Status Claim</label>
-            <select id="statusClaim" class="form-control" required [(ngModel)]="claim.statusClaim" name="statusClaim">
-                <option *ngFor="let status of statusClaims" [value]="status">{{ status }}</option>
-            </select>
+            <label for="submissionDate">Submission Date</label>
+            <input type="date" id="submissionDate" class="form-control" required [(ngModel)]="claim.submissionDate" name="submissionDate" #submissionDate="ngModel">
         </div>
 
         <!-- Claim Reason -->
         <div class="form-group">
-            <label for="claimReason" class="font-weight-bold">Claim Reason</label>
+            <label for="claimReason">Claim Reason</label>
             <select id="claimReason" class="form-control" required [(ngModel)]="claim.claimReason" name="claimReason" (change)="checkClaimReason()">
                 <option value="Accident">Accident</option>
                 <option value="Natural Disaster">Natural Disaster</option>
@@ -47,26 +41,32 @@
 
         <!-- Other Claim Reason -->
         <div class="form-group" *ngIf="claim.claimReason === 'Other'">
-            <label for="otherClaimReason" class="font-weight-bold">Specify Other Reason</label>
+            <label for="otherClaimReason">Specify Other Reason</label>
             <input type="text" id="otherClaimReason" class="form-control" [(ngModel)]="temporaryOtherClaimReason" name="otherClaimReason">
         </div>
 
         <!-- Description -->
         <div class="form-group">
-            <label for="description" class="font-weight-bold">Description</label>
+            <label for="description">Claim Description</label>
             <textarea id="description" class="form-control" required [(ngModel)]="claim.description" name="description"></textarea>
         </div>
 
         <!-- Supporting Documents -->
         <div class="form-group">
-            <label class="font-weight-bold">Supporting Documents</label>
-            <input type="file" id="file-upload" class="form-control file-input" multiple (change)="onFileSelected($event)">
+            <label for="file-upload">Supporting Documents</label>
+        </div>
+        
+        <!-- Supporting Documents -->
+        <div class="form-group file-upload-container">
+            <input type="text" id="file-name" class="form-control" [value]="fileName" readonly>
+            <input type="file" id="file-upload" class="form-control file-input" (change)="onFileSelected($event)" #fileInput style="display:none;">
+            <button type="button" class="btn btn-secondary" (click)="fileInput.click()">Upload</button>
         </div>
 
         <!-- Buttons -->
         <div class="button-group">
-            <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!modifyClaimForm.form.valid">Update Claim</button>
-            <button type="button" class="btn btn-secondary mt-3 w-100" (click)="onCancel()">Cancel</button>
+            <button type="submit" class="btn btn-primary" [disabled]="!modifyClaimForm.form.valid">Update Claim</button>
+            <button type="button" class="btn btn-secondary" (click)="onCancel()">Cancel</button>
         </div>
     </form>
 </div>

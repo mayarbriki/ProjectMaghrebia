@@ -66,4 +66,8 @@ export class ViewAssessmentComponentFront implements OnInit {
       );
     }
   }
+
+  goBack() : void {
+    this.router.navigate(['/claims']);
+  }
 }

@@ -1,19 +1,37 @@
 .add-claim-container {
-  max-width: 800px;
-  margin: 120px auto;
-  padding: 30px;
-  background-color: #e7f0f7;
-  border-radius: 15px;
+  max-width: 600px;
+  margin: 160px auto; /* Less margin for a more centered look */
+  padding: 60px;
+  background-color: white; /* White background */
+  border-radius: 12px;
   font-family: 'Roboto', sans-serif;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
-  padding-top: 80px;
-  padding-bottom: 60px;
-  margin-bottom: 40px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow to lift the form */
+}
+button.back {
+  background: none; /* No background color */
+  border: none; /* Remove the default border */
+  padding: 0; /* No padding */
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start; /* Align the icons to the left */
+}
+
+button.back svg {
+  width: 24px; /* Adjust size of the icon */
+  height: 24px;
+  fill: currentColor; /* Use the current text color for the icon */
+  color: #34495e; /* Dark color for the icon */
+  transition: color 0.3s ease;
+}
+
+button.back:hover svg {
+  color: #2980b9; /* Change icon color on hover */
 }
 
 h3 {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
   font-size: 3em;
   font-weight: 600;
   color: black;
@@ -21,27 +39,26 @@ h3 {
 
 form {
   background-color: #fff;
-  padding: 30px;
+  padding: 40px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid black; /* Black border around the form */
 }
 
 label {
   font-weight: 600;
   color: #34495e;
-  font-size: 1.2em;
-  margin-bottom: 12px;
+  font-size: 1.1em;
+  margin-bottom: 8px;
 }
 
 input[type="text"], input[type="date"], select, textarea {
   width: 100%;
-  padding: 14px;
-  margin-bottom: 25px;
-  border: 2px solid #ddd;
+  padding: 12px;
+  margin-bottom: 18px;
+  border: 2px solid #34495e; /* Black border */
   border-radius: 8px;
-  font-size: 1.1em;
-  box-sizing: border-box;
-  background-color: #f9f9f9;
+  font-size: 1em;
+  background-color: #f7f7f7;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
@@ -55,26 +72,27 @@ textarea {
   min-height: 120px;
 }
 
-/* Container for file input and button */
 .file-upload-container {
   display: flex;
   align-items: center;
-  gap: 15px; /* Space between input and button */
+  gap: 0; /* No gap between input and button */
 }
 
 .file-upload-container input[type="text"] {
   flex-grow: 1;
+  padding-right: 10px; /* Optional: Space for the file input button */
 }
 
 .file-input {
   cursor: pointer;
-  padding: 12px;
+  padding: 12px 20px;
   border: 2px dashed #2980b9;
   background-color: #fafafa;
-  font-size: 1.1em;
+  font-size: 1em;
   color: #2980b9;
-  transition: 0.3s;
   text-align: center;
+  transition: 0.3s;
+  width: auto; /* Set width to auto to avoid stretching */
 }
 
 .file-input:hover {
@@ -90,22 +108,25 @@ textarea {
 
 button {
   width: 48%;
-  padding: 14px 20px;
+  padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1em;
   font-weight: 600;
-  transition: background-color 0.3s ease;
   border: none;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Primary Button - Custom Dark Background with White Text */
 button.btn-primary {
-  background-color: #2980b9;
+  background-color: blue;
   color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button.btn-primary:hover {
-  background-color: #1f6f8b;
+  background-color: #1f3a46;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
 button.btn-primary:disabled {
@@ -113,11 +134,49 @@ button.btn-primary:disabled {
   cursor: not-allowed;
 }
 
+/* Secondary Button - Custom Gray with White Text */
 button.btn-secondary {
-  background-color: #95a5a6;
+  background-color: #7f8c8d;
   color: #fff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button.btn-secondary:hover {
+  background-color: #95a5a6;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+.upload-btn {
+  margin-left: 10px; /* Adds space between input and button */
+  padding: 12px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  cursor: pointer;
   background-color: #7f8c8d;
+  color: white;
+  border: none;
+}
+
+.upload-btn:hover {
+  background-color: #95a5a6;
+}
+
+/* Error messages */
+.error-message {
+  color: #e74c3c;
+  font-size: 0.9em;
+  margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+  .add-claim-container {
+    max-width: 90%; /* Make the form container more adaptable on smaller screens */
+    margin: 50px auto;
+  }
+
+  button {
+    width: 100%; /* Full width for buttons on mobile */
+  }
+  
+
+  
 }

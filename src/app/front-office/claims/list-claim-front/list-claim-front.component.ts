@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
@@ -13,7 +14,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
   templateUrl: './list-claim-front.component.html',
   styleUrls: ['./list-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, NgxPaginationModule]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, NgxPaginationModule,ChatbotComponent]
 })
 export class ListClaimComponentFront implements OnInit {
   claims: Claim[] = [];
@@ -22,6 +23,7 @@ export class ListClaimComponentFront implements OnInit {
   selectedSort: string = 'id';
   page: number = 1; // Variable pour la page actuelle
   pageSize: number = 3; // Nombre d'éléments par page
+  showStatistics: boolean = false;
 
   constructor(private claimService: ClaimService, private router: Router) {}
 
@@ -40,6 +42,13 @@ export class ListClaimComponentFront implements OnInit {
       }
     );
   }
+  toggleStatistics(): void {
+    this.showStatistics = !this.showStatistics;
+  }
+
+  getClaimCountByStatus(status: string): number {
+    return this.claims.filter(claim => claim.statusClaim === status).length;
+  }
 
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>
@@ -53,6 +62,21 @@ export class ListClaimComponentFront implements OnInit {
     this.page = 1; // Reset to page 1 after a search
   }
 
+  getStatusColor(status: string): string {
+    switch (status) {
+      case 'PENDING':
+        return '#ff9800'; // Orange pour "En attente"
+      case 'APPROVED':
+        return '#4caf50'; // Vert pour "Approuvée"
+      case 'REJECTED':
+        return '#f44336'; // Rouge pour "Rejetée"
+      case 'IN_REVIEW':
+        return '#2196f3'; // Bleu pour "En révision"
+      default:
+        return '#9e9e9e'; // Gris pour un statut inconnu
+    }
+  }
+  
   applySort(): void {
     if (this.selectedSort === 'id') {
       this.filteredClaims.sort((a, b) => a.idClaim.localeCompare(b.idClaim));
@@ -89,6 +113,10 @@ export class ListClaimComponentFront implements OnInit {
     }
   }
 
+  getTotalClaims(): number {
+    return this.claims.length;
+  }
+  
   navigateToAddClaim(): void {
     this.router.navigate(['claimsFront/AddClaim']);
   }

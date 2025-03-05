@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../../../claim.service';
 import { AssessmentService } from '../../../../assessment.service'; // Import du service d'évaluation
-import { Claim } from '../../../../models/claim.model';
+import { Claim,StatusClaim } from '../../../../models/claim.model';
 import { Assessment } from '../../../../models/assessment.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-list-claim',
@@ -19,13 +21,18 @@ export class ListClaimComponent implements OnInit {
   filteredClaims: Claim[] = [];
   searchQuery: string = '';
   selectedSort: string = 'id';
-  sortDirection: boolean = true; // true for ascending, false for descending
+  sortDirection: boolean = true; 
+  statusOptions = Object.values(StatusClaim); // Récupérer les valeurs de StatusClaim
+  // true for ascending, false for descending
 
-
+// Define the list of possible claim statuses
+statusClaims = Object.values(StatusClaim);
   constructor(
     private claimService: ClaimService, 
     private assessmentService: AssessmentService, // Ajout du service d'évaluation
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
+
   ) {}
 
   ngOnInit(): void {
@@ -43,6 +50,36 @@ export class ListClaimComponent implements OnInit {
       }
     );
   }
+
+  changeStatus(claim: Claim, newStatus: string) {
+    const confirmation = confirm('Are you sure you want to update the status of this claim?');
+  
+    if (confirmation) {
+      // Check if the status is different before sending the update
+      if (claim.statusClaim !== newStatus) {
+        this.claimService.updateClaimStatus(claim.idClaim, newStatus).subscribe(
+          (updatedClaim) => {
+            // Update the claim's status in the UI after the backend update
+            const index = this.claims.findIndex(c => c.idClaim === claim.idClaim);
+            if (index !== -1) {
+              // Update the status locally
+              this.claims[index].statusClaim = updatedClaim.statusClaim;
+              this.filteredClaims = [...this.claims]; // Trigger change detection for filtered claims
+              
+              // Manually trigger Angular change detection
+              this.cdr.detectChanges();
+            }
+            console.log('Status updated successfully:', updatedClaim.statusClaim);
+          },
+          (error) => {
+            console.error('Error updating status:', error);
+          }
+        );
+      }
+    }
+  }
+  
+
 
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>

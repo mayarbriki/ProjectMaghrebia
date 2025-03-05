@@ -1,5 +1,6 @@
 package com.example.projectmaghrebia.Services;
 
+import com.example.projectmaghrebia.Entities.Category;
 import com.example.projectmaghrebia.Entities.Product;
 import com.example.projectmaghrebia.Repositories.ProductRepository;
 import lombok.AllArgsConstructor;
@@ -66,6 +67,18 @@ public class ProductService implements IProductService {
         // Add null check and optional handling
         return productRepository.findTopByOrderByViewsDesc();
 
+    }
+    public List<Product> findByCategory(String category) {
+        return productRepository.findByCategory(category);
+    }
+    @Override
+    public String getCategoryByProductId(Long productId) {
+        return productRepository.findCategoryById(productId);
+    }
+
+    @Override
+    public List<Long> getProductIdsByCategory(Category category) {
+        return productRepository.findProductIdsByCategory(category);
     }
 
 }

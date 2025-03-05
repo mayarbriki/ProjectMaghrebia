@@ -7,31 +7,40 @@ import com.example.projectmaghrebiauser.Services.FileStorageService;
 import com.example.projectmaghrebiauser.Services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 public class UserController {
-@Autowired
-private UserRepository userRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @Autowired
     private UserService userService;
 
     @Autowired
     private FileStorageService fileStorageService;
 
-    // Add BCryptPasswordEncoder
+    private final RestTemplate restTemplate = new RestTemplate();
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @Value("${product.service.url:http://localhost:6060/api}")
+    private String PRODUCT_SERVICE_URL;
+
+    private static final List<Long> POPULAR_PRODUCT_IDS = Arrays.asList(10L, 11L, 12L);
 
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> registerUser(
@@ -49,14 +58,12 @@ private UserRepository userRepository;
 
         User user = new User();
         user.setUsername(username);
-        // Encrypt the password before saving
         user.setPassword(passwordEncoder.encode(password));
         user.setEmail(email);
         user.setPhoneNumber(phoneNumber);
         user.setAddress(address);
         user.setRole(role);
 
-        // Handle file upload
         if (file != null && !file.isEmpty()) {
             String fileName = fileStorageService.store(file);
             user.setImage(fileName);
@@ -72,20 +79,20 @@ private UserRepository userRepository;
 
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            // Compare raw password with encrypted password
             if (passwordEncoder.matches(password, user.getPassword())) {
                 return ResponseEntity.ok(user);
             }
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
+
     @GetMapping("/{username}")
     public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
         return userService.findByUsername(username)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    // Get all bookmarked product IDs for a user
+
     @GetMapping("/{userId}/bookmarks")
     public ResponseEntity<List<Long>> getBookmarkedProducts(@PathVariable Long userId) {
         User user = userRepository.findById(userId)
@@ -93,13 +100,10 @@ private UserRepository userRepository;
         return ResponseEntity.ok(user.getBookmarkedProductIds());
     }
 
-    // Bookmark a product
     @PostMapping("/{userId}/bookmark")
     public ResponseEntity<String> bookmarkProducts(
             @PathVariable Long userId,
             @RequestBody List<Long> productIds) {
-
-        // Fetch user and add bookmarked products
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
@@ -109,8 +113,6 @@ private UserRepository userRepository;
         return ResponseEntity.ok("Products bookmarked successfully");
     }
 
-
-    // Unbookmark a product
     @PostMapping("/{userId}/unbookmark")
     public ResponseEntity<Void> removeBookmark(@PathVariable Long userId, @RequestBody Map<String, Long> request) {
         Long productId = request.get("productId");
@@ -122,6 +124,104 @@ private UserRepository userRepository;
             userRepository.save(user);
         }
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{userId}/suggestions")
+    public ResponseEntity<List<Long>> getProductSuggestions(@PathVariable Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Long> bookmarkedIds = user.getBookmarkedProductIds();
+        if (bookmarkedIds.isEmpty()) {
+            System.out.println("Hey " + user.getUsername() + "! Bookmark some insurance plans to unlock magical suggestions!");
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        String url = PRODUCT_SERVICE_URL + "/suggestions?bookmarkedIds=" + String.join(",",
+                bookmarkedIds.stream().map(String::valueOf).toArray(String[]::new)) + "&includeWildCard=true";
+        ResponseEntity<SuggestionResponse> response;
+        try {
+            System.out.println("Calling Product service at: " + url);
+            response = restTemplate.getForEntity(url, SuggestionResponse.class);
+            System.out.println("Received response from Product service: " + response.getBody());
+        } catch (Exception e) {
+            System.err.println("Failed to fetch suggestions from Product service for user " + user.getUsername() + ": " + e.getMessage());
+            String[] errorMessages = {
+                    "Oops, " + user.getUsername() + "! Our suggestion crystal ball is cloudy—try again later!",
+                    "Oh no, " + user.getUsername() + "! The suggestion spirits are napping—check back soon!",
+                    "Alas, " + user.getUsername() + "! The magic mirror of suggestions is foggy—let’s try again later!"
+            };
+            String errorMessage = errorMessages[new Random().nextInt(errorMessages.length)];
+            System.out.println(errorMessage);
+
+            List<Long> fallbackSuggestions = POPULAR_PRODUCT_IDS.stream()
+                    .filter(id -> !bookmarkedIds.contains(id))
+                    .limit(3)
+                    .collect(Collectors.toList());
+
+            if (!fallbackSuggestions.isEmpty()) {
+                String[] magicMessages = {
+                        "But wait, " + user.getUsername() + "! Here’s a sprinkle of magic—try these popular picks instead!",
+                        "Fear not, " + user.getUsername() + "! The wizards have conjured some popular plans for you!",
+                        "Behold, " + user.getUsername() + "! The enchanted vault opens with these timeless picks!"
+                };
+                System.out.println(magicMessages[new Random().nextInt(magicMessages.length)]);
+            } else {
+                System.out.println("Looks like you’ve already explored our popular picks, " + user.getUsername() + "! Stay tuned for more!");
+            }
+
+            return ResponseEntity.ok(fallbackSuggestions);
+        }
+
+        if (!response.getStatusCode().is2xxSuccessful() || response.getBody() == null) {
+            System.out.println("Hmmm, " + user.getUsername() + ", we couldn’t find any suggestions this time—keep exploring!");
+            return ResponseEntity.ok(Collections.emptyList());
+        }
+
+        SuggestionResponse suggestionResponse = response.getBody();
+        List<Long> suggestions = suggestionResponse.getSuggestedProductIds();
+        String topCategory = suggestionResponse.getTopCategory();
+
+        if (suggestions == null || suggestions.isEmpty() || topCategory == null) {
+            System.out.println("No valid suggestions received for " + user.getUsername() + ", falling back to popular picks.");
+            List<Long> fallbackSuggestions = POPULAR_PRODUCT_IDS.stream()
+                    .filter(id -> !bookmarkedIds.contains(id))
+                    .limit(3)
+                    .collect(Collectors.toList());
+
+            if (!fallbackSuggestions.isEmpty()) {
+                System.out.println("But wait, " + user.getUsername() + "! Here’s a sprinkle of magic—try these popular picks instead!");
+            } else {
+                System.out.println("Looks like you’ve already explored our popular picks, " + user.getUsername() + "! Stay tuned for more!");
+            }
+
+            return ResponseEntity.ok(fallbackSuggestions);
+        }
+
+        String[] funMessages = {
+                "Greetings, " + user.getUsername() + "! The winds whisper you adore " + topCategory + "—feast your eyes on these treasures!",
+                "Oh, " + user.getUsername() + "! Your love for " + topCategory + " shines bright—here’s some enchanted picks for you!",
+                "Dear " + user.getUsername() + ", the stars align with " + topCategory + "—discover these magical insurance plans!"
+        };
+        String message = funMessages[new Random().nextInt(funMessages.length)];
+        System.out.println(message);
+
+        return ResponseEntity.ok(suggestions);
+    }
+
+    private static class SuggestionResponse {
+        private List<Long> suggestedProductIds;
+        private String topCategory;
+
+        public List<Long> getSuggestedProductIds() { return suggestedProductIds; }
+        public void setSuggestedProductIds(List<Long> suggestedProductIds) { this.suggestedProductIds = suggestedProductIds; }
+        public String getTopCategory() { return topCategory; }
+        public void setTopCategory(String topCategory) { this.topCategory = topCategory; }
+
+        @Override
+        public String toString() {
+            return "SuggestionResponse{suggestedProductIds=" + suggestedProductIds + ", topCategory='" + topCategory + "'}";
+        }
     }
 
 }

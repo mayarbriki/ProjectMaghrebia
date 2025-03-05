@@ -1,5 +1,6 @@
 package com.example.projectmaghrebia.Entities;
 
+import com.example.projectmaghrebia.Repositories.ProductRepository;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,6 +29,7 @@ public class Product {
     private String fileName;    // Mandatory field
     private Double price;       // Mandatory field
     private Long views = 0L;    // Default to 0
+
 
     @Transient
     private List<Map<String, Object>> paymentPlans;
@@ -64,5 +66,6 @@ public class Product {
                 })
                 .orElseGet(ArrayList::new); // Empty list if price is null or <= 0
     }
+
 
 }

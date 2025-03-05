@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -37,5 +38,43 @@ public class UserService implements IUserService {
     @Override
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
+    }
+    // Generate and save a coupon for the user
+    public String generateCoupon(User user, double discountAmount) {
+        String couponCode = "DISCOUNT-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+
+        // Add coupon details to the parallel lists
+        user.getCouponCodes().add(couponCode);
+        user.getCouponDiscountAmounts().add(discountAmount);
+        user.getCouponUsedStatuses().add(false);
+
+        userRepository.save(user);
+        return couponCode;
+    }
+
+    // Validate and use a coupon
+    public boolean useCoupon(User user, String couponCode) {
+        int index = user.getCouponCodes().indexOf(couponCode);
+        if (index == -1) {
+            return false; // Coupon not found
+        }
+
+        if (user.getCouponUsedStatuses().get(index)) {
+            return false; // Coupon already used
+        }
+
+        user.getCouponUsedStatuses().set(index, true);
+        userRepository.save(user);
+        return true;
+    }
+
+    // Get the discount amount for a coupon (if valid)
+    public Double getDiscountAmount(User user, String couponCode) {
+        int index = user.getCouponCodes().indexOf(couponCode);
+        if (index == -1 || user.getCouponUsedStatuses().get(index)) {
+            return 0.0; // Coupon not found or already used
+        }
+
+        return user.getCouponDiscountAmounts().get(index);
     }
 }

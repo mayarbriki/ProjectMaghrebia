@@ -6,20 +6,22 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
-
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-list-claim-front',
   templateUrl: './list-claim-front.component.html',
   styleUrls: ['./list-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, NgxPaginationModule]
 })
 export class ListClaimComponentFront implements OnInit {
   claims: Claim[] = [];
   filteredClaims: Claim[] = [];
   searchQuery: string = '';
   selectedSort: string = 'id';
+  page: number = 1; // Variable pour la page actuelle
+  pageSize: number = 3; // Nombre d'éléments par page
 
   constructor(private claimService: ClaimService, private router: Router) {}
 
@@ -47,8 +49,8 @@ export class ListClaimComponentFront implements OnInit {
       claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       new Date(claim.submissionDate).toISOString().includes(this.searchQuery) // Search by assessment date
-
     );
+    this.page = 1; // Reset to page 1 after a search
   }
 
   applySort(): void {
@@ -90,13 +92,13 @@ export class ListClaimComponentFront implements OnInit {
   navigateToAddClaim(): void {
     this.router.navigate(['claimsFront/AddClaim']);
   }
-  
+
   viewAssessment(idClaim: string): void {
     this.claimService.getClaimById(idClaim).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
-          this.router.navigate([`/assessmentsFront/ViewAssessment/${idAssessment}`]); 
+          this.router.navigate([`/assessmentsFront/ViewAssessment/${idAssessment}`]);
         } else {
           alert('No assessment found for this claim.');
         }
@@ -111,5 +113,4 @@ export class ListClaimComponentFront implements OnInit {
       }
     );
   }
-  
 }

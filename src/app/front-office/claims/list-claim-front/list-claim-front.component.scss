@@ -161,4 +161,10 @@
       }
     }
   }
+
+  .pagination-container {
+    display: flex;
+    justify-content: center;  /* Centre horizontalement */
+    margin-top: 20px;         /* Espacement entre la grille et la pagination */
+  }
 }

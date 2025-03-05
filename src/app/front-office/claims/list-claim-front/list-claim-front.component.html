@@ -3,7 +3,6 @@
     <div class="header-container">
         <h1>My Claims</h1>
         <div class="header-actions">
-            <!-- Recherche avancée -->
             <input 
                 type="text" 
                 placeholder="Search Claims" 
@@ -11,25 +10,22 @@
                 (input)="applySearch()" 
                 class="search-input" />
 
-            <!-- Tri -->
             <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
+                <option value="" disabled selected>Select Sort Option</option> 
                 <option value="name">Sort by Claim Name</option>
                 <option value="date">Sort by Full Name</option>
                 <option value="date">Sort by Date</option>
             </select>
 
-            <!-- Bouton Ajouter une réclamation -->
             <button class="btn btn-success" (click)="navigateToAddClaim()">Add Claim</button>
         </div>
     </div>
 
-    <!-- Grid de cartes pour chaque réclamation -->
     <div class="claims-grid">
-        <div class="claim-card" *ngFor="let claim of filteredClaims; let i = index">
+        <div class="claim-card" *ngFor="let claim of filteredClaims | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
             <div class="claim-card-header">
                 <h3>{{ claim.fullName }}</h3>
                 <p>{{ claim.claimName }}</p>
-                
             </div>
             <div class="claim-card-body">
                 <p><strong>Submission Date:</strong> {{ claim.submissionDate | date:'yyyy-MM-dd' }}</p>
@@ -58,5 +54,9 @@
         </div>
     </div>
 
+    <div class="pagination-container">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
 </div>
+
 <app-footer-front></app-footer-front>

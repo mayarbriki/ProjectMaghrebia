@@ -30,6 +30,8 @@ export class ModifyClaimComponentFront implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
+  fileName: string = '';
+
 
   constructor(
     private claimService: ClaimService,
@@ -58,8 +60,10 @@ export class ModifyClaimComponentFront implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.selectedFiles = Array.from(input.files);
+      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; // Update file name
     }
   }
+
   
   onUpdate(): void {
     const formData = new FormData();
@@ -102,7 +106,7 @@ export class ModifyClaimComponentFront implements OnInit {
       this.temporaryOtherClaimReason = '';
     }
   }
-  goBack(): void {
+  onBack(): void {
     this.router.navigate(['/admin/claims'], { relativeTo: this.route });
   }
 }

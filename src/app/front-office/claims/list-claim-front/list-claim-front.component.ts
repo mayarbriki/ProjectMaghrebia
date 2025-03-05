@@ -42,7 +42,12 @@ export class ListClaimComponentFront implements OnInit {
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>
       claim.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      claim.claimName.toLowerCase().includes(this.searchQuery.toLowerCase())
+      claim.claimName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      claim.claimReason.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) // Search by assessment date
+
     );
   }
 
@@ -53,6 +58,8 @@ export class ListClaimComponentFront implements OnInit {
       this.filteredClaims.sort((a, b) => a.claimName.localeCompare(b.claimName));
     } else if (this.selectedSort === 'date') {
       this.filteredClaims.sort((a, b) => new Date(a.submissionDate).getTime() - new Date(b.submissionDate).getTime());
+    } else if (this.selectedSort === 'fullName') {
+      this.filteredClaims.sort((a, b) => a.fullName.localeCompare(b.fullName));
     }
   }
 

@@ -54,7 +54,13 @@
 
     .actions {
         display: flex;
-        gap: 10px;
+        gap: 5px; /* Reduce the gap between buttons */
+        justify-content: flex-start;
+
+        .action-buttons {
+            display: flex;
+            gap: 5px; /* Add gap for tighter button spacing */
+        }
 
         .btn {
             padding: 8px 12px;
@@ -89,6 +95,11 @@
                 &:hover {
                     background-color: #c82333;
                 }
+            }
+
+            &.btn-sm {
+                padding: 6px 10px; /* Slightly smaller padding for buttons */
+                font-size: 0.9em; /* Slightly smaller font size */
             }
         }
     }
@@ -131,21 +142,21 @@
     }
 }
 
-    /* Sort Button Styles */
-    .btn-info {
-        background-color: #17a2b8;
-        color: white;
-        font-weight: bold;
-        padding: 8px 15px;
-        border-radius: 5px;
-        transition: 0.3s ease;
+/* Sort Button Styles */
+.btn-info {
+    background-color: #17a2b8;
+    color: white;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 5px;
+    transition: 0.3s ease;
 
-        &:hover {
-            background-color: #138496;
-        }
-
-        &:focus {
-            outline: none;
-            box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
-        }
+    &:hover {
+        background-color: #138496;
     }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
+    }
+}

@@ -43,6 +43,8 @@ export class ListAssessmentComponent implements OnInit {
   applySearch(): void {
     this.filteredAssessments = this.assessments.filter(assessment =>
       assessment.idAssessment.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment ID
+      assessment.statusAssessment.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment name
+      assessment.finalDecision.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment reason
       new Date(assessment.assessmentDate).toISOString().includes(this.searchQuery) // Search by assessment date
     );
   }

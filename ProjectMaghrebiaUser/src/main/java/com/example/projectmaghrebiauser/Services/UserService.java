@@ -47,7 +47,7 @@ public class UserService implements IUserService {
         user.getCouponCodes().add(couponCode);
         user.getCouponDiscountAmounts().add(discountAmount);
         user.getCouponUsedStatuses().add(false);
-
+        user.setAccountBalance(user.getAccountBalance() + discountAmount);
         userRepository.save(user);
         return couponCode;
     }

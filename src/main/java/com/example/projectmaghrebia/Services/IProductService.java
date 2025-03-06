@@ -17,4 +17,6 @@ public interface IProductService {
 
     // Get a list of product IDs for a given category
     List<Long> getProductIdsByCategory(Category category); // Change to Category
+    List<Product> searchProducts(String query);
+    List<Product> sortProducts(List<Product> products, String sortBy, String sortDir); // New separate sort method
  }

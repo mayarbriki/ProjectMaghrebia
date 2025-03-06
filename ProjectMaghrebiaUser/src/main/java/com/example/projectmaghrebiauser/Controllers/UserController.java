@@ -5,6 +5,7 @@ import com.example.projectmaghrebiauser.Entities.User;
 import com.example.projectmaghrebiauser.Repositories.UserRepository;
 import com.example.projectmaghrebiauser.Services.FileStorageService;
 import com.example.projectmaghrebiauser.Services.UserService;
+import com.example.projectmaghrebiauser.Services.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.mail.MessagingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,6 +34,9 @@ public class UserController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private EmailService emailService;
 
     private final RestTemplate restTemplate = new RestTemplate();
 
@@ -209,14 +214,88 @@ public class UserController {
         return ResponseEntity.ok(suggestions);
     }
 
+    // Updated endpoint to send product via email using frontend data
+    @PostMapping("/{userId}/send-product-email")
+    public ResponseEntity<String> sendProductEmail(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) throws MessagingException {
+        // Extract product details from the request
+        String productName = request.get("productName");
+        String productDescription = request.get("productDescription");
+
+        if (productName == null || productDescription == null) {
+            return ResponseEntity.status(400).body("Product name and description are required");
+        }
+
+        // Fetch the user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Generate a coupon
+        double discountAmount = 10.0; // Example: 10% discount
+        String couponCode = userService.generateCoupon(user, discountAmount);
+
+        // Send email with product details and coupon
+        try {
+            emailService.sendProductEmail(
+                    user.getEmail(),
+                    productName,
+                    productDescription,
+                    couponCode,
+                    discountAmount
+            );
+        } catch (MessagingException e) {
+            return ResponseEntity.status(500).body("Failed to send email: " + e.getMessage());
+        }
+
+        return ResponseEntity.ok("Product details and coupon sent to " + user.getEmail());
+    }
+
+    // Endpoint to apply a coupon and get a discount
+    @PostMapping("/{userId}/apply-coupon")
+    public ResponseEntity<Map<String, Object>> applyCoupon(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) {
+        String couponCode = request.get("couponCode");
+
+        // Fetch the user
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Validate and use the coupon
+        boolean isValid = userService.useCoupon(user, couponCode);
+        if (!isValid) {
+            return ResponseEntity.status(400).body(Map.of("message", "Invalid or already used coupon"));
+        }
+
+        // Get the discount amount
+        double discountAmount = userService.getDiscountAmount(user, couponCode);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Coupon applied successfully");
+        response.put("discountAmount", discountAmount);
+        return ResponseEntity.ok(response);
+    }
+
     private static class SuggestionResponse {
         private List<Long> suggestedProductIds;
         private String topCategory;
 
-        public List<Long> getSuggestedProductIds() { return suggestedProductIds; }
-        public void setSuggestedProductIds(List<Long> suggestedProductIds) { this.suggestedProductIds = suggestedProductIds; }
-        public String getTopCategory() { return topCategory; }
-        public void setTopCategory(String topCategory) { this.topCategory = topCategory; }
+        public List<Long> getSuggestedProductIds() {
+            return suggestedProductIds;
+        }
+
+        public void setSuggestedProductIds(List<Long> suggestedProductIds) {
+            this.suggestedProductIds = suggestedProductIds;
+        }
+
+        public String getTopCategory() {
+            return topCategory;
+        }
+
+        public void setTopCategory(String topCategory) {
+            this.topCategory = topCategory;
+        }
 
         @Override
         public String toString() {
@@ -224,4 +303,57 @@ public class UserController {
         }
     }
 
+    @PostMapping("/{userId}/share-product")
+    public ResponseEntity<String> shareProduct(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) throws MessagingException {
+        String productName = request.get("productName");
+        String productDescription = request.get("productDescription");
+        String recipientEmail = request.get("recipientEmail");
+
+        if (productName == null || productDescription == null || recipientEmail == null) {
+            return ResponseEntity.status(400).body("Product name, description, and recipient email are required");
+        }
+
+        // Fetch the user (sharer)
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Send the product details to the recipient (friend)
+        emailService.sendReferralEmail(
+                recipientEmail,
+                user.getUsername(),
+                productName,
+                productDescription
+        );
+
+        // Reward the sharer with a coupon and add to balance
+        double discountPercentage = 10.0; // Example: 10% discount
+        String couponCode = userService.generateCoupon(user, discountPercentage);
+
+        // Calculate the monetary value of the discount (same logic as in UserService)
+        double baseAmount = 100.0; // Example: Base amount for calculation
+        double discountAmount = (discountPercentage / 100.0) * baseAmount; // e.g., $10
+
+        emailService.sendProductEmail(
+                user.getEmail(),
+                productName,
+                productDescription,
+                couponCode,
+                discountPercentage
+        );
+        // Inside shareProduct method, after calculating discountAmount:
+      //  user.setAccountBalance(user.getAccountBalance() + discountAmount);
+     //   userRepository.save(user); // Save the updated user
+
+        return ResponseEntity.ok(
+                String.format(
+                        "Product shared successfully with %s, a coupon has been sent to %s, and $%.2f has been added to your account balance (new balance: $%.2f).",
+                        recipientEmail,
+                        user.getEmail(),
+                        discountAmount,
+                        user.getAccountBalance()
+                )
+        );
+    }
 }

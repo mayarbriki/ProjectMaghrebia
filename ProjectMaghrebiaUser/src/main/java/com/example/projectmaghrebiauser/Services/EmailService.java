@@ -32,4 +32,19 @@ public class EmailService {
 
         mailSender.send(message);
     }
+    public void sendReferralEmail(String to, String referrerUsername, String productName, String productDescription) throws MessagingException {
+        MimeMessage message = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+        helper.setTo(to);
+        helper.setSubject(referrerUsername + " Shared a Great Product with You!");
+        helper.setText(
+                "<p>Hi there,</p>" +
+                        "<p>" + referrerUsername + " thought you’d love this:</p>" +
+                        "<h3>" + productName + "</h3>" +
+                        "<p>" + productDescription + "</p>" +
+                        "<p>Check it out on our site!</p>",
+                true
+        );
+        mailSender.send(message);
+    }
 }

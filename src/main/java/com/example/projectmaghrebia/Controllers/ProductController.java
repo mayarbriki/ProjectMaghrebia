@@ -136,14 +136,54 @@ public class ProductController {
     }
 
     @GetMapping("/products/most-viewed")
-    public ResponseEntity<Product> getMostViewedProduct() {
-        Product mostViewedProduct = ProductService.getMostViewedProduct();
-        if (mostViewedProduct != null) {
-            return ResponseEntity.ok(mostViewedProduct);
-        }
+    public ResponseEntity<List<Product>> getMostViewedProducts() {
+        List<Product> mostViewedProducts = ProductService.getMostViewedProducts();        if
+        (mostViewedProducts != null) {
+            return ResponseEntity.ok(mostViewedProducts);        }
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/products/search")
+    @Operation(
+            summary = "Search products",
+            description = "Search products by name, description, or category",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Products found"),
+                    @ApiResponse(responseCode = "400", description = "Invalid search query")
+            }
+    )
+    public ResponseEntity<List<Product>> searchProducts(@RequestParam("query") String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Product> products = productService.searchProducts(query);
+        String baseUrl = "http://localhost:6060/upload-dir/";
+        products.forEach(product -> {
+            if (product.getFileName() != null && !product.getFileName().isEmpty()) {
+                product.setFileName(baseUrl + product.getFileName());
+            }
+        });
+        return ResponseEntity.ok(products);
+    }
+    @PostMapping("/products/sort")
+    public ResponseEntity<List<Product>> sortProducts(
+            @RequestBody List<Product> products,
+            @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir) {
+        if (products == null || products.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<Product> sortedProducts = productService.sortProducts(products, sortBy, sortDir);
+        String baseUrl = "http://localhost:6060/upload-dir/";
+        sortedProducts.forEach(product -> {
+            if (product.getFileName() != null && !product.getFileName().isEmpty()) {
+                product.setFileName(baseUrl + product.getFileName());
+            }
+        });
+        return ResponseEntity.ok(sortedProducts);
+    }
     @PostMapping("/bulk")
     public ResponseEntity<List<Product>> getProductsByIds(@RequestBody List<Long> productIds) {
         List<Product> products = productRepository.findAllById(productIds);

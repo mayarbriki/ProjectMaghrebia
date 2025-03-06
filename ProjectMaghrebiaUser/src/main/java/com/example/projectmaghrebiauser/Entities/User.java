@@ -25,6 +25,7 @@ public class User {
 
     private String email;
 
+    private double accountBalance ; // Add account balance field
 
 
     private String phoneNumber;

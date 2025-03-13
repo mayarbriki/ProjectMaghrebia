@@ -1,5 +1,5 @@
 package com.example.projectmaghrebia.Entities;
 
 public enum PropertyType {
-    HOUSE, APARTMENT, CAR
+    CAR, RESIDENCE, LIFE, TRAVEL, COMMERCIAL
 }

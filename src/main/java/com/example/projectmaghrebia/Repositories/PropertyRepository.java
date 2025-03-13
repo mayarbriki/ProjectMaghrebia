@@ -1,7 +1,7 @@
 package com.example.projectmaghrebia.Repositories;
 
 import com.example.projectmaghrebia.Entities.Property;
-import org.springframework.data.jpa.repository.EntityGraph;
+import com.example.projectmaghrebia.Entities.PropertyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface PropertyRepository extends JpaRepository<Property, Long> {
-    @EntityGraph(attributePaths = {"user", "incidents"})
-    List<Property> findAll();
+    List<Property> findByType(PropertyType type);
+    List<Property> findByFullNameContaining(String name);
+    List<Property> findByBusinessNameContaining(String businessName);
 }

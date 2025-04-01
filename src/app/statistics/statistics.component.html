@@ -1,0 +1,60 @@
+<div class="statistics-container">
+    <h2>Product Statistics</h2>
+  
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading">
+      Loading statistics...
+    </div>
+  
+    <!-- Error State -->
+    <div *ngIf="error" class="error">
+      {{ error }}
+    </div>
+  
+    <!-- Statistics Display -->
+    <div *ngIf="!loading && !error" class="statistics-content">
+      <!-- Summary Cards -->
+      <div class="stats-cards">
+        <div class="card">
+          <h3>Total Products</h3>
+          <p>{{ statistics?.totalProducts }}</p>
+        </div>
+        <div class="card">
+          <h3>Average Price</h3>
+          <p>{{ statistics?.averagePrice | number:'1.2-2' }} $</p>
+        </div>
+        <div class="card">
+          <h3>Total Views</h3>
+          <p>{{ statistics?.totalViews }}</p>
+        </div>
+      </div>
+  
+      <!-- Charts -->
+      <div class="charts">
+        <!-- Bar Chart: Products by Category -->
+        <div class="chart-container">
+          <apx-chart
+            [series]="barChartOptions.series!"
+            [chart]="barChartOptions.chart!"
+            [xaxis]="barChartOptions.xaxis!"
+            [yaxis]="barChartOptions.yaxis!"
+            [title]="barChartOptions.title!"
+            [dataLabels]="barChartOptions.dataLabels!"
+          ></apx-chart>
+        </div>
+  
+        <!-- Pie Chart: Views by Category -->
+        <div class="chart-container">
+          <apx-chart
+            [series]="pieChartOptions.series!"
+            [chart]="pieChartOptions.chart!"
+            [labels]="pieChartOptions.labels!"
+            [legend]="pieChartOptions.legend!"
+            [title]="pieChartOptions.title!"
+            [responsive]="pieChartOptions.responsive!"
+            [dataLabels]="pieChartOptions.dataLabels!"
+          ></apx-chart>
+        </div>
+      </div>
+    </div>
+  </div>

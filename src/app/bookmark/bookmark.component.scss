@@ -1,0 +1,306 @@
+/* Ensure the header doesn't interfere with spacing */
+app-header-front {
+    display: block; /* Ensure it behaves as a block element */
+  }
+  
+  /* Add spacing above the carousel container */
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    max-width: 1000px;
+    margin: 100px auto 0; /* Add margin-top to create space below the header */
+    padding: 20px 40px;
+    overflow: visible;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Products container */
+  .carousel-products-container {
+    overflow: hidden;
+    padding: 10px 0;
+  }
+  
+  /* Products track */
+  .carousel-products {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
+  
+  /* Product card */
+  .product-card {
+    position: relative;
+    flex: 0 0 260px;
+    margin-right: 20px;
+    background: #ffffff;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+  
+    &.active {
+      display: block;
+    }
+  
+    &:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 25px rgba(0, 0, 0, 0.15);
+    }
+  
+    /* Bookmark button (icon) */
+    .bookmark-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 2em;
+      transition: all 0.3s ease;
+  
+      &::before {
+        content: '☆'; /* Empty star */
+        color: #ccc; /* Light gray */
+      }
+  
+      &.bookmarked::before {
+        content: '★'; /* Filled star */
+        color: #4CAF50; /* Green */
+      }
+  
+      &:hover:not(:disabled) {
+        transform: scale(1.2);
+      }
+  
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+  
+      &[disabled]::before {
+        content: '★';
+        color: #ccc; /* Light gray when loading */
+      }
+    }
+  }
+  
+  /* Product image */
+  img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-bottom: 2px solid #f1f1f1; /* Lighter border */
+  }
+  
+  /* Card body */
+  .card-body {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  /* Card title */
+  .card-title {
+    font-size: 1.3em;
+    font-weight: 600;
+    color: #2c3e50;
+    margin: 0 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    .trending-inline-badge {
+      font-size: 0.8em;
+      font-weight: bold;
+      color: #fff;
+      background: #F39C12; /* Soft gold */
+      padding: 3px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  }
+  
+  /* Trending badge (top-left ribbon) */
+  .trending-badge {
+    position: absolute;
+    top: 10px;
+    left: -40px;
+    background: #F39C12; /* Soft gold */
+    color: #fff;
+    font-size: 0.9em;
+    font-weight: bold;
+    padding: 5px 40px;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+  }
+  
+  /* Card text */
+  .card-text {
+    font-size: 0.95em;
+    color: #666;
+    margin: 0 0 10px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  /* Category badges */
+  .badge {
+    display: inline-block;
+    margin: 10px 0;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: transform 0.2s ease;
+    color: #333;
+  
+    background-color: transparent;
+    border: 2px solid #333;
+  
+    &.badge-primary {
+      border-color: #6C5CE7;
+      color: #6C5CE7;
+    }
+  
+    &.badge-success {
+      border-color: #27AE60;
+      color: #27AE60;
+    }
+  
+    &.badge-info {
+      border-color: #1ABC9C;
+      color: #1ABC9C;
+    }
+  
+    &:hover {
+      transform: scale(1.1);
+      border-color: #3498db;
+      color: #3498db;
+    }
+  }
+  
+  /* Details button */
+  .details-btn {
+    background: none;
+    color: #3498db;
+    border: 2px solid #3498db;
+    padding: 10px 20px;
+    border-radius: 25px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1em;
+    font-weight: 500;
+    transition: background 0.3s ease, transform 0.2s ease;
+  
+    &:hover {
+      background: #f0f9ff;
+      transform: scale(1.05);
+    }
+  
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+  
+  /* Arrows */
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #003087;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  
+    &.left {
+      left: -60px;
+    }
+  
+    &.right {
+      right: -60px;
+    }
+  
+    &:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+  }
+  
+  /* No bookmarks state */
+  .no-bookmarks {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2em;
+    color: #666;
+    background: #ffffff;
+    border-radius: 10px;
+    margin: 100px auto 0; /* Match the carousel-container margin-top */
+    max-width: 300px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .carousel-container {
+      margin-top: 80px; /* Slightly less spacing on mobile */
+      padding: 10px 20px;
+    }
+  
+    .no-bookmarks {
+      margin-top: 80px; /* Match the carousel-container margin-top on mobile */
+    }
+  
+    .product-card {
+      flex: 0 0 220px;
+      margin-right: 15px;
+  
+      img {
+        height: 140px;
+      }
+  
+      .card-title {
+        font-size: 1.1em;
+      }
+  
+      .card-text {
+        font-size: 0.85em;
+      }
+  
+      .details-btn {
+        padding: 8px 15px;
+        font-size: 0.9em;
+      }
+  
+      .bookmark-btn {
+        font-size: 1.5em;
+      }
+    }
+  
+    .carousel-btn {
+      width: 40px;
+      height: 40px;
+      font-size: 20px;
+  
+      &.left {
+        left: -40px;
+      }
+  
+      &.right {
+        right: -40px;
+      }
+    }
+  }

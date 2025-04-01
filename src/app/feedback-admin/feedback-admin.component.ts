@@ -23,16 +23,17 @@ export class FeedbackAdminComponent implements OnInit {
     this.feedbackService.getAllFeedback().subscribe({
       next: (data) => {
         console.log('Received feedback data:', data);
-        // Log each feedback item to debug image field names
-        data.forEach((item: any, index: number) => {
-          console.log(`Feedback ${index}:`, item);
-          console.log(`Image field available:`, 
-            Object.keys(item).filter(key => 
-              key.includes('image') || key.includes('img') || key.includes('file')
-            )
-          );
+  
+        this.feedbacks = data.map((feedback: any) => {
+          // Detect the correct image field dynamically
+          const filename = feedback.image_url || feedback.imageUrl || feedback.image || 
+                           feedback.img || feedback.imgUrl || feedback.file_name || '';
+  
+          return {
+            ...feedback,
+            fullImageUrl: filename ? `http://localhost:8083/feedback/uploads/${filename}` : ''
+          };
         });
-        this.feedbacks = data;
       },
       error: (error) => {
         console.error('Error loading feedback:', error);
@@ -40,6 +41,7 @@ export class FeedbackAdminComponent implements OnInit {
       },
     });
   }
+  
 
   deleteFeedback(id: string): void {
     const feedbackId = Number(id);
@@ -71,5 +73,11 @@ export class FeedbackAdminComponent implements OnInit {
     // Try all possible field names
     return feedback.image_url || feedback.imageUrl || feedback.image || 
            feedback.img || feedback.imgUrl || feedback.file_name || '';
+  }
+  onImageError(event: Event): void {
+    console.error('Image failed to load:', (event.target as HTMLImageElement).src);
+  }
+  getImageUrl(filename: string): string {
+    return `http://localhost:8083/feedback/uploads/${filename}`;
   }
 }

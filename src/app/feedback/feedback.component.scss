@@ -1,22 +1,77 @@
-.feedback-container {
-    width: 400px;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+// feedback.component.scss
+.feedback-submit-container {
+  max-width: 500px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+
+  h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
   }
-  
-  input, button {
-    display: block;
-    width: 100%;
-    margin: 10px 0;
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+
+    label {
+      margin-bottom: 5px;
+      color: #666;
+      font-weight: 500;
+    }
+
+    textarea, input[type="number"] {
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    input[type="file"] {
+      padding: 5px 0;
+    }
   }
-  
+
+  button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+
+    &:disabled {
+      background-color: #cccccc;
+      cursor: not-allowed;
+    }
+  }
+
   .success {
-    color: green;
+    color: #28a745;
+    background-color: #e7f3e8;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
   }
-  
+
   .error {
-    color: red;
+    color: #dc3545;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
   }
-  
+}

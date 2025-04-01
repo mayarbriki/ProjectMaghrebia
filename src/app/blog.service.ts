@@ -29,9 +29,14 @@ export class BlogService {
     formData.append('title', blog.title);
     formData.append('author', blog.author);
     formData.append('content', blog.content);
+    formData.append('type', blog.type); // Ensure this is included
     if (file) {
       formData.append('file', file);
     }
+
+    // Debug: Log FormData contents
+    console.log('Creating blog with FormData:');
+    formData.forEach((value, key) => console.log(`${key}: ${value}`));
 
     return this.http.post<Blog>(this.apiUrl, formData);
   }
@@ -41,13 +46,17 @@ export class BlogService {
     formData.append('title', blog.title);
     formData.append('author', blog.author);
     formData.append('content', blog.content);
+    formData.append('type', blog.type); // Ensure this is included
     if (file) {
       formData.append('file', file);
     }
 
+    // Debug: Log FormData contents
+    console.log('Updating blog with FormData:');
+    formData.forEach((value, key) => console.log(`${key}: ${value}`));
+
     return this.http.put<Blog>(`${this.apiUrl}/${id}`, formData);
   }
-
   deleteBlog(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }

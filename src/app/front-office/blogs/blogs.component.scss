@@ -1,0 +1,278 @@
+.text-danger {
+    font-size: 0.9em;
+    color: #dc3545;
+    margin-top: 5px;
+  }
+  
+  .form-control.ng-dirty.ng-invalid {
+    border-color: #dc3545;
+  }
+  
+  .btn {
+    margin: 0 5px;
+  }
+  
+  .card {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  /* General container styling */
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* Center-aligned headings with modern typography */
+  h2.text-center, h3.text-center {
+    color: #333;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+  
+  /* Button group styling */
+  .text-center.mb-3 {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  
+    .btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  
+      &.btn-success {
+        background-color: #003087; /* Dark blue for "Add Blog" */
+        border-color: #003087;
+        color: white;
+  
+        &:hover:not(:disabled) {
+          background-color: #00205b;
+          transform: translateY(-2px);
+        }
+      }
+  
+      &.btn-warning {
+        background-color: #6c757d; /* Soft gray for "Modify Blog" */
+        border-color: #6c757d;
+        color: white;
+  
+        &:hover:not(:disabled) {
+          background-color: #5a6268;
+          transform: translateY(-2px);
+        }
+      }
+  
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  /* Card styling for the form */
+  .card {
+    max-width: 600px;
+    margin: 0 auto 30px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.3s ease;
+  
+    &:hover {
+      transform: translateY(-5px);
+    }
+  
+    h3 {
+      color: #444;
+      margin-bottom: 25px;
+    }
+  
+    /* Form elements */
+    .mb-2 {
+      margin-bottom: 20px;
+  
+      label {
+        display: block;
+        font-weight: 500;
+        color: #555;
+        margin-bottom: 5px;
+      }
+  
+      .form-control, .form-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 1em;
+        transition: border-color 0.3s ease;
+  
+        &:focus {
+          outline: none;
+          border-color: #003087;
+          box-shadow: 0 0 5px rgba(0, 48, 135, 0.3);
+        }
+  
+        &.ng-dirty.ng-invalid {
+          border-color: #dc3545;
+        }
+      }
+  
+      .text-danger {
+        font-size: 0.85em;
+        color: #dc3545;
+        margin-top: 5px;
+      }
+    }
+  
+    /* Buttons inside the form */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+  
+      &.btn-primary {
+        background-color: #003087; /* Dark blue for "Add Blog" and "Update Blog" */
+        border-color: #003087;
+        color: white;
+  
+        &:hover {
+          background-color: #00205b;
+          transform: translateY(-2px);
+        }
+      }
+  
+      &.btn-secondary {
+        background-color: #6c757d; /* Soft gray for "Cancel" */
+        border-color: #6c757d;
+        color: white;
+  
+        &:hover {
+          background-color: #5a6268;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+  
+  /* Table styling */
+  .table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  
+    thead {
+      background: #f8f9fa;
+      color: #333;
+      font-weight: 600;
+  
+      th {
+        padding: 15px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  
+    tbody {
+      tr {
+        transition: background 0.3s ease;
+  
+        &:hover {
+          background: #f1f3f5;
+        }
+  
+        td {
+          padding: 15px;
+          vertical-align: middle;
+  
+          img {
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+  
+            &:hover {
+              transform: scale(1.1);
+            }
+          }
+  
+          .btn {
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+  
+            &.btn-warning {
+              background-color: #6c757d; /* Soft gray for "Modify" */
+              border-color: #6c757d;
+              color: white;
+  
+              &:hover {
+                background-color: #5a6268;
+                transform: translateY(-2px);
+              }
+            }
+  
+            &.btn-danger {
+              background-color: #c82333; /* Dark red for "Delete" */
+              border-color: #c82333;
+              color: white;
+  
+              &:hover {
+                background-color: #a71d2a;
+                transform: translateY(-2px);
+              }
+            }
+          }
+        }
+      }
+  
+      tr:last-child td {
+        border-bottom: none;
+      }
+  
+      /* No blogs message */
+      tr td[colspan="5"] {
+        padding: 20px;
+        color: #666;
+        font-style: italic;
+      }
+    }
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+  
+    .card {
+      max-width: 100%;
+    }
+  
+    .table {
+      font-size: 0.9em;
+  
+      th, td {
+        padding: 10px;
+      }
+    }
+  
+    .text-center.mb-3 {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }

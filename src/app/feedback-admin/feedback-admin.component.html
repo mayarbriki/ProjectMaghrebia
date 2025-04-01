@@ -1,34 +1,42 @@
 <div class="feedback-admin-container">
-    <h2>Admin Feedback Management</h2>
-   
-    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
-    
-    <table>
-      <thead>
-        <tr>
-          <th>Content</th>
-          <th>Rating</th>
-          <th>Image</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let feedback of feedbacks">
-          <td>{{ feedback.content }}</td>
-          <td>{{ feedback.rating }}</td>
-          <td>
-            <!-- Use the fullImageUrl if available, otherwise fall back to the transformed URL -->
-            <img *ngIf="feedback.imageUrl" 
-                 [src]="feedback.fullImageUrl || feedbackService.getImageUrl(feedback.imageUrl)"
-                 alt="Feedback Image" 
-                 width="100">
-            <p *ngIf="!feedback.imageUrl">No image</p>
-            <p style="display: none; color: red;">Image failed to load</p>
-          </td>
-          <td>
-            <button (click)="deleteFeedback(feedback.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <h2>Admin Feedback Management</h2>
+
+  <!-- Display error message if any -->
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+  <!-- Feedback table -->
+  <table>
+    <thead>
+      <tr>
+        <th>Content</th>
+        <th>Rating</th>
+        <th>Image</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let feedback of feedbacks">
+        <td>{{ feedback.content }}</td>
+        <td>{{ feedback.rating }}</td>
+        <td>
+          <!-- Display the image if available -->
+          <img *ngIf="feedback.fullImageUrl" 
+               [src]="feedback.fullImageUrl" 
+               alt="Feedback Image" 
+               width="100"
+               (error)="onImageError($event)">
+          
+          <!-- Display "No image" if imageUrl is not available -->
+          <p *ngIf="!feedback.fullImageUrl">No image</p>
+          
+          <!-- Hidden error message for image loading errors -->
+          <p style="display: none; color: red;">Image failed to load</p>
+        </td>
+        <td>
+          <!-- Delete button -->
+          <button (click)="deleteFeedback(feedback.id)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

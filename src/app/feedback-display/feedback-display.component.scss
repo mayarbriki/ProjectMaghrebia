@@ -1,0 +1,294 @@
+/* feedback-display.component.scss */
+.feedback-display-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+}
+
+h2 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.error {
+    color: #dc3545;
+    background-color: #ffebee;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+.loading {
+    color: #666;
+    font-style: italic;
+    margin-bottom: 20px;
+}
+
+.feedback-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.feedback-item {
+    background-color: #fff;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.feedback-content {
+    flex: 1;
+}
+
+.feedback-content p {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 16px;
+}
+
+.feedback-rating {
+    color: #888;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.feedback-date {
+    color: #888;
+    font-size: 12px;
+}
+
+.feedback-image {
+    max-width: 150px;
+}
+
+.feedback-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    transition: transform 0.2s;
+}
+
+.feedback-image img:hover {
+    transform: scale(1.05);
+}
+
+.no-image {
+    color: #888;
+    font-style: italic;
+    margin: 0;
+}
+
+.no-feedback {
+    color: #888;
+    font-style: italic;
+    font-size: 16px;
+}
+
+.feedback-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn, .save-btn, .cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.edit-btn {
+    background-color: #007bff;
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #0056b3;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.save-btn {
+    background-color: #28a745;
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #218838;
+}
+
+.cancel-btn {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #5a6268;
+}
+
+.edit-form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+    color: #666;
+    font-weight: 500;
+}
+
+.form-group textarea,
+.form-group input[type="number"] {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.form-group input[type="file"] {
+    padding: 5px 0;
+}
+
+@media (max-width: 600px) {
+    .feedback-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .feedback-image {
+        max-width: 100%;
+    }
+
+    .feedback-actions {
+        flex-direction: column;
+        gap: 5px;
+    }
+}
+.feedback-display-container {
+    padding: 20px;
+  
+    .feedback-list {
+      .feedback-item {
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+  
+        .feedback-content {
+          flex: 2;
+  
+          .edit-form {
+            .form-group {
+              margin-bottom: 10px;
+  
+              label {
+                display: block;
+                margin-bottom: 5px;
+              }
+  
+              textarea, input[type="number"] {
+                width: 100%;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+              }
+  
+              .error-message {
+                color: red;
+                font-size: 12px;
+                margin-top: 5px;
+              }
+            }
+          }
+        }
+  
+        .feedback-image {
+          flex: 1;
+          text-align: center;
+  
+          img {
+            max-width: 100px;
+            max-height: 100px;
+          }
+  
+          .no-image {
+            color: #888;
+          }
+        }
+  
+        .feedback-actions {
+          flex: 1;
+          text-align: right;
+  
+          button {
+            margin-left: 10px;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+  
+            &.edit-btn {
+              background-color: #007bff;
+              color: white;
+            }
+  
+            &.delete-btn {
+              background-color: #dc3545;
+              color: white;
+            }
+  
+            &.save-btn {
+              background-color: #28a745;
+              color: white;
+  
+              &[disabled] {
+                background-color: #ccc;
+                cursor: not-allowed;
+              }
+            }
+  
+            &.cancel-btn {
+              background-color: #6c757d;
+              color: white;
+            }
+          }
+        }
+      }
+    }
+  
+    .error {
+      color: red;
+    }
+  
+    .loading, .no-feedback {
+      color: #888;
+    }
+  }

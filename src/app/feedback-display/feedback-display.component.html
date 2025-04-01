@@ -1,0 +1,80 @@
+<app-header-front></app-header-front>
+<div class="intro-container wow fadeIn">
+  <h1 class="mb-4 pb-0">Maghrebia<br><span>Insurance</span></h1>
+  <p class="mb-4 pb-0">Protect what matters most with our comprehensive insurance plans – reliable coverage, peace of mind, and support when you need it most</p>
+</div>
+
+<div class="feedback-display-container">
+  <h2>Your Feedback</h2>
+
+  <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+  <p *ngIf="loading" class="loading">Loading feedback...</p>
+
+  <div class="feedback-list" *ngIf="!loading && feedbacks.length > 0; else noFeedback">
+    <div class="feedback-item" *ngFor="let feedback of feedbacks; let i = index">
+      <div class="feedback-content">
+        <!-- Display mode -->
+        <div *ngIf="!editMode[i]; else editForm">
+          <p>{{ feedback.content }}</p>
+          <div class="feedback-rating">Rating: {{ feedback.rating }}/5</div>
+          <div class="feedback-date">Submitted: {{ feedback.createdAt | date:'medium' }}</div>
+        </div>
+
+        <!-- Edit mode -->
+        <ng-template #editForm>
+          <form [formGroup]="editForms[i]" class="edit-form">
+            <div class="form-group">
+              <label for="content-{{i}}">Content:</label>
+              <textarea id="content-{{i}}" formControlName="content" required></textarea>
+              <div class="error-message" *ngIf="editForms[i].get('content')?.touched && editForms[i].get('content')?.invalid">
+                <span *ngIf="editForms[i].get('content')?.errors?.['required']">Content is required.</span>
+                <span *ngIf="editForms[i].get('content')?.errors?.['minlength']">Content must be at least 3 characters.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="rating-{{i}}">Rating (1-5):</label>
+              <input type="number" id="rating-{{i}}" formControlName="rating" min="1" max="5" required>
+              <div class="error-message" *ngIf="editForms[i].get('rating')?.touched && editForms[i].get('rating')?.invalid">
+                <span *ngIf="editForms[i].get('rating')?.errors?.['required']">Rating is required.</span>
+                <span *ngIf="editForms[i].get('rating')?.errors?.['min'] || editForms[i].get('rating')?.errors?.['max']">
+                  Rating must be between 1 and 5.
+                </span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="image-{{i}}">Image (optional):</label>
+              <input type="file" id="image-{{i}}" (change)="onFileChange($event, i)" accept="image/*">
+            </div>
+          </form>
+        </ng-template>
+      </div>
+
+      <div class="feedback-image">
+        <img *ngIf="feedback.fullImageUrl && !imageErrors[i]" 
+             [src]="feedback.fullImageUrl" 
+             alt="Feedback Image"
+             (error)="onImageError(i)">
+        <p *ngIf="!feedback.fullImageUrl || imageErrors[i]" class="no-image">
+          {{ imageErrors[i] ? 'Image failed to load' : 'No image' }}
+        </p>
+      </div>
+
+      <div class="feedback-actions">
+        <ng-container *ngIf="!editMode[i]; else editActions">
+          <button class="edit-btn" (click)="editFeedback(i)">Edit</button>
+          <button class="delete-btn" (click)="deleteFeedback(feedback.id, i)">Delete</button>
+        </ng-container>
+        <ng-template #editActions>
+          <button class="save-btn" [disabled]="editForms[i]?.invalid" (click)="saveFeedback(i)">Save</button>
+          <button class="cancel-btn" (click)="cancelEdit(i)">Cancel</button>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #noFeedback>
+    <p class="no-feedback" *ngIf="!loading">You haven't submitted any feedback yet.</p>
+  </ng-template>
+</div>

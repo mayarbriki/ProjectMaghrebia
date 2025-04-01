@@ -1,48 +1,76 @@
-<!--==========================
-    Header
-  ============================-->
-  <header id="header">
-    <div class="container">
-<link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
-      <div id="logo" class="pull-left">
-        <a href="#" class="scrollto"><img src="../../../assets/FrontOffice/img/maghrebia (2).png" alt="" title=""></a>
-      </div>
-
-      <nav id="nav-menu-container">
-        <ul class="nav-menu">
-          <li class="menu-active"><a href="#intro">Home</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="/claims">Claims</a></li>
-          <li><a href="/assessments">Assessments</a></li>
-          <li><a href="#contracts">Contracts</a></li>
-          <li><a href="#properties">Properties</a></li>
-          <li><a href="#sponsors">Sponsors</a></li>
-          <li><a href="/signin">News</a></li>
-          <li><a href="/services">Services</a></li>
-
-          <!-- Conditional rendering -->
-          <ng-container *ngIf="!isAuthenticated; else profileMenu">
-            <li><a href="/signup">SignUp</a></li>
-            <li class="buy-tickets"><a href="/signin">Login</a></li>
-          </ng-container>
-
-          <ng-template #profileMenu>
-            <li class="nav-item dropdown">
-              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                <img src="/assets/FrontOffice/img/user-profile.png" alt="" width="30" height="30" class="rounded-circle">
-                {{ user?.username }}
-              </a>
-              <ul class="dropdown-menu">
-                <li><span class="dropdown-item-text"><strong>Username:</strong> {{ user?.username }}</span></li>
-                <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
-              </ul>
-            </li>
-          </ng-template>
-          
-          
-
-        </ul>
-      </nav><!-- #nav-menu-container -->
+<header id="header">
+  <div class="container">
+    <link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
+    <div id="logo" class="pull-left">
+      <a href="#" class="scrollto"><img src="../../../assets/FrontOffice/img/maghrebia (2).png" alt="" title=""></a>
     </div>
-  </header><!-- #header -->
 
+    <nav id="nav-menu-container">
+      <ul class="nav-menu">
+        <li class="menu-active"><a href="#intro">Home</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="/claims">Claims</a></li>
+        <li><a href="/assessments">Assessments</a></li>
+        <li><a href="#contracts">Contracts</a></li>
+        <li><a href="#properties">Properties</a></li>
+        <li><a href="#sponsors">Sponsors</a></li>
+        <li><a href="/signin">News</a></li>
+        <li><a href="/services">Services</a></li>
+
+        <ng-container *ngIf="!isAuthenticated; else profileMenu">
+          <li><a href="/signup">SignUp</a></li>
+          <li class="buy-tickets"><a href="/signin">Login</a></li>
+        </ng-container>
+
+        <ng-template #profileMenu>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" (click)="goToProfile()">
+              <img src="/assets/FrontOffice/img/user-profile.png" alt="" width="30" height="30" class="rounded-circle">
+              {{ user?.username }}
+              <span class="badge bg-primary ms-2" *ngIf="suggestionCount > 0">
+                <i class="bi bi-bell"></i> {{ suggestionCount }}
+              </span>
+            </a>
+            <ul class="dropdown-menu">
+              <li>
+                <span class="dropdown-item-text">
+                  <strong>Username:</strong> {{ user?.username }}
+                </span>
+              </li>
+              <li>
+                <div>
+                  Account Balance: {{ user?.accountBalance ?? 'Not Available' }}                </div>
+              </li>
+              <li *ngIf="suggestions.length > 0">
+                <span class="dropdown-item-text suggestion-message">
+                  <strong>Hey {{ user?.username }}! Here are some plans we think you'll love:</strong>
+                </span>
+              </li>
+              <li *ngFor="let suggestion of suggestions">
+                <div class="dropdown-item suggestion-item">
+                  <strong>{{ suggestion.name || 'Unknown Product' }}</strong>
+                  <p>{{ suggestion.description || 'No description available' }}</p>
+                  <div class="text-muted">Price: ${{ suggestion.price || 'N/A' }}</div>
+                </div>
+              </li>
+              
+        
+                <a class="dropdown-item btn" [routerLink]="['/app-bookmark']" (click)="closeDropdown()">
+                  View All Bookmarks
+                </a>
+                <li>
+                  <a class="dropdown-item"  [routerLink]="['/app-feedback-display']"(click)="goToFeedbacks()">
+                    Feedback
+                  </a>
+                </li>
+                
+           
+              
+              <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+            </ul>
+          </li>
+        </ng-template>
+      </ul>
+    </nav><!-- #nav-menu-container -->
+  </div>
+</header><!-- #header -->

@@ -1,5 +1,4 @@
 <app-header-front></app-header-front>
-<router-outlet></router-outlet>
 
 <div class="product-container">
   <div *ngIf="product" class="product-card">
@@ -37,6 +36,25 @@
             {{ selectedPlan.amount | currency }} / {{ selectedPlan.duration }} months
           </p>
         </div>
+      </div>
+
+      <!-- Share Product Section -->
+      <div class="share-product">
+        <h3 class="share-product-title">Share this Product and earn a coupon?</h3>
+        <div class="share-form">
+          <input 
+            type="email" 
+            [(ngModel)]="recipientEmail" 
+            placeholder="Enter friend's email" 
+            class="share-input" 
+            name="recipientEmail"
+            [disabled]="isSharing"
+          />
+          <button class="share-btn" (click)="shareProduct()" [disabled]="isSharing">
+            {{ isSharing ? 'Sharing...' : 'Share' }}
+          </button>
+        </div>
+        <p *ngIf="shareMessage" class="share-message">{{ shareMessage }}</p>
       </div>
 
       <!-- Feedback Button -->

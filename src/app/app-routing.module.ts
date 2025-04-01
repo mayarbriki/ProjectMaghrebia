@@ -46,12 +46,19 @@ import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessm
 import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
 import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
 import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
+import { BookmarkComponent } from './bookmark/bookmark.component';
+import { StatisticsComponent } from './statistics/statistics.component';
+import { FeedbackDisplayComponent } from './feedback-display/feedback-display.component';
 
 const routes: Routes = [
   // Front-Office Routes
   {
     path: '',
     component: AllTemplateFrontComponent,  // Front-Office as Default Route
+  },
+  {
+    path: 'app-feedback-display',
+    component: FeedbackDisplayComponent,  // Front-Office as Default Route
   },
   {
     path: 'app-header-front',
@@ -109,6 +116,11 @@ const routes: Routes = [
     path: 'Services', // New route for the message component
     component: ServicesComponent
   },
+  {
+    path: 'app-bookmark',
+    component: BookmarkComponent
+  },
+  
   
   
 
@@ -123,6 +135,10 @@ const routes: Routes = [
       { path: 'contracts', component: ContratsComponent },
       { path: 'articles', component: ArticlesComponent },
       { path: 'blogs', component: BlogsComponent },
+      {
+        path: 'app-statistics',
+        component: StatisticsComponent
+      },
       {
         path: 'products', // New route for the message component
         component: ProductsComponent

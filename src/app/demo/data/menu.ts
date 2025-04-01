@@ -226,6 +226,15 @@ export const menus: Navigation[] = [
       },
       {
         id: 'Dashboard',
+        title: 'Statistics',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/app-statistics', // Route to the app-statistics component
+        icon: '#custom-chart-bar', // Use an appropriate icon
+        breadcrumbs: false
+      },
+      {
+        id: 'Dashboard',
         title: 'real estate',
         type: 'item',
         classes: 'nav-item',

@@ -13,6 +13,7 @@ export interface User {
   address: string;
   role: 'ADMIN' | 'CUSTOMER' | 'AGENT'; // Adjust roles as needed
   image?: string;
+  accountBalance?: number;
 }
 
 @Injectable({

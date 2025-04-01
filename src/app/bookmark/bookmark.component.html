@@ -1,25 +1,7 @@
-<div class="carousel-container">
-  <!-- Search Bar -->
-  <div class="search-container">
-    <input type="text" [(ngModel)]="searchQuery" placeholder="Search products..." (input)="onSearch()" />
-  </div>
+<!-- bookmark.component.html -->
+<app-header-front></app-header-front>
 
-  <!-- Carousel -->
-  <div class="sort-controls">
-    <label for="sortBy">Sort by: </label>
-    <select [(ngModel)]="sortBy" (change)="onSortChange(sortBy, sortDir)">
-      <option value="name">Name</option>
-      <option value="price">Price</option>
-      <option value="views">Views</option>
-    </select>
-  
-    <label for="sortDir">Direction: </label>
-    <select [(ngModel)]="sortDir" (change)="onSortChange(sortBy, sortDir)">
-      <option value="asc">Ascending</option>
-      <option value="desc">Descending</option>
-    </select>
-  </div>
-  <div *ngIf="products.length > 0; else noProducts">
+<div class="carousel-container" *ngIf="bookmarkedProducts.length > 0; else noBookmarks">
     <!-- Left Arrow -->
     <button class="carousel-btn left" (click)="prevSlide()" [disabled]="transitionInProgress">
       ❮
@@ -30,7 +12,7 @@
       <div class="carousel-products" [style.transform]="'translateX(' + translateX + 'px)'">
         <div
           class="product-card"
-          *ngFor="let product of products; let i = index"
+          *ngFor="let product of bookmarkedProducts; let i = index"
           [class.active]="isCurrentlyVisible(i)"
         >
           <!-- Bookmark Icon -->
@@ -41,15 +23,15 @@
             [disabled]="isBookmarkLoading(product.idProduct)"
             title="{{ isBookmarked(product.idProduct) ? 'Remove Bookmark' : 'Bookmark' }}"
           ></button>
-
+  
           <!-- Trending Badge (Top-Left) -->
           <div class="trending-badge" *ngIf="isTrendingProduct(product)">
             Trending Product
           </div>
-
+  
           <!-- Product Image -->
           <img *ngIf="product.fileName" [src]="product.fileName" alt="Product Image" />
-
+  
           <!-- Product Details -->
           <div class="card-body">
             <h5 class="card-title">
@@ -65,7 +47,7 @@
                 'badge-info': product.category === 'VEHICULE'
               }"
             >{{ product.category }}</span>
-
+  
             <!-- View Product Details Button -->
             <button class="details-btn" (click)="viewProductDetails(product.idProduct)">
               View Product Details
@@ -80,16 +62,8 @@
       ❯
     </button>
   </div>
-
-  <!-- No Products State -->
-  <ng-template #noProducts>
-    <div class="no-products">
-      <ng-container *ngIf="searchQuery; else loading">
-        No products found for "{{ searchQuery }}".
-      </ng-container>
-      <ng-template #loading>
-        Loading products...
-      </ng-template>
-    </div>
+  
+  <!-- No Bookmarks State -->
+  <ng-template #noBookmarks>
+    <div class="no-bookmarks">No bookmarked products yet</div>
   </ng-template>
-</div>

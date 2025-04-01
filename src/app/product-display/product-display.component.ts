@@ -1,66 +1,152 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Product, ProductService } from '../product.service';
 import { CommonModule } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
 import { FeedbackComponent } from '../feedback/feedback.component';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { catchError, finalize } from 'rxjs/operators';
+import { SuggestionService } from '../suggestion.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-product-display',
   standalone: true,
-  imports: [CommonModule, FeedbackComponent],
+  imports: [CommonModule, FeedbackComponent, FormsModule],
   templateUrl: './product-display.component.html',
   styleUrls: ['./product-display.component.scss'],
 })
 export class ProductDisplayComponent implements OnInit {
   products: Product[] = [];
+  originalProducts: Product[] = []; // Store the original list of products
+  private bookmarkedProductIdsSubject = new BehaviorSubject<number[]>([]);
+  bookmarkedProductIds$ = this.bookmarkedProductIdsSubject.asObservable();
   bookmarkedProductIds: number[] = [];
-  userId: number | null = null; // Changed to nullable number
-    currentIndex: number = 0;
-  itemsPerPage: number = 3; // Show 3 items at a time
+  userId: number | null = null;
+  currentIndex: number = 0;
+  itemsPerPage: number = 3;
   transitionInProgress: boolean = false;
   translateX: number = 0;
-  mostViewedProduct: Product | null = null; // Store the most viewed product
+  mostViewedProducts: Product[] = [];
+  searchQuery: string = '';
+  searchResults: Product[] = [];
+  sortBy: string = 'name';
+  sortDir: string = 'asc';
+  bookmarkLoading: { [key: number]: boolean } = {};
+
   constructor(
     private productService: ProductService,
     private dialog: MatDialog,
     private router: Router,
-    private authService: AuthService, 
-    
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private suggestionService: SuggestionService
   ) {}
 
   ngOnInit(): void {
-    // Get user info and set userId
     const user = this.authService.getUser();
-    this.userId = user.id; // Assuming your User entity has an 'id' property
-    
+    this.userId = user?.id ?? null;
+
     if (this.userId) {
       this.loadBookmarks();
     }
 
-    this.productService.getProducts().subscribe((data) => {
-      this.products = data;
+    this.productService.getProducts().subscribe({
+      next: (data) => {
+        this.originalProducts = data; // Store the original list
+        this.products = [...this.originalProducts]; // Initialize products with the full list
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error fetching products:', err)
     });
 
     this.productService.getMostViewedProduct().subscribe({
-      next: (data) => {
-        this.mostViewedProduct = data;
+      next: (data: Product[]) => {
+        this.mostViewedProducts = data || [];
+        this.cdr.detectChanges();
       },
-      error: (err) => console.error('Error fetching most viewed product:', err),
+      error: (err) => {
+        console.error('Error fetching most viewed products:', err);
+        this.mostViewedProducts = [];
+      }
     });
 
-    // Subscribe to authentication changes
     this.authService.isAuthenticated$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         const updatedUser = this.authService.getUser();
-        this.userId = updatedUser.id;
+        this.userId = updatedUser?.id ?? null;
         this.loadBookmarks();
       } else {
         this.userId = null;
-        this.bookmarkedProductIds = [];
+        this.bookmarkedProductIdsSubject.next([]);
       }
     });
+
+    this.bookmarkedProductIds$.subscribe(bookmarkedIds => {
+      this.bookmarkedProductIds = bookmarkedIds;
+      this.cdr.detectChanges();
+    });
+  }
+
+  loadBookmarks(): void {
+    if (!this.userId) return;
+
+    this.productService.getBookmarkedProducts(this.userId).subscribe({
+      next: (bookmarks) => {
+        console.log('Bookmarked products fetched:', bookmarks);
+        this.bookmarkedProductIdsSubject.next(bookmarks);
+      },
+      error: (error) => {
+        console.error('Error loading bookmarks:', error);
+        this.bookmarkedProductIdsSubject.next([]);
+      }
+    });
+  }
+
+  toggleBookmark(product: Product): void {
+    if (product.idProduct === undefined || !this.userId) {
+      console.error('Product ID or User ID is undefined');
+      return;
+    }
+
+    const productId = product.idProduct;
+    this.bookmarkLoading[productId] = true;
+
+    let bookmarkAction$: Observable<string | void>;
+
+    if (this.isBookmarked(productId)) {
+      bookmarkAction$ = this.productService.unbookmarkProduct(this.userId, productId);
+    } else {
+      bookmarkAction$ = this.productService.bookmarkProducts(this.userId, [productId]);
+    }
+
+    bookmarkAction$.pipe(
+      catchError(error => {
+        console.error('Bookmark toggle error:', error);
+        return of(null);
+      }),
+      finalize(() => {
+        this.bookmarkLoading[productId] = false;
+        this.loadBookmarks();
+        this.cdr.detectChanges();
+        this.suggestionService.refreshSuggestions();
+      })
+    ).subscribe({
+      next: (response) => {
+        if (response !== null) {
+          console.log(`Bookmark toggle successful for product ID: ${productId}`);
+        }
+      }
+    });
+  }
+
+  isBookmarked(productId: number | undefined): boolean {
+    return productId !== undefined && this.bookmarkedProductIds.includes(productId);
+  }
+
+  isBookmarkLoading(productId: number | undefined): boolean {
+    return productId ? !!this.bookmarkLoading[productId] : false;
   }
 
   prevSlide() {
@@ -77,7 +163,7 @@ export class ProductDisplayComponent implements OnInit {
 
       setTimeout(() => {
         this.transitionInProgress = false;
-      }, 500); // Match transition time in CSS
+      }, 500);
     }
   }
 
@@ -95,12 +181,12 @@ export class ProductDisplayComponent implements OnInit {
 
       setTimeout(() => {
         this.transitionInProgress = false;
-      }, 500); // Match transition time in CSS
+      }, 500);
     }
   }
 
   updateTranslation(): void {
-    const itemWidth = 220; // 200px wide + 20px gap
+    const itemWidth = 220;
     this.translateX = -(this.currentIndex * itemWidth);
   }
 
@@ -113,70 +199,95 @@ export class ProductDisplayComponent implements OnInit {
   }
 
   viewProductDetails(productId: number | undefined): void {
-    if (productId !== undefined) {
-      this.productService.incrementViews(productId).subscribe({
-        next: (updatedProduct) => {
-          console.log(`Views incremented for product ${productId}: ${updatedProduct.views}`);
-          // Update the local products array with the new views count
-          const index = this.products.findIndex((p) => p.idProduct === productId);
-          if (index !== -1) {
-            this.products[index] = updatedProduct;
+    if (productId === undefined) return;
+
+    this.productService.incrementViews(productId).subscribe({
+      next: (updatedProduct) => {
+        const index = this.products.findIndex(p => p.idProduct === productId);
+        if (index !== -1) {
+          this.products[index] = updatedProduct;
+        }
+
+        const mostViewedIndex = this.mostViewedProducts.findIndex(p => p.idProduct === productId);
+        if (mostViewedIndex !== -1) {
+          this.mostViewedProducts[mostViewedIndex] = updatedProduct;
+        } else if (this.mostViewedProducts.length < 3) {
+          this.mostViewedProducts.push(updatedProduct);
+        } else {
+          this.mostViewedProducts.sort((a, b) => (b.views || 0) - (a.views || 0));
+          if ((updatedProduct.views || 0) > (this.mostViewedProducts[2].views || 0)) {
+            this.mostViewedProducts[2] = updatedProduct;
           }
-          // Update most viewed product if necessary
-          if (!this.mostViewedProduct || updatedProduct.views! > (this.mostViewedProduct.views || 0)) {
-            this.mostViewedProduct = updatedProduct;
-          }
-          this.router.navigate(['/product', productId]);
-        },
-        error: (err) => {
-          console.error('Error incrementing views:', err);
-          this.router.navigate(['/product', productId]); // Navigate even if increment fails
-        },
-      });
-    }
+        }
+        this.mostViewedProducts.sort((a, b) => (b.views || 0) - (a.views || 0));
+
+        this.cdr.detectChanges();
+        this.router.navigate(['/product', productId]);
+      },
+      error: (err) => {
+        console.error('Error incrementing views:', err);
+        this.router.navigate(['/product', productId]);
+      }
+    });
   }
 
   isTrendingProduct(product: Product): boolean {
-    return product.idProduct === this.mostViewedProduct?.idProduct;
-  }
-  loadBookmarks() {
-    if (!this.userId) return; // Guard against null userId
-    
-    this.productService.getBookmarkedProducts(this.userId).subscribe(
-      (bookmarks) => this.bookmarkedProductIds = bookmarks,
-      (error) => console.error('Error loading bookmarks:', error)
-    );
+    return product.idProduct !== undefined && 
+           this.mostViewedProducts.some(p => p.idProduct === product.idProduct);
   }
 
-  isBookmarked(productId: number | undefined): boolean {
-    return productId !== undefined && this.bookmarkedProductIds.includes(productId);
+  openDropdown() {
+    const dropdownToggle = document.querySelector('.nav-link.dropdown-toggle') as HTMLElement;
+    if (dropdownToggle) {
+      dropdownToggle.click();
+    }
   }
-
- 
-
-  toggleBookmark(product: Product) {
-    if (product.idProduct === undefined || !this.userId) return;
-
-    const productId = product.idProduct;
-
-    if (this.isBookmarked(productId)) {
-      this.productService.unbookmarkProduct(this.userId, productId)
-        .subscribe({
-          next: () => {
-            this.bookmarkedProductIds = this.bookmarkedProductIds.filter(
-              id => id !== productId
-            );
-          },
-          error: (error) => console.error('Error unbookmarking:', error)
-        });
+  loadProducts(): void {
+    this.productService.sort(this.sortBy, this.sortDir).subscribe({
+      next: (data) => {
+        this.originalProducts = data;
+        this.products = [...this.originalProducts];
+        this.cdr.detectChanges();
+      },
+      error: (err) => console.error('Error fetching products:', err)
+    });
+  }
+  onSortChange(sortBy: string, sortDir: string): void {
+    this.sortBy = sortBy;
+    this.sortDir = sortDir;
+    if (this.searchQuery.trim()) {
+      this.onSearch();
     } else {
-      this.productService.bookmarkProducts(this.userId, [productId])
-        .subscribe({
-          next: () => {
-            this.bookmarkedProductIds.push(productId);
-          },
-          error: (error) => console.error('Error bookmarking:', error)
-        });
+      this.loadProducts();
+    }
+  }
+
+  onSearch() {
+    if (this.searchQuery.trim()) {
+      this.productService.searchProducts(this.searchQuery).subscribe({
+        next: (results) => {
+          this.searchResults = results;
+          this.products = [...this.searchResults]; // Replace products with search results
+          this.currentIndex = 0; // Reset carousel to start
+          this.updateTranslation(); // Update carousel position
+          this.cdr.detectChanges();
+          console.log('Search results:', results);
+        },
+        error: (err) => {
+          console.error('Search error:', err);
+          this.searchResults = [];
+          this.products = [...this.originalProducts]; // Revert to original list on error
+          this.currentIndex = 0;
+          this.updateTranslation();
+          this.cdr.detectChanges();
+        }
+      });
+    } else {
+      this.searchResults = [];
+      this.products = [...this.originalProducts]; // Revert to original list if query is empty
+      this.currentIndex = 0;
+      this.updateTranslation();
+      this.cdr.detectChanges();
     }
   }
 }

@@ -1,5 +1,10 @@
 <app-header-front></app-header-front>
 <div *ngIf="assessment" class="view-assessment-container">
+  <button class="back" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+  </button>
     <h3>Assessment Details</h3>
     <div class="assessment-detail">
       <p><strong>Assessment Date:</strong> {{ assessment.assessmentDate | date }}</p>
@@ -8,19 +13,15 @@
       <p><strong>Final Decision:</strong> {{ assessment.finalDecision }}</p>
       <p><strong>Submission Date:</strong> {{ assessment.submissionDate | date }}</p>
       
-      <p><strong>Documents:</strong></p>
+      <!--<p><strong>Documents:</strong></p>
       <ul>
         <li *ngFor="let file of assessment.assessmentDocuments">
           <a href="{{ file }}" target="_blank">{{ file }}</a>
         </li>
-      </ul>
+      </ul>-->
     </div>
   
-    <!-- Buttons for Edit and Delete -->
-    <div class="action-buttons">
-      <button class="btn btn-warning" (click)="editAssessment()">Edit</button>
-      <button class="btn btn-danger" (click)="deleteAssessment()">Delete</button>
-    </div>
+   
   </div>
   
   <app-footer-front></app-footer-front>

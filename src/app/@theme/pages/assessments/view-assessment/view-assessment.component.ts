@@ -64,4 +64,13 @@ export class ViewAssessmentComponent implements OnInit {
       );
     }
   }
+  goBack(): void {
+    this.router.navigate(['/admin/assessments'], { relativeTo: this.route });
+  }
+
+  isImage(file: string): boolean {
+    const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'webp'];
+    const extension = file.split('.').pop()?.toLowerCase();
+    return extension ? imageExtensions.includes(extension) : false;
+  }
 }

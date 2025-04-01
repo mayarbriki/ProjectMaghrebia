@@ -94,4 +94,7 @@ export class AddAssessmentComponent implements OnInit {
   onCancel(): void {
     this.router.navigate(['/admin/assessments']);
   }
+  goBack(): void {
+    this.router.navigate(['/admin/assessments']);
+  }
 }

@@ -1,0 +1,163 @@
+/* Style pour le chatbot */
+.chatbot-container {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 350px;
+    max-width: 100%;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    z-index: 1000;
+    font-family: 'Arial', sans-serif;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Header du chatbot */
+.chat-header {
+    background: linear-gradient(135deg, #1e90ff, #00bfff);
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.chat-header h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.chat-header button {
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.chat-header button:hover {
+    color: #ff6347; /* change color on hover */
+}
+
+/* Corps du chatbot */
+.chat-body {
+    padding: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    padding: 10px;
+    border-radius: 10px;
+    margin: 5px 0;
+    max-width: 80%;
+    line-height: 1.5;
+    font-size: 14px;
+    position: relative;
+}
+
+.message.user {
+    background-color: #1e90ff;
+    color: white;
+    margin-left: auto;
+    border-radius: 12px 12px 0 12px;
+}
+
+.message.bot {
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 12px 12px 12px 0;
+}
+
+.message.user::after {
+    content: '→';
+    position: absolute;
+    right: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #1e90ff;
+    font-size: 20px;
+}
+
+.message.bot::before {
+    content: '←';
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e5e5e5;
+    font-size: 20px;
+}
+
+/* Input de message */
+input[type="text"] {
+    padding: 12px 18px;
+    font-size: 16px;
+    width: calc(100% - 40px);
+    border: none;
+    border-radius: 25px;
+    margin: 10px 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    box-shadow: 0 4px 12px rgba(0, 150, 255, 0.5);
+}
+
+input[type="text"]::placeholder {
+    color: #b0b0b0;
+}
+
+/* Bouton d'activation du chatbot */
+.chat-header button {
+    font-size: 20px;
+    padding: 5px 10px;
+    background: #ff6347;
+    border-radius: 50%;
+    color: white;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.chat-header button:hover {
+    background-color: #ff4500;
+}
+
+/* Animation d'entrée */
+.chatbot-container.ng-enter {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.chatbot-container.ng-enter.ng-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: all 0.5s ease-in-out;
+}
+
+/* Personnalisation du fond du corps du chat */
+.chat-body {
+    background: #f9f9f9;
+    border-radius: 15px;
+    padding: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ombres et transitions subtiles */
+.chatbot-container {
+    transition: transform 0.5s ease-out;
+}
+
+.chatbot-container:active {
+    transform: scale(0.98);
+}

@@ -1,4 +1,11 @@
+
+
 <div *ngIf="claim" class="view-claim-container">
+  <button class="back" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+  </button>
     <h3>Claim Details</h3>
     <div class="claim-detail">
       <p><strong>Full Name:</strong> {{ claim.fullName }}</p>
@@ -14,11 +21,11 @@
         </li>
       </ul>
     </div>
-    
-<!-- Buttons for Edit and Delete -->
-<div class="action-buttons">
-    <button class="btn btn-warning" (click)="editClaim()">Edit</button>
-    <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
-  </div>
-</div>
   
+    <!-- Buttons for Edit and Delete -->
+    <div class="action-buttons">
+        <button class="btn btn-warning" (click)="editClaim()">Edit</button>
+        <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
+        <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>
+    </div>
+</div>

@@ -28,6 +28,8 @@ export class ModifyClaimComponent implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
+  fileName: string = '';
+
 
   constructor(
     private claimService: ClaimService,
@@ -56,8 +58,10 @@ export class ModifyClaimComponent implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.selectedFiles = Array.from(input.files);
+      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; // Update file name
     }
   }
+
   
   onUpdate(): void {
     const formData = new FormData();
@@ -82,7 +86,7 @@ export class ModifyClaimComponent implements OnInit {
   
     this.claimService.updateClaim(this.claim.idClaim, formData).subscribe(() => {
       alert('Claim updated successfully!');
-      this.router.navigate(['/admin/claims']);
+      this.router.navigate(['/claims']);
     }, error => {
       console.error("Error updating claim:", error);
       alert('Failed to update claim.');
@@ -91,7 +95,7 @@ export class ModifyClaimComponent implements OnInit {
   
   
   onCancel(): void {
-    this.router.navigate(['/admin/claims']);    
+    this.router.navigate(['/claims']);    
   }
   
 
@@ -99,5 +103,8 @@ export class ModifyClaimComponent implements OnInit {
     if (this.claim.claimReason !== 'Other') {
       this.temporaryOtherClaimReason = '';
     }
+  }
+  goBack() : void {
+    this.router.navigate(['/admin/claims']);
   }
 }

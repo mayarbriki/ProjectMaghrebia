@@ -9,7 +9,7 @@ import { Claim } from './models/claim.model';
 export class ClaimService {
   private baseUrl = 'http://localhost:8089/claims';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient  ) { }
 
   // Create claim
   createClaim(claim: FormData): Observable<Claim> {
@@ -39,4 +39,10 @@ export class ClaimService {
   deleteClaim(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
   }
+
+  updateClaimStatus(idClaim: string, newStatus: string): Observable<Claim> {
+    return this.http.put<Claim>(`${this.baseUrl}/${idClaim}/status?status=${newStatus}`, {});
+}
+
+
 }

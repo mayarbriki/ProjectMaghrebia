@@ -65,4 +65,27 @@ export class ViewClaimComponent implements OnInit {
       );
     }
   }
+  viewAssessment(idClaim: string): void {
+    this.claimService.getClaimById(idClaim).subscribe(
+      (claim) => {
+        if (claim && claim.assessment) {
+          const idAssessment = claim.assessment.idAssessment;
+          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]); 
+        } else {
+          alert('No assessment found for this claim.');
+        }
+      },
+      (error) => {
+        console.error('Error fetching claim:', error);
+        if (error.status === 404) {
+          alert('Claim not found.');
+        } else {
+          alert('Server error. Please try again later.');
+        }
+      }
+    );
+  }
+  goBack(): void {
+    this.router.navigate(['/admin/claims'], { relativeTo: this.route });
+  }
 }

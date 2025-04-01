@@ -1,11 +1,8 @@
-
-
 <div class="list-claim-container">
     <app-header-front></app-header-front>
     <div class="header-container">
-        <h3>List of Claims</h3>
+        <h1>My Claims</h1>
         <div class="header-actions">
-            <!-- Recherche avancée -->
             <input 
                 type="text" 
                 placeholder="Search Claims" 
@@ -13,40 +10,180 @@
                 (input)="applySearch()" 
                 class="search-input" />
 
-            <!-- Tri -->
             <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
+                <option value="" disabled selected>Select Sort Option</option> 
                 <option value="name">Sort by Claim Name</option>
+                <option value="date">Sort by Full Name</option>
                 <option value="date">Sort by Date</option>
             </select>
 
-            <!-- Bouton Ajouter une réclamation -->
-            <button class="btn btn-success" (click)="navigateToAddClaim()"> Add Claim</button>
+            <button class="btn btn-success" (click)="navigateToAddClaim()">Add Claim</button>
+            <button class="btn btn-secondary" (click)="toggleStatistics()">Statistics</button>
         </div>
     </div>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Full Name</th>
-                <th>Claim Name</th>
-                <th>Submission Date</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let claim of filteredClaims; let i = index">
-                <td>{{ claim.fullName }}</td>
-                <td>{{ claim.claimName }}</td>
-                <td>{{ claim.submissionDate | date:'yyyy-MM-dd' }}</td>
-                <td>{{ claim.statusClaim }}</td>
-                <td class="actions">
-                    <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">View</button>
-                    <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)">Edit</button>
-                    <button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">Delete</button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="claims-grid">
+        <div class="claim-card" *ngFor="let claim of filteredClaims | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
+            <div class="claim-card-header">
+                <h3>{{ claim.fullName }}</h3>
+                <p>{{ claim.claimName }}</p>
+            </div>
+            <div class="claim-card-body">
+                <p><strong>Submission Date:</strong> {{ claim.submissionDate | date:'yyyy-MM-dd' }}</p>
+                <p><strong>Status:</strong> {{ claim.statusClaim }}</p>
+            </div>
+            <div class="claim-card-footer">
+                <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
+                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
+                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                        <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+                        <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+                        <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+                    </svg>
+                </button>
+                <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">Assessment</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="pagination-container">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
 </div>
+<div *ngIf="showStatistics" class="stats-container">
+    <h2>Statistics</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-circle total-claims">
+                <span class="stat-count">{{ getTotalClaims() }}</span>
+            </div>
+            <p class="stat-label">Total Claims</p>
+        </div>
+        
+        <div class="stat-card">
+            <div class="stat-circle" [style.background]="getStatusColor('PENDING')">
+                <span class="stat-count">{{ getClaimCountByStatus('PENDING') }}</span>
+            </div>
+            <p class="stat-label">Pending</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-circle" [style.background]="getStatusColor('APPROVED')">
+                <span class="stat-count">{{ getClaimCountByStatus('APPROVED') }}</span>
+            </div>
+            <p class="stat-label">Approved</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-circle" [style.background]="getStatusColor('REJECTED')">
+                <span class="stat-count">{{ getClaimCountByStatus('REJECTED') }}</span>
+            </div>
+            <p class="stat-label">Rejected</p>
+        </div>
+        <div class="stat-card">
+            <div class="stat-circle" [style.background]="getStatusColor('IN_REVIEW')">
+                <span class="stat-count">{{ getClaimCountByStatus('IN_REVIEW') }}</span>
+            </div>
+            <p class="stat-label">In Review</p>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .stats-container {
+        background-color: #ffffff;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        margin: 20px auto;
+        max-width: 900px;
+        width: 100%;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        text-align: center;
+    }
+
+    .stats-container h2 {
+        font-size: 30px;
+        font-weight: bold;
+        color: black;
+        margin-bottom: 20px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+    }
+
+    .stat-card {
+        background-color: #f1f1f1;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+
+    .stat-circle {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto;
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+        background-color: #3b82f6; /* Default color */
+    }
+
+    .stat-count {
+        font-size: 24px;
+        color: white;
+    }
+
+    .stat-label {
+        font-size: 18px;
+        color: #555;
+        margin-top: 10px;
+    }
+
+    .stat-card:hover {
+        background-color: #e8e8e8;
+        transform: translateY(-5px);
+        transition: all 0.3s ease-in-out;
+    }
+
+    /* Color mapping for each status */
+    .stat-circle.pending {
+        background-color: #f59e0b;
+    }
+
+    .stat-circle.approved {
+        background-color: #10b981;
+    }
+
+    .stat-circle.rejected {
+        background-color: #ef4444;
+    }
+
+    .stat-circle.in-review {
+        background-color: #3b82f6;
+    }
+    .stat-circle.total-claims {
+    background-color: #9e9e9e; /* Vous pouvez changer la couleur selon votre préférence */
+}
+
+</style>
+
+<app-chatbot></app-chatbot> 
+
 <app-footer-front></app-footer-front>

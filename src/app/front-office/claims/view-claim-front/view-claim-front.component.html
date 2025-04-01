@@ -1,6 +1,11 @@
 <div *ngIf="claim" class="view-claim-container">
   <app-header-front></app-header-front>
-
+  <button class="back" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+  </button>
+  
     <h3>Claim Details</h3>
     <div class="claim-detail">
       <p><strong>Full Name:</strong> {{ claim.fullName }}</p>
@@ -9,18 +14,40 @@
       <p><strong>Status:</strong> {{ claim.statusClaim }}</p>
       <p><strong>Reason:</strong> {{ claim.claimReason }}</p>
       <p><strong>Description:</strong> {{ claim.description }}</p>
-      <p><strong>Documents:</strong></p>
-      <ul>
-        <li *ngFor="let file of claim.supportingDocuments">
-          <a href="{{ file.url }}" target="_blank">{{ file }}</a>
-        </li>
-      </ul>
+      <!--<p><strong>Documents:</strong></p>-->
+<ul>
+  <li *ngFor="let file of claim.supportingDocuments">
+    <!-- Afficher l'URL si le fichier n'est pas une image -->
+    <a *ngIf="!isImage(file.url)" href="{{ file.url }}" target="_blank">{{ file.url }}</a>
+
+    <!-- Afficher l'image si c'est une image -->
+    <img *ngIf="isImage(file.url)" [src]="file.url" alt="Supporting Document" style="max-width: 200px; max-height: 200px;" />
+    
+    <!-- Debugging: Affichage de l'URL du fichier pour vérifier qu'elle est correcte -->
+    <p *ngIf="file.url">File URL: {{ file.url }}</p>
+  </li>
+</ul>
+
+      
     </div>
     
 <!-- Buttons for Edit and Delete -->
 <div class="action-buttons">
-    <button class="btn btn-warning" (click)="editClaim()">Edit</button>
-    <button class="btn btn-danger" (click)="deleteClaim()">Delete</button>
+  <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)"> 
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+        <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+        <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+    </svg>Update
+</button>
+<button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+      <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+  </svg>Delete
+</button>
+    <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>
+    <button class="btn btn-primary" (click)="downloadPDF()">Download PDF</button>
+    <button class="btn btn-secondary" (click)="downloadExcel()">Download Excel</button>
+
   </div>
 </div>
 <app-footer-front></app-footer-front>

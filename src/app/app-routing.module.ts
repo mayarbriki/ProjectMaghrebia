@@ -49,6 +49,7 @@ import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessm
 import { BookmarkComponent } from './bookmark/bookmark.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { FeedbackDisplayComponent } from './feedback-display/feedback-display.component';
+import { BlogSingleComponent } from './blog-single/blog-single.component';
 
 const routes: Routes = [
   // Front-Office Routes
@@ -119,6 +120,10 @@ const routes: Routes = [
   {
     path: 'app-bookmark',
     component: BookmarkComponent
+  },
+  {
+    path: 'blogs/:id',
+    component: BlogSingleComponent
   },
   
   

@@ -1,6 +1,6 @@
 <div class="blog-container">
-  <div *ngFor="let blog of displayedBlogs" class="blog-card">
-    <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image"/>
+  <div *ngFor="let blog of displayedBlogs" class="blog-card" (click)="viewBlog(blog.id)">
+    <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image" />
     <h2>{{ blog.title }}</h2>
     <p><strong>Author:</strong> {{ blog.author }}</p>
     <p>{{ blog.content | slice:0:100 }}...</p>
@@ -10,7 +10,7 @@
 <div class="pagination" *ngIf="totalPages > 1">
   <button 
     [disabled]="currentPage === 1" 
-    (click)="previousPage()"
+    (click)="previousPage()" 
     class="pagination-button">
     Previous
   </button>
@@ -21,7 +21,7 @@
 
   <button 
     [disabled]="currentPage === totalPages" 
-    (click)="nextPage()"
+    (click)="nextPage()" 
     class="pagination-button">
     Next
   </button>

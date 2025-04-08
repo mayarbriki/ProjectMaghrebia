@@ -1,10 +1,9 @@
-// blog.service.ts
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 export interface Blog {
-  id?: number;
+  id: number;
   title: string;
   author: string;
   content: string;
@@ -13,6 +12,7 @@ export interface Blog {
   image?: string;
   scheduledPublicationDate?: string;
   published?: boolean;
+  likes?: number; 
 }
 
 @Injectable({
@@ -39,10 +39,6 @@ export class BlogService {
     if (file) {
       formData.append('file', file);
     }
-
-    console.log('Creating blog with FormData:');
-    formData.forEach((value, key) => console.log(`${key}: ${value}`));
-
     return this.http.post<Blog>(this.apiUrl, formData);
   }
 
@@ -58,10 +54,6 @@ export class BlogService {
     if (file) {
       formData.append('file', file);
     }
-
-    console.log('Updating blog with FormData:');
-    formData.forEach((value, key) => console.log(`${key}: ${value}`));
-
     return this.http.put<Blog>(`${this.apiUrl}/${id}`, formData);
   }
 
@@ -71,5 +63,14 @@ export class BlogService {
 
   getBlogById(id: number): Observable<Blog> {
     return this.http.get<Blog>(`${this.apiUrl}/${id}`);
+  }
+
+  // New method to like a blog
+  likeBlog(id: number): Observable<Blog> {
+    return this.http.post<Blog>(`${this.apiUrl}/${id}/like`, {});
+  }
+
+  unlikeBlog(id: number): Observable<Blog> {
+    return this.http.post<Blog>(`${this.apiUrl}/${id}/unlike`, {});
   }
 }

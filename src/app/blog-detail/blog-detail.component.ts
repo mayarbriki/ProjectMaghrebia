@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router'; // Import RouterModule and Router
 import { BlogService, Blog } from '../blog.service';
 
 @Component({
   selector: 'app-blog-detail',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule], // Add RouterModule here
   templateUrl: './blog-detail.component.html',
   styleUrls: ['./blog-detail.component.scss']
 })
@@ -17,7 +18,10 @@ export class BlogDetailComponent implements OnInit {
   totalBlogs: number = 0;
   totalPages: number = 0;
 
-  constructor(private blogService: BlogService) {}
+  constructor(
+    private blogService: BlogService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadBlogs();
@@ -25,7 +29,6 @@ export class BlogDetailComponent implements OnInit {
 
   loadBlogs(): void {
     this.blogService.getBlogs().subscribe((data) => {
-      // Filter only published blogs
       this.allBlogs = data.filter(blog => blog.published === true);
       this.totalBlogs = this.allBlogs.length;
       this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
@@ -63,4 +66,9 @@ export class BlogDetailComponent implements OnInit {
   getBlogImageUrl(imageFileName?: string): string {
     return imageFileName ? `http://localhost:6969/uploads/${imageFileName}` : '';
   }
+
+  viewBlog(blogId: number): void {
+    this.router.navigate(['/blogs', blogId]);
+  }
+  
 }

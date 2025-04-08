@@ -1,0 +1,22 @@
+<div class="blog-single-container" *ngIf="blog; else noBlog">
+    <h2>{{ blog.title }}</h2>
+    <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image">
+    <p>{{ blog.content }}</p>
+    
+    <div class="like-section">
+      <button class="like-button" (click)="toggleLike()">
+        <span class="like-icon" [class.liked]="isLiked">♥</span>
+        <span class="like-text">{{ isLiked ? 'Unlike' : 'Like' }}</span>
+      </button>
+      <span class="like-count">{{ likeCount }} {{ likeCount === 1 ? 'Like' : 'Likes' }}</span>
+    </div>
+    
+    <button class="back-button" (click)="backToList()">Back to List</button>
+  </div>
+  
+  <ng-template #noBlog>
+    <div class="no-blog">
+      <p>Blog not found.</p>
+      <button class="back-button" (click)="backToList()">Back to List</button>
+    </div>
+  </ng-template>

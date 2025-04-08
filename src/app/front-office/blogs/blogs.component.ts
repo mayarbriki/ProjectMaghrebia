@@ -1,4 +1,3 @@
-// blogs.component.ts
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BlogService, Blog } from '../../blog.service';
 import { CommonModule } from '@angular/common';
@@ -13,7 +12,8 @@ import { FormsModule } from '@angular/forms';
 })
 export class BlogsComponent implements OnInit, OnDestroy {
   blogs: Blog[] = [];
-  newBlog: Blog = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
+  // Use Partial<Blog> for newBlog since id is assigned by backend
+  newBlog: Partial<Blog> = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
   selectedBlog: Blog | null = null;
   isModifyMode: boolean = false;
   selectedFile: File | null = null;
@@ -56,9 +56,8 @@ export class BlogsComponent implements OnInit, OnDestroy {
       }
     );
   }
-  
 
-  validateBlog(blog: Blog): boolean {
+  validateBlog(blog: Partial<Blog>): boolean {
     this.errors = {};
 
     if (!blog.title || blog.title.trim().length < 3) {
@@ -89,7 +88,7 @@ export class BlogsComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.blogService.createBlog(this.newBlog, this.selectedFile || undefined).subscribe(
+    this.blogService.createBlog(this.newBlog as Blog, this.selectedFile || undefined).subscribe(
       () => {
         this.loadBlogs();
         this.newBlog = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };

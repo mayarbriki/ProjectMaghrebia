@@ -170,4 +170,13 @@ public class BlogController {
     public ResponseEntity<List<Blog>> getPublishedBlogs() {
         return ResponseEntity.ok(blogService.getPublishedBlogs());
     }
+    @PostMapping("/{id}/like")
+    public Blog likeBlog(@PathVariable int id) {
+        return blogService.likeBlog(id);
+    }
+
+    @PostMapping("/{id}/unlike")
+    public Blog unlikeBlog(@PathVariable int id) {
+        return blogService.unlikeBlog(id);
+    }
 }

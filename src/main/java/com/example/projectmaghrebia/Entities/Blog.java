@@ -25,4 +25,5 @@ public class Blog {
     @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime scheduledPublicationDate;
     private boolean published = false; // Default to unpublished
+    private int likes = 0; // New field to track likes
 }

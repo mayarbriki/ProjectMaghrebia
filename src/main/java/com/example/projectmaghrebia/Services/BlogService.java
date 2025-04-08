@@ -56,4 +56,25 @@ public class BlogService implements IBlogService {
                 .filter(Blog::isPublished)
                 .collect(Collectors.toList());
     }
+    @Override
+    public Blog likeBlog(int id) {
+        Optional<Blog> blogOpt = blogRepository.findById(id);
+        if (blogOpt.isEmpty()) {
+            throw new RuntimeException("Blog not found");
+        }
+        Blog blog = blogOpt.get();
+        blog.setLikes(blog.getLikes() + 1); // Increment directly, no null check needed
+        return blogRepository.save(blog);
+    }
+
+    @Override
+    public Blog unlikeBlog(int id) {
+        Optional<Blog> blogOpt = blogRepository.findById(id);
+        if (blogOpt.isEmpty()) {
+            throw new RuntimeException("Blog not found");
+        }
+        Blog blog = blogOpt.get();
+        blog.setLikes(Math.max(0, blog.getLikes() - 1)); // Decrement, but not below 0
+        return blogRepository.save(blog);
+    }
 }

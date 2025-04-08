@@ -13,4 +13,6 @@ public interface IBlogService {
     void deleteBlog(int id);
     public List<Blog> getScheduledBlogs() ;
     public List<Blog> getPublishedBlogs() ;
+    Blog likeBlog(int id); // New method
+    Blog unlikeBlog(int id); // New method
     }

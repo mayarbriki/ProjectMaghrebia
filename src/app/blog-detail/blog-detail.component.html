@@ -8,21 +8,21 @@
 </div>
 
 <div class="pagination" *ngIf="totalPages > 1">
-<button 
-  [disabled]="currentPage === 1" 
-  (click)="previousPage()"
-  class="pagination-button">
-  Previous
-</button>
+  <button 
+    [disabled]="currentPage === 1" 
+    (click)="previousPage()"
+    class="pagination-button">
+    Previous
+  </button>
 
-<span class="page-info">
-  Page {{ currentPage }} of {{ totalPages }}
-</span>
+  <span class="page-info">
+    Page {{ currentPage }} of {{ totalPages }}
+  </span>
 
-<button 
-  [disabled]="currentPage === totalPages" 
-  (click)="nextPage()"
-  class="pagination-button">
-  Next
-</button>
+  <button 
+    [disabled]="currentPage === totalPages" 
+    (click)="nextPage()"
+    class="pagination-button">
+    Next
+  </button>
 </div>

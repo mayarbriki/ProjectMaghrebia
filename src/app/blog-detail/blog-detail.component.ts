@@ -10,8 +10,8 @@ import { BlogService, Blog } from '../blog.service';
   styleUrls: ['./blog-detail.component.scss']
 })
 export class BlogDetailComponent implements OnInit {
-  allBlogs: Blog[] = []; // Store all blogs
-  displayedBlogs: Blog[] = []; // Only blogs for current page
+  allBlogs: Blog[] = [];
+  displayedBlogs: Blog[] = [];
   currentPage: number = 1;
   pageSize: number = 3;
   totalBlogs: number = 0;
@@ -25,8 +25,9 @@ export class BlogDetailComponent implements OnInit {
 
   loadBlogs(): void {
     this.blogService.getBlogs().subscribe((data) => {
-      this.allBlogs = data;
-      this.totalBlogs = data.length;
+      // Filter only published blogs
+      this.allBlogs = data.filter(blog => blog.published === true);
+      this.totalBlogs = this.allBlogs.length;
       this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
       this.updateDisplayedBlogs();
     });

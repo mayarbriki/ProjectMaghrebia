@@ -45,6 +45,13 @@
       </div>
 
       <div class="mb-2">
+        <label>Schedule Publication Date (Optional):</label>
+        <input *ngIf="!isModifyMode" type="datetime-local" [(ngModel)]="newBlog.scheduledPublicationDate" name="scheduledPublicationDate" class="form-control" />
+        <input *ngIf="isModifyMode" type="datetime-local" [(ngModel)]="selectedBlog!.scheduledPublicationDate" name="scheduledPublicationDate" class="form-control" />
+        <div *ngIf="errors.scheduledPublicationDate" class="text-danger">{{ errors.scheduledPublicationDate }}</div>
+      </div>
+
+      <div class="mb-2">
         <label>Upload Image:</label>
         <input type="file" (change)="onFileSelected($event)" class="form-control" />
       </div>
@@ -63,6 +70,8 @@
         <th>Author</th>
         <th>Category</th>
         <th>Image</th>
+        <th>Scheduled Publication Date</th>
+        <th>Published</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -74,13 +83,15 @@
         <td>
           <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" width="50" />
         </td>
+        <td>{{ blog.scheduledPublicationDate ? (blog.scheduledPublicationDate | date:'medium') : 'Not Scheduled' }}</td>
+        <td>{{ blog.published ? 'Yes' : 'No' }}</td>
         <td>
           <button class="btn btn-warning me-2" (click)="selectBlog(blog)">Modify</button>
           <button class="btn btn-danger" (click)="blog.id ? deleteBlog(blog.id) : null">Delete</button>
         </td>
       </tr>
       <tr *ngIf="blogs.length === 0">
-        <td colspan="5">No blogs available</td>
+        <td colspan="7">No blogs available</td>
       </tr>
     </tbody>
   </table>

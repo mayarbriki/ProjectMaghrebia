@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+// blogs.component.ts
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { BlogService, Blog } from '../../blog.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -10,31 +11,52 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './blogs.component.html',
   styleUrls: ['./blogs.component.scss']
 })
-export class BlogsComponent implements OnInit {
+export class BlogsComponent implements OnInit, OnDestroy {
   blogs: Blog[] = [];
-  newBlog: Blog = { title: '', author: '', content: '', type: 'NEWS' };
+  newBlog: Blog = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
   selectedBlog: Blog | null = null;
   isModifyMode: boolean = false;
   selectedFile: File | null = null;
-  errors: { title?: string; author?: string; content?: string } = {};
+  errors: { title?: string; author?: string; content?: string; scheduledPublicationDate?: string } = {};
+  private refreshInterval: any;
 
   constructor(private blogService: BlogService) {}
 
   ngOnInit(): void {
     this.loadBlogs();
+    // Auto-refresh every 30 seconds to update published status
+    this.refreshInterval = setInterval(() => {
+      this.loadBlogs();
+    }, 30000);
+  }
+
+  ngOnDestroy(): void {
+    // Clean up the interval when the component is destroyed
+    if (this.refreshInterval) {
+      clearInterval(this.refreshInterval);
+    }
   }
 
   loadBlogs(): void {
     this.blogService.getBlogs().subscribe(
       (data) => {
         console.log('Blogs loaded:', data);
-        this.blogs = data;
+        this.blogs = data.map(blog => {
+          if (typeof blog.scheduledPublicationDate === 'string' && blog.scheduledPublicationDate.includes(',')) {
+            const parts = blog.scheduledPublicationDate.split(',').map(Number);
+            if (parts.length >= 5) {
+              blog.scheduledPublicationDate = new Date(parts[0], parts[1] - 1, parts[2], parts[3], parts[4]).toISOString();
+            }
+          }
+          return blog;
+        });
       },
       (error) => {
         console.error('Error loading blogs:', error);
       }
     );
   }
+  
 
   validateBlog(blog: Blog): boolean {
     this.errors = {};
@@ -48,6 +70,15 @@ export class BlogsComponent implements OnInit {
     if (!blog.content || blog.content.trim().length < 10) {
       this.errors.content = 'Content must be at least 10 characters long';
     }
+    if (blog.scheduledPublicationDate) {
+      const scheduledDate = new Date(blog.scheduledPublicationDate);
+      const now = new Date();
+      if (isNaN(scheduledDate.getTime())) {
+        this.errors.scheduledPublicationDate = 'Invalid date format';
+      } else if (scheduledDate < now) {
+        this.errors.scheduledPublicationDate = 'Scheduled publication date cannot be in the past';
+      }
+    }
 
     return Object.keys(this.errors).length === 0;
   }
@@ -60,9 +91,8 @@ export class BlogsComponent implements OnInit {
 
     this.blogService.createBlog(this.newBlog, this.selectedFile || undefined).subscribe(
       () => {
-        // Refresh the blog list after adding
         this.loadBlogs();
-        this.newBlog = { title: '', author: '', content: '', type: 'NEWS' };
+        this.newBlog = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
         this.selectedFile = null;
         this.errors = {};
       },
@@ -78,20 +108,18 @@ export class BlogsComponent implements OnInit {
       return;
     }
 
-    this.blogService.updateBlog(this.selectedBlog.id, this.selectedBlog, this.selectedFile || undefined)
-      .subscribe(
-        () => {
-          // Refresh the blog list after modifying
-          this.loadBlogs();
-          this.isModifyMode = false;
-          this.selectedBlog = null;
-          this.selectedFile = null;
-          this.errors = {};
-        },
-        (error) => {
-          console.error('Error updating blog:', error);
-        }
-      );
+    this.blogService.updateBlog(this.selectedBlog.id, this.selectedBlog, this.selectedFile || undefined).subscribe(
+      () => {
+        this.loadBlogs();
+        this.isModifyMode = false;
+        this.selectedBlog = null;
+        this.selectedFile = null;
+        this.errors = {};
+      },
+      (error) => {
+        console.error('Error updating blog:', error);
+      }
+    );
   }
 
   selectBlog(blog: Blog): void {
@@ -103,7 +131,6 @@ export class BlogsComponent implements OnInit {
   deleteBlog(id: number): void {
     this.blogService.deleteBlog(id).subscribe(
       () => {
-        // Refresh the blog list after deleting
         this.loadBlogs();
       },
       (error) => {
@@ -124,7 +151,7 @@ export class BlogsComponent implements OnInit {
   }
 
   resetForm(): void {
-    this.newBlog = { title: '', author: '', content: '', type: 'NEWS' };
+    this.newBlog = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
     this.selectedBlog = null;
     this.isModifyMode = false;
     this.selectedFile = null;

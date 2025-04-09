@@ -1,4 +1,15 @@
 <div class="blog-container">
+  <!-- Search Input -->
+  <div class="search-controls">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      (input)="onSearch()" 
+      placeholder="Search blogs..." 
+      class="search-input" 
+    />
+  </div>
+
   <!-- Sorting Controls -->
   <div class="sorting-controls">
     <span class="sort-label">Sort By:</span>

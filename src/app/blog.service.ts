@@ -87,4 +87,12 @@ export class BlogService {
   getBlogStatistics(): Observable<BlogStatistics> {
     return this.http.get<BlogStatistics>(`${this.apiUrl}/statistics`);
   }
+  // In blog.service.ts
+searchBlogs(query: string, sortBy: string = 'createdAt', direction: string = 'ASC'): Observable<Blog[]> {
+  let params = new HttpParams()
+    .set('query', query)
+    .set('sortBy', sortBy)
+    .set('direction', direction);
+  return this.http.get<Blog[]>(`${this.apiUrl}/search`, { params });
+}
 }

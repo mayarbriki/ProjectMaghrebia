@@ -2,11 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { BlogService, Blog } from '../blog.service';
+import { FormsModule } from '@angular/forms'; // Import FormsModule for two-way binding
 
 @Component({
   selector: 'app-blog-detail',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, FormsModule], // Add FormsModule
   templateUrl: './blog-detail.component.html',
   styleUrls: ['./blog-detail.component.scss']
 })
@@ -19,8 +20,8 @@ export class BlogDetailComponent implements OnInit {
   totalPages: number = 0;
 
   // Sorting properties
-  sortBy: string = 'createdAt'; // Default sort field
-  direction: string = 'ASC'; // Default sort direction
+  sortBy: string = 'createdAt';
+  direction: string = 'ASC';
   sortOptions = [
     { label: 'Created At', value: 'createdAt' },
     { label: 'Title', value: 'title' },
@@ -28,6 +29,9 @@ export class BlogDetailComponent implements OnInit {
     { label: 'Likes', value: 'likes' },
     { label: 'Scheduled Date', value: 'scheduledPublicationDate' }
   ];
+
+  // Search property
+  searchQuery: string = ''; // Two-way bound to the search input
 
   constructor(
     private blogService: BlogService,
@@ -39,13 +43,26 @@ export class BlogDetailComponent implements OnInit {
   }
 
   loadBlogs(): void {
-    this.blogService.getBlogs(this.sortBy, this.direction).subscribe((data) => {
-      this.allBlogs = data.filter(blog => blog.published === true);
-      this.totalBlogs = this.allBlogs.length;
-      this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
-      this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
-      this.updateDisplayedBlogs();
-    });
+    if (this.searchQuery.trim() === '') {
+      // If no search query, load all blogs
+      this.blogService.getBlogs(this.sortBy, this.direction).subscribe((data) => {
+        this.allBlogs = data.filter(blog => blog.published === true);
+        this.updatePagination();
+      });
+    } else {
+      // If there's a search query, use the search endpoint
+      this.blogService.searchBlogs(this.searchQuery, this.sortBy, this.direction).subscribe((data) => {
+        this.allBlogs = data.filter(blog => blog.published === true); // Filter published blogs
+        this.updatePagination();
+      });
+    }
+  }
+
+  updatePagination(): void {
+    this.totalBlogs = this.allBlogs.length;
+    this.totalPages = Math.ceil(this.totalBlogs / this.pageSize);
+    this.currentPage = Math.min(this.currentPage, this.totalPages || 1);
+    this.updateDisplayedBlogs();
   }
 
   updateDisplayedBlogs(): void {
@@ -77,19 +94,17 @@ export class BlogDetailComponent implements OnInit {
 
   sort(field: string): void {
     if (this.sortBy === field) {
-      // Toggle direction if the same field is clicked
       this.direction = this.direction === 'ASC' ? 'DESC' : 'ASC';
     } else {
-      // Set new sort field and default to ASC
       this.sortBy = field;
       this.direction = 'ASC';
     }
-    this.currentPage = 1; // Reset to first page when sorting changes
-    this.loadBlogs(); // Reload blogs with new sorting
+    this.currentPage = 1;
+    this.loadBlogs();
   }
 
   getSortArrow(field: string): string {
-    if (this.sortBy !== field) return ''; // No arrow if not sorted by this field
+    if (this.sortBy !== field) return '';
     return this.direction === 'ASC' ? '↑' : '↓';
   }
 
@@ -99,5 +114,11 @@ export class BlogDetailComponent implements OnInit {
 
   viewBlog(blogId: number): void {
     this.router.navigate(['/blogs', blogId]);
+  }
+
+  // Trigger search when the user types
+  onSearch(): void {
+    this.currentPage = 1; // Reset to first page on new search
+    this.loadBlogs();
   }
 }

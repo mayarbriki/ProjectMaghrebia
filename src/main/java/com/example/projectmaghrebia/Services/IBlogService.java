@@ -18,4 +18,4 @@ public interface IBlogService {
     Blog unlikeBlog(int id); // New method
     List<Blog> getAllBlogsSorted(String sortBy, String direction); // New method for sorting
     Map<String, Object> getBlogStatistics(); // Updated to return a Map
-    }
+    List<Blog> searchBlogs(String query, String sortBy, String direction);    }

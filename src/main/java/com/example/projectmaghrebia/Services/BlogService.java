@@ -122,4 +122,9 @@ public class BlogService implements IBlogService {
 
         return statistics;
     }
+    @Override
+    public List<Blog> searchBlogs(String query, String sortBy, String direction) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        return blogRepository.searchBlogs(query, sort);
+    }
 }

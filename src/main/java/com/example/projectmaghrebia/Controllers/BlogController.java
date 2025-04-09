@@ -186,4 +186,14 @@ public class BlogController {
     public ResponseEntity<Map<String, Object>> getBlogStatistics() {
         return ResponseEntity.ok(blogService.getBlogStatistics());
     }
+    // Add this to BlogController.java
+// In BlogController.java
+    @GetMapping("/search")
+    public ResponseEntity<List<Blog>> searchBlogs(
+            @RequestParam("query") String query,
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
+        List<Blog> blogs = blogService.searchBlogs(query, sortBy, direction);
+        return ResponseEntity.ok(blogs);
+    }
 }

@@ -103,8 +103,10 @@ public class BlogController {
         }
     }
     @GetMapping
-    public ResponseEntity<List<Blog>> getAllBlogs() {
-        List<Blog> blogs = blogService.getAllBlogs();
+    public ResponseEntity<List<Blog>> getAllBlogs(
+            @RequestParam(defaultValue = "createdAt") String sortBy,
+            @RequestParam(defaultValue = "ASC") String direction) {
+        List<Blog> blogs = blogService.getAllBlogsSorted(sortBy, direction);
         blogs.forEach(System.out::println); // Debug: Print the blogs
         return ResponseEntity.ok(blogs);
     }
@@ -149,7 +151,7 @@ public class BlogController {
         }
     }*/
 
-    // ✅ Delete a blog
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBlog(@PathVariable int id) {
         Optional<Blog> existingBlog = blogService.getBlogById(id);

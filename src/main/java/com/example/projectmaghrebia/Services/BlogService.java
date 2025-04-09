@@ -3,6 +3,7 @@ package com.example.projectmaghrebia.Services;
 import com.example.projectmaghrebia.Entities.Blog;
 import com.example.projectmaghrebia.Repositories.BlogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -76,5 +77,10 @@ public class BlogService implements IBlogService {
         Blog blog = blogOpt.get();
         blog.setLikes(Math.max(0, blog.getLikes() - 1)); // Decrement, but not below 0
         return blogRepository.save(blog);
+    }
+    @Override
+    public List<Blog> getAllBlogsSorted(String sortBy, String direction) {
+        Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
+        return blogRepository.findAll(sort);
     }
 }

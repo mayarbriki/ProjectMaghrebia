@@ -15,4 +15,5 @@ public interface IBlogService {
     public List<Blog> getPublishedBlogs() ;
     Blog likeBlog(int id); // New method
     Blog unlikeBlog(int id); // New method
+    List<Blog> getAllBlogsSorted(String sortBy, String direction); // New method for sorting
     }

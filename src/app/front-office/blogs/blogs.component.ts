@@ -12,7 +12,6 @@ import { FormsModule } from '@angular/forms';
 })
 export class BlogsComponent implements OnInit, OnDestroy {
   blogs: Blog[] = [];
-  // Use Partial<Blog> for newBlog since id is assigned by backend
   newBlog: Partial<Blog> = { title: '', author: '', content: '', type: 'NEWS', scheduledPublicationDate: '' };
   selectedBlog: Blog | null = null;
   isModifyMode: boolean = false;
@@ -20,25 +19,39 @@ export class BlogsComponent implements OnInit, OnDestroy {
   errors: { title?: string; author?: string; content?: string; scheduledPublicationDate?: string } = {};
   private refreshInterval: any;
 
+  // Sorting properties
+  sortBy: string = 'createdAt'; // Default sort field
+  direction: string = 'ASC'; // Default sort direction
+  sortOptions = [
+    { label: 'Created At', value: 'createdAt' },
+    { label: 'Title', value: 'title' },
+    { label: 'Author', value: 'author' },
+    { label: 'Likes', value: 'likes' },
+    { label: 'Scheduled Date', value: 'scheduledPublicationDate' },
+    { label: 'Published', value: 'published' }
+  ];
+  directionOptions = [
+    { label: 'Ascending', value: 'ASC' },
+    { label: 'Descending', value: 'DESC' }
+  ];
+
   constructor(private blogService: BlogService) {}
 
   ngOnInit(): void {
     this.loadBlogs();
-    // Auto-refresh every 30 seconds to update published status
     this.refreshInterval = setInterval(() => {
       this.loadBlogs();
     }, 30000);
   }
 
   ngOnDestroy(): void {
-    // Clean up the interval when the component is destroyed
     if (this.refreshInterval) {
       clearInterval(this.refreshInterval);
     }
   }
 
   loadBlogs(): void {
-    this.blogService.getBlogs().subscribe(
+    this.blogService.getBlogs(this.sortBy, this.direction).subscribe(
       (data) => {
         console.log('Blogs loaded:', data);
         this.blogs = data.map(blog => {
@@ -55,6 +68,10 @@ export class BlogsComponent implements OnInit, OnDestroy {
         console.error('Error loading blogs:', error);
       }
     );
+  }
+
+  onSortChange(): void {
+    this.loadBlogs(); // Reload blogs when sorting changes
   }
 
   validateBlog(blog: Partial<Blog>): boolean {
@@ -155,5 +172,19 @@ export class BlogsComponent implements OnInit, OnDestroy {
     this.isModifyMode = false;
     this.selectedFile = null;
     this.errors = {};
+  }
+
+  likeBlog(id: number): void {
+    this.blogService.likeBlog(id).subscribe(
+      () => this.loadBlogs(),
+      (error) => console.error('Error liking blog:', error)
+    );
+  }
+
+  unlikeBlog(id: number): void {
+    this.blogService.unlikeBlog(id).subscribe(
+      () => this.loadBlogs(),
+      (error) => console.error('Error unliking blog:', error)
+    );
   }
 }

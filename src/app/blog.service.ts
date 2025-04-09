@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient ,HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -23,10 +23,12 @@ export class BlogService {
 
   constructor(private http: HttpClient) {}
 
-  getBlogs(): Observable<Blog[]> {
-    return this.http.get<Blog[]>(this.apiUrl);
+  getBlogs(sortBy: string = 'createdAt', direction: string = 'ASC'): Observable<Blog[]> {
+    let params = new HttpParams()
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+    return this.http.get<Blog[]>(this.apiUrl, { params });
   }
-
   createBlog(blog: Blog, file?: File): Observable<Blog> {
     const formData = new FormData();
     formData.append('title', blog.title);

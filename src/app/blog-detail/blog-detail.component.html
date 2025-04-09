@@ -1,12 +1,36 @@
 <div class="blog-container">
+  <!-- Sorting Controls -->
+  <div class="sorting-controls">
+    <span class="sort-label">Sort By:</span>
+    <div class="sort-options">
+      <ng-container *ngFor="let option of sortOptions">
+        <span 
+          class="sort-option" 
+          [class.active]="sortBy === option.value" 
+          (click)="sort(option.value)">
+          {{ option.label }}
+          <span class="sort-arrow">{{ getSortArrow(option.value) }}</span>
+        </span>
+      </ng-container>
+    </div>
+  </div>
+
+  <!-- Blog Cards -->
   <div *ngFor="let blog of displayedBlogs" class="blog-card" (click)="viewBlog(blog.id)">
     <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image" />
     <h2>{{ blog.title }}</h2>
     <p><strong>Author:</strong> {{ blog.author }}</p>
     <p>{{ blog.content | slice:0:100 }}...</p>
+    <p><strong>Likes:</strong> {{ blog.likes || 0 }}</p>
+  </div>
+
+  <!-- No Blogs Message -->
+  <div *ngIf="displayedBlogs.length === 0" class="no-blogs">
+    No published blogs available.
   </div>
 </div>
 
+<!-- Pagination -->
 <div class="pagination" *ngIf="totalPages > 1">
   <button 
     [disabled]="currentPage === 1" 

@@ -91,7 +91,7 @@ export const menus: Navigation[] = [
       },
       {
         id: 'table',
-        title: 'Articles',
+        title: 'Blog Statistics',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/articles',

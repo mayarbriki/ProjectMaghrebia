@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'; 
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Front-Office Imports
@@ -18,8 +18,6 @@ import { ViewClaimComponentFront } from '../app/front-office/claims/view-claim-f
 import { ListAssessmentComponentFront } from '../app/front-office/assessments/list-assessment-front/list-assessment-front.component';
 import { ViewAssessmentComponentFront } from '../app/front-office/assessments/view-assessment-front/view-assessment-front.component';
 
-
-
 // Back-Office Imports
 import { AdminComponent } from './demo/layout/admin';
 import { EmptyComponent } from './demo/layout/empty';
@@ -31,7 +29,6 @@ import { IncidentsComponent } from './@theme/pages/incidents/incidents.component
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
 import { NewsComponent } from './@theme/pages/news/news.component';
 import { PropertiesComponent } from './@theme/pages/properties/properties.component';
-
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { HeaderFrontComponent } from './front-office/header-front/header-front.component';
 import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
@@ -56,105 +53,117 @@ const routes: Routes = [
   // Front-Office Routes
   {
     path: '',
-    component: AllTemplateFrontComponent,  // Front-Office as Default Route
+    component: AllTemplateFrontComponent,
   },
   {
     path: 'app-feedback-display',
-    component: FeedbackDisplayComponent,  // Front-Office as Default Route
+    component: FeedbackDisplayComponent,
   },
   {
     path: 'app-header-front',
-    component: HeaderFrontComponent,  // Front-Office as Default Route
+    component: HeaderFrontComponent,
   },
   {
     path: 'app-feedback',
-    component: FeedbackComponent,  // Front-Office as Default Route
+    component: FeedbackComponent,
   },
-  { path: 'product/:id', component: ProductDetailComponent },  // ✅ Route for product details
-
+  { path: 'product/:id', component: ProductDetailComponent },
   {
-    path: 'message', // New route for the message component
-    component: MessageComponent
+    path: 'message',
+    component: MessageComponent,
   },
   { path: 'app-blog-detail', component: BlogDetailComponent },
-
   {
     path: 'app-product-display',
-    component: ProductDisplayComponent
+    component: ProductDisplayComponent,
   },
   {
-    path: 'signin', // New route for the message component
-    component: SigninComponent
+    path: 'signin',
+    component: SigninComponent,
   },
   {
-    path: 'signup', // New route for the message component
-    component: SignupComponent
+    path: 'signup',
+    component: SignupComponent,
   },
   {
-    path: 'claims', 
-    component: ListClaimComponentFront
+    path: 'claims',
+    component: ListClaimComponentFront,
   },
-  {path: 'claimsFront/AddClaim', // New route for the message component
-  component: AddClaimComponentFront
-  },
-
-  { path: 'claimsFront/EditClaim/:id', 
-    component: ModifyClaimComponentFront 
-  },
-
-  { path: 'claimsFront/DetailsClaim/:id', 
-    component: ViewClaimComponentFront
-  },
-
-  {path: 'assessments', 
-  component: ListAssessmentComponentFront
-  },
-
-  {path: 'assessmentsFront/ViewAssessment/:id', 
-    component: ViewAssessmentComponentFront
-  },
-  
   {
-    path: 'Services', // New route for the message component
-    component: ServicesComponent
+    path: 'claimsFront/AddClaim',
+    component: AddClaimComponentFront,
+  },
+  {
+    path: 'claimsFront/EditClaim/:id',
+    component: ModifyClaimComponentFront,
+  },
+  {
+    path: 'claimsFront/DetailsClaim/:id',
+    component: ViewClaimComponentFront,
+  },
+  {
+    path: 'assessments',
+    component: ListAssessmentComponentFront,
+  },
+  {
+    path: 'assessmentsFront/ViewAssessment/:id',
+    component: ViewAssessmentComponentFront,
+  },
+  {
+    path: 'Services',
+    component: ServicesComponent,
   },
   {
     path: 'app-bookmark',
-    component: BookmarkComponent
+    component: BookmarkComponent,
   },
   {
     path: 'blogs/:id',
-    component: BlogSingleComponent
+    component: BlogSingleComponent,
   },
   { path: 'blog-statistics', component: BlogStatisticsComponent },
-  
-  
-  
 
   // Back-Office Routes
   {
     path: 'admin',
     component: AdminComponent,
     children: [
-      { path: 'dashboard', loadComponent: () => import('./demo/pages/dashboard/dashboard.component').then(m => DashboardComponent) },
-      { path: 'component', loadChildren: () => import('./demo/pages/components/component.module').then(m => m.ComponentModule) },
-      { path: 'sample-page', loadComponent: () => import('./demo/pages/other/sample-page/sample-page.component').then(m => SamplePageComponent) },
+      {
+        path: 'dashboard',
+        loadComponent: () =>
+          import('./demo/pages/dashboard/dashboard.component').then(
+            (m) => DashboardComponent
+          ),
+      },
+      {
+        path: 'component',
+        loadChildren: () =>
+          import('./demo/pages/components/component.module').then(
+            (m) => m.ComponentModule
+          ),
+      },
+      {
+        path: 'sample-page',
+        loadComponent: () =>
+          import('./demo/pages/other/sample-page/sample-page.component').then(
+            (m) => SamplePageComponent
+          ),
+      },
       { path: 'contracts', component: ContratsComponent },
-      { path: 'articles', component: ArticlesComponent },
+      { path: 'articles', component: BlogStatisticsComponent }, // Updated to use BlogStatisticsComponent
       { path: 'blogs', component: BlogsComponent },
       {
         path: 'app-statistics',
-        component: StatisticsComponent
+        component: StatisticsComponent,
       },
       {
-        path: 'products', // New route for the message component
-        component: ProductsComponent
+        path: 'products',
+        component: ProductsComponent,
       },
       {
         path: 'app-feedback-admin',
-        component:FeedbackAdminComponent
+        component: FeedbackAdminComponent,
       },
-
       /////// Claim Routes Back-Office
       { path: 'claims', component: ListClaimComponent },
       { path: 'claims/AddClaim', component: AddClaimComponent },
@@ -163,28 +172,40 @@ const routes: Routes = [
       /////// Assessment Routes Back-Office
       { path: 'assessments', component: ListAssessmentComponent },
       { path: 'assessments/AddAssessment', component: AddAssessmentComponent },
-      { path: 'assessments/EditAssessment/:id', component: ModifyAssessmentComponent },
-      { path: 'assessments/ViewAssessment/:id', component: ViewAssessmentComponent },
+      {
+        path: 'assessments/EditAssessment/:id',
+        component: ModifyAssessmentComponent,
+      },
+      {
+        path: 'assessments/ViewAssessment/:id',
+        component: ViewAssessmentComponent,
+      },
       { path: 'incidents', component: IncidentsComponent },
       { path: 'joboffers', component: JoboffersComponent },
       { path: 'news', component: NewsComponent },
-      { path: 'properties', component: PropertiesComponent }
-    ]
+      { path: 'properties', component: PropertiesComponent },
+    ],
   },
 
   // Authentication Routes
   {
     path: 'auth',
     component: EmptyComponent,
-    children: [{ path: '', loadChildren: () => import('./demo/pages/auth/auth.module').then(m => m.AuthModule) }]
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('./demo/pages/auth/auth.module').then((m) => m.AuthModule),
+      },
+    ],
   },
 
   // Wildcard Route
-  { path: '**', redirectTo: '', pathMatch: 'full' }
+  { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class AppRoutingModule {}

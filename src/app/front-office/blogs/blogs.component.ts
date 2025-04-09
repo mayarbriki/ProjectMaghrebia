@@ -20,8 +20,8 @@ export class BlogsComponent implements OnInit, OnDestroy {
   private refreshInterval: any;
 
   // Sorting properties
-  sortBy: string = 'createdAt'; // Default sort field
-  direction: string = 'ASC'; // Default sort direction
+  sortBy: string = 'createdAt';
+  direction: string = 'ASC';
   sortOptions = [
     { label: 'Created At', value: 'createdAt' },
     { label: 'Title', value: 'title' },
@@ -34,6 +34,10 @@ export class BlogsComponent implements OnInit, OnDestroy {
     { label: 'Ascending', value: 'ASC' },
     { label: 'Descending', value: 'DESC' }
   ];
+
+  // Export properties
+  exportFormat: 'csv' | 'pdf' = 'csv'; // Default export format
+  exportQuery: string = ''; // Optional search query for exporting all blogs
 
   constructor(private blogService: BlogService) {}
 
@@ -71,12 +75,11 @@ export class BlogsComponent implements OnInit, OnDestroy {
   }
 
   onSortChange(): void {
-    this.loadBlogs(); // Reload blogs when sorting changes
+    this.loadBlogs();
   }
 
   validateBlog(blog: Partial<Blog>): boolean {
     this.errors = {};
-
     if (!blog.title || blog.title.trim().length < 3) {
       this.errors.title = 'Title must be at least 3 characters long';
     }
@@ -95,7 +98,6 @@ export class BlogsComponent implements OnInit, OnDestroy {
         this.errors.scheduledPublicationDate = 'Scheduled publication date cannot be in the past';
       }
     }
-
     return Object.keys(this.errors).length === 0;
   }
 
@@ -104,7 +106,6 @@ export class BlogsComponent implements OnInit, OnDestroy {
       console.error('Validation failed:', this.errors);
       return;
     }
-
     this.blogService.createBlog(this.newBlog as Blog, this.selectedFile || undefined).subscribe(
       () => {
         this.loadBlogs();
@@ -123,7 +124,6 @@ export class BlogsComponent implements OnInit, OnDestroy {
       console.error('Validation failed:', this.errors);
       return;
     }
-
     this.blogService.updateBlog(this.selectedBlog.id, this.selectedBlog, this.selectedFile || undefined).subscribe(
       () => {
         this.loadBlogs();
@@ -185,6 +185,42 @@ export class BlogsComponent implements OnInit, OnDestroy {
     this.blogService.unlikeBlog(id).subscribe(
       () => this.loadBlogs(),
       (error) => console.error('Error unliking blog:', error)
+    );
+  }
+
+  exportBlogs(): void {
+    this.blogService.exportBlogs(this.exportQuery, this.sortBy, this.direction, this.exportFormat).subscribe(
+      (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `blogs_export_${new Date().toISOString()}.${this.exportFormat}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error('Error exporting blogs:', error);
+      }
+    );
+  }
+
+  exportBlog(id: number): void {
+    this.blogService.exportBlogById(id, this.exportFormat).subscribe(
+      (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `blog_${id}_export_${new Date().toISOString()}.${this.exportFormat}`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+      },
+      (error) => {
+        console.error(`Error exporting blog with ID ${id}:`, error);
+      }
     );
   }
 }

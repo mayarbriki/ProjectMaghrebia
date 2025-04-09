@@ -15,7 +15,6 @@ export interface Blog {
   likes?: number;
 }
 
-// Interface for the statistics response
 export interface BlogStatistics {
   totalPublishedBlogs: number;
   averageLikes: number;
@@ -83,16 +82,30 @@ export class BlogService {
     return this.http.post<Blog>(`${this.apiUrl}/${id}/unlike`, {});
   }
 
-  // New method to fetch statistics
   getBlogStatistics(): Observable<BlogStatistics> {
     return this.http.get<BlogStatistics>(`${this.apiUrl}/statistics`);
   }
-  // In blog.service.ts
-searchBlogs(query: string, sortBy: string = 'createdAt', direction: string = 'ASC'): Observable<Blog[]> {
-  let params = new HttpParams()
-    .set('query', query)
-    .set('sortBy', sortBy)
-    .set('direction', direction);
-  return this.http.get<Blog[]>(`${this.apiUrl}/search`, { params });
-}
+
+  searchBlogs(query: string, sortBy: string = 'createdAt', direction: string = 'ASC'): Observable<Blog[]> {
+    let params = new HttpParams()
+      .set('query', query)
+      .set('sortBy', sortBy)
+      .set('direction', direction);
+    return this.http.get<Blog[]>(`${this.apiUrl}/search`, { params });
+  }
+
+  exportBlogs(query: string = '', sortBy: string = 'createdAt', direction: string = 'ASC', format: 'csv' | 'pdf' = 'csv'): Observable<Blob> {
+    let params = new HttpParams()
+      .set('query', query)
+      .set('sortBy', sortBy)
+      .set('direction', direction)
+      .set('format', format);
+    return this.http.get(`${this.apiUrl}/export`, { params, responseType: 'blob' });
+  }
+
+  // New method to export a specific blog by ID
+  exportBlogById(id: number, format: 'csv' | 'pdf' = 'csv'): Observable<Blob> {
+    let params = new HttpParams().set('format', format);
+    return this.http.get(`${this.apiUrl}/${id}/export`, { params, responseType: 'blob' });
+  }
 }

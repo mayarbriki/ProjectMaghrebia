@@ -61,21 +61,37 @@
     </form>
   </div>
 
-  <!-- Sorting Controls -->
+  <!-- Sorting and Export Controls -->
   <div class="mb-3">
     <h3 class="text-center">Blog List</h3>
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-3">
         <label>Sort By:</label>
         <select [(ngModel)]="sortBy" (change)="onSortChange()" class="form-select">
           <option *ngFor="let option of sortOptions" [value]="option.value">{{ option.label }}</option>
         </select>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-3">
         <label>Direction:</label>
         <select [(ngModel)]="direction" (change)="onSortChange()" class="form-select">
           <option *ngFor="let option of directionOptions" [value]="option.value">{{ option.label }}</option>
         </select>
+      </div>
+      <div class="col-md-3">
+        <label>Export Format:</label>
+        <select [(ngModel)]="exportFormat" class="form-select">
+          <option value="csv">CSV</option>
+          <option value="pdf">PDF</option>
+        </select>
+      </div>
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-info w-100" (click)="exportBlogs()">Export All Blogs</button>
+      </div>
+    </div>
+    <div class="row mt-2">
+      <div class="col-md-12">
+        <label>Search Query for All Blogs Export (Optional):</label>
+        <input type="text" [(ngModel)]="exportQuery" class="form-control" placeholder="Enter search query for all blogs export" />
       </div>
     </div>
   </div>
@@ -108,7 +124,7 @@
         <td>
           <button class="btn btn-warning me-2" (click)="selectBlog(blog)">Modify</button>
           <button class="btn btn-danger me-2" (click)="blog.id ? deleteBlog(blog.id) : null">Delete</button>
-       
+          <button class="btn btn-info me-2" (click)="blog.id ? exportBlog(blog.id) : null">Export</button>
         </td>
       </tr>
       <tr *ngIf="blogs.length === 0">

@@ -3,6 +3,7 @@ package com.example.projectmaghrebia.Services;
 import com.example.projectmaghrebia.Entities.Blog;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IBlogService {
@@ -16,4 +17,5 @@ public interface IBlogService {
     Blog likeBlog(int id); // New method
     Blog unlikeBlog(int id); // New method
     List<Blog> getAllBlogsSorted(String sortBy, String direction); // New method for sorting
+    Map<String, Object> getBlogStatistics(); // Updated to return a Map
     }

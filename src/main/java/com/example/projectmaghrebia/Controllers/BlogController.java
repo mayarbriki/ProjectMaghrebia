@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -180,5 +181,9 @@ public class BlogController {
     @PostMapping("/{id}/unlike")
     public Blog unlikeBlog(@PathVariable int id) {
         return blogService.unlikeBlog(id);
+    }
+    @GetMapping("/statistics")
+    public ResponseEntity<Map<String, Object>> getBlogStatistics() {
+        return ResponseEntity.ok(blogService.getBlogStatistics());
     }
 }

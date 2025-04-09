@@ -7,7 +7,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -82,5 +84,42 @@ public class BlogService implements IBlogService {
     public List<Blog> getAllBlogsSorted(String sortBy, String direction) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         return blogRepository.findAll(sort);
+    }
+    @Override
+    public Map<String, Object> getBlogStatistics() {
+        // Get all published blogs
+        List<Blog> publishedBlogs = getPublishedBlogs();
+
+        // Total published blogs
+        long totalPublishedBlogs = publishedBlogs.size();
+
+        // Average likes
+        double averageLikes = publishedBlogs.isEmpty() ? 0.0 :
+                publishedBlogs.stream()
+                        .mapToInt(Blog::getLikes)
+                        .average()
+                        .orElse(0.0);
+
+        // Most liked blog
+        Map<String, Object> mostLikedBlog = null;
+        if (!publishedBlogs.isEmpty()) {
+            Blog maxBlog = publishedBlogs.stream()
+                    .max((b1, b2) -> Integer.compare(b1.getLikes(), b2.getLikes()))
+                    .orElse(null);
+            if (maxBlog != null) {
+                mostLikedBlog = new HashMap<>();
+                mostLikedBlog.put("id", maxBlog.getId());
+                mostLikedBlog.put("title", maxBlog.getTitle());
+                mostLikedBlog.put("likes", maxBlog.getLikes());
+            }
+        }
+
+        // Build the response map
+        Map<String, Object> statistics = new HashMap<>();
+        statistics.put("totalPublishedBlogs", totalPublishedBlogs);
+        statistics.put("averageLikes", Math.round(averageLikes * 10) / 10.0);
+        statistics.put("mostLikedBlog", mostLikedBlog);
+
+        return statistics;
     }
 }

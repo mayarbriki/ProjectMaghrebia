@@ -1,0 +1,64 @@
+<div class="dashboard-container">
+    <h2 class="dashboard-title">Blog Statistics Dashboard</h2>
+  
+    <!-- Loading and Error States -->
+    <div *ngIf="loading" class="loading">Loading statistics...</div>
+    <div *ngIf="error" class="error">{{ error }}</div>
+  
+    <!-- Statistics Cards -->
+    <div class="statistics-section" *ngIf="statistics && !loading && !error">
+      <div class="stat-card">
+        <span class="stat-value">{{ statistics.totalPublishedBlogs }}</span>
+        <span class="stat-label">Published Blogs</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ statistics.averageLikes }}</span>
+        <span class="stat-label">Average Likes</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-value">{{ statistics.mostLikedBlog?.likes || 0 }}</span>
+        <span class="stat-label">Most Likes</span>
+        <span class="stat-sublabel" *ngIf="statistics.mostLikedBlog">on "{{ statistics.mostLikedBlog?.title }}"</span>
+      </div>
+    </div>
+  
+    <!-- Charts Section -->
+    <div class="charts-section" *ngIf="!loading && !error">
+      <!-- Bar Chart: Blogs by Type -->
+      <div class="chart-container">
+        <apx-chart
+          [series]="barChartOptions.series!"
+          [chart]="barChartOptions.chart!"
+          [xaxis]="barChartOptions.xaxis!"
+          [yaxis]="barChartOptions.yaxis!"
+          [title]="barChartOptions.title!"
+          [dataLabels]="barChartOptions.dataLabels!">
+        </apx-chart>
+      </div>
+  
+      <!-- Pie Chart: Likes by Blog Type -->
+      <div class="chart-container">
+        <apx-chart
+          [series]="pieChartOptions.series!"
+          [chart]="pieChartOptions.chart!"
+          [labels]="pieChartOptions.labels!"
+          [title]="pieChartOptions.title!"
+          [legend]="pieChartOptions.legend!"
+          [responsive]="pieChartOptions.responsive!"
+          [dataLabels]="pieChartOptions.dataLabels!">
+        </apx-chart>
+      </div>
+  
+      <!-- Line Chart: Blogs Published Over Time -->
+      <div class="chart-container">
+        <apx-chart
+          [series]="lineChartOptions.series!"
+          [chart]="lineChartOptions.chart!"
+          [xaxis]="lineChartOptions.xaxis!"
+          [yaxis]="lineChartOptions.yaxis!"
+          [title]="lineChartOptions.title!"
+          [dataLabels]="lineChartOptions.dataLabels!">
+        </apx-chart>
+      </div>
+    </div>
+  </div>

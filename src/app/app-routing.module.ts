@@ -50,6 +50,7 @@ import { BookmarkComponent } from './bookmark/bookmark.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { FeedbackDisplayComponent } from './feedback-display/feedback-display.component';
 import { BlogSingleComponent } from './blog-single/blog-single.component';
+import { BlogStatisticsComponent } from './blog-statistics/blog-statistics.component';
 
 const routes: Routes = [
   // Front-Office Routes
@@ -125,6 +126,7 @@ const routes: Routes = [
     path: 'blogs/:id',
     component: BlogSingleComponent
   },
+  { path: 'blog-statistics', component: BlogStatisticsComponent },
   
   
   

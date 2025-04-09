@@ -1,4 +1,4 @@
-import { HttpClient ,HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -12,7 +12,14 @@ export interface Blog {
   image?: string;
   scheduledPublicationDate?: string;
   published?: boolean;
-  likes?: number; 
+  likes?: number;
+}
+
+// Interface for the statistics response
+export interface BlogStatistics {
+  totalPublishedBlogs: number;
+  averageLikes: number;
+  mostLikedBlog: { id: number; title: string; likes: number } | null;
 }
 
 @Injectable({
@@ -29,6 +36,7 @@ export class BlogService {
       .set('direction', direction);
     return this.http.get<Blog[]>(this.apiUrl, { params });
   }
+
   createBlog(blog: Blog, file?: File): Observable<Blog> {
     const formData = new FormData();
     formData.append('title', blog.title);
@@ -67,12 +75,16 @@ export class BlogService {
     return this.http.get<Blog>(`${this.apiUrl}/${id}`);
   }
 
-  // New method to like a blog
   likeBlog(id: number): Observable<Blog> {
     return this.http.post<Blog>(`${this.apiUrl}/${id}/like`, {});
   }
 
   unlikeBlog(id: number): Observable<Blog> {
     return this.http.post<Blog>(`${this.apiUrl}/${id}/unlike`, {});
+  }
+
+  // New method to fetch statistics
+  getBlogStatistics(): Observable<BlogStatistics> {
+    return this.http.get<BlogStatistics>(`${this.apiUrl}/statistics`);
   }
 }

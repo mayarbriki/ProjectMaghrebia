@@ -22,6 +22,7 @@ export interface Incident {
   property?: { id: number };
   submittedAt?: string;
   mediaUrls?: string[];
+
 }
 
 
@@ -49,7 +50,10 @@ export class IncidentService {
     );
   }
   
-
+  getAllIncidents(): Observable<Incident[]> {
+    return this.http.get<Incident[]>(this.apiUrl);
+  }
+  
   // Get incidents by property ID
   getIncidentsByPropertyId(propertyId: number): Observable<Incident[]> {
     return this.http.get<Incident[]>(`${this.apiUrl}/property/${propertyId}`).pipe(

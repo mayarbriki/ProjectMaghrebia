@@ -7,8 +7,7 @@ import { HeaderFrontComponent } from "../../header-front/header-front.component"
 import jsPDF from 'jspdf';
 import { icon, latLng, Map, marker, Marker, tileLayer, latLngBounds, LatLngBounds } from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import * as rasterizeHTML from 'rasterizehtml';
-import html2canvas from 'html2canvas';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   standalone: true,
@@ -22,7 +21,9 @@ export class IncidentFormComponent implements OnInit {
   propertyId!: number;
   isLoading = false;
   today = new Date().toISOString().split('T')[0];
-
+  voiceTranscription: string = '';
+  recognition: any;
+  
   map!: Map;
   mainMarker!: Marker;
 
@@ -43,7 +44,9 @@ export class IncidentFormComponent implements OnInit {
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
-    private incidentService: IncidentService
+    private incidentService: IncidentService,
+    private http: HttpClient
+
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +71,8 @@ export class IncidentFormComponent implements OnInit {
       needsAssessment: [true],
       latitude: [34, Validators.required],
       longitude: [9, Validators.required],
-      mediaFiles: [null]
+      mediaFiles: [null],
+
     });
   }
 
@@ -142,6 +146,7 @@ export class IncidentFormComponent implements OnInit {
     const paragraphs = [
       `On ${data.dateOfIncident}, an incident titled "${data.title}" occurred at the following location: ${data.locationDetails || 'unspecified location'}.`,
       `The description provided by the reporter states: "${data.description}"`,
+      this.voiceTranscription ? `🗣️ Dictated description (voice): "${this.voiceTranscription}"` : '',
       `Severity level: "${data.severity}" | Category: "${data.incidentCategory}"`,
       data.incidentCause ? `Probable cause: "${data.incidentCause}"` : '',
       `Contact: ${data.userEmail}${data.userPhone ? ` or ${data.userPhone}` : ''}`,
@@ -183,6 +188,7 @@ export class IncidentFormComponent implements OnInit {
       doc.save(`incident-report-${data.title}.pdf`);
     }
   }
+  
   
   
 
@@ -284,6 +290,55 @@ isVideo(fileUrl: string): boolean {
 private generateLocationIQStaticImageUrl(lat: number, lng: number): string {
   const apiKey = 'pk.f6cff4e27cbf77dec5fb32896647a75c'; // Use your own LocationIQ key
   return `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${lat},${lng}&zoom=18&size=600x400&markers=icon:large-red-cutout|${lat},${lng}`;
+}
+
+
+startVoiceInput() {
+  const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+  this.recognition = new SpeechRecognition();
+  this.recognition.lang = 'en-US'; // You can change to 'fr-FR' or 'ar' as needed
+  this.recognition.continuous = false;
+  this.recognition.interimResults = false;
+
+  this.recognition.onresult = (event: any) => {
+    const transcript = Array.from(event.results)
+      .map((result: any) => result[0].transcript)
+      .join('');
+
+    // Append to description field and save transcript
+    const currentDescription = this.incidentForm.get('description')?.value || '';
+    this.incidentForm.patchValue({ description: currentDescription + ' ' + transcript });
+    this.voiceTranscription = transcript;
+  };
+
+  this.recognition.start();
+}
+
+stopVoiceInput() {
+  if (this.recognition) {
+    this.recognition.stop();
+  }
+}
+
+translateVoiceTranscriptionLibre(targetLang: string = 'en'): void {
+  const url = 'https://libretranslate.de/translate';
+  const body = {
+    q: this.voiceTranscription,
+    source: 'auto',
+    target: targetLang,
+    format: 'text'
+  };
+
+  this.http.post<any>(url, body).subscribe({
+    next: (res) => {
+      this.voiceTranscription = res.translatedText;
+      alert(`Translated to ${targetLang.toUpperCase()} ✅`);
+    },
+    error: (err) => {
+      console.error('LibreTranslate error:', err);
+      alert('Translation failed. Check your internet or try later.');
+    }
+  });
 }
 
 

@@ -30,6 +30,7 @@ import { PropertiessComponent } from './front-office/property/properties/propert
 import { PropertiesComponentF } from './front-office/properties/properties.component';
 import { PropertyCollageComponent } from './@theme/pages/property/property-collage/property-collage.component';
 import { IncidentFormComponent } from './front-office/incidents/incident-form/incident-form.component';
+import { IncidentListComponent } from './front-office/incidents/incident-list/incident-list.component';
 
 // Combined Routes
 const routes: Routes = [
@@ -87,6 +88,10 @@ const routes: Routes = [
   {
     path: 'report-incident/:propertyId',
     component: IncidentFormComponent
+  },
+  {
+    path: 'incidents',
+    component: IncidentListComponent
   },
   
   // Back-Office Routes

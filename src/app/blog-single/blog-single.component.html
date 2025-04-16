@@ -1,22 +1,54 @@
-<div class="blog-single-container" *ngIf="blog; else noBlog">
-    <h2>{{ blog.title }}</h2>
-    <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image">
-    <p>{{ blog.content }}</p>
-    
-    <div class="like-section">
-      <button class="like-button" (click)="toggleLike()">
-        <span class="like-icon" [class.liked]="isLiked">♥</span>
-        <span class="like-text">{{ isLiked ? 'Unlike' : 'Like' }}</span>
-      </button>
-      <span class="like-count">{{ likeCount }} {{ likeCount === 1 ? 'Like' : 'Likes' }}</span>
-    </div>
-    
+<app-header-front></app-header-front>
+
+<div class="blog-single-container" *ngIf="!loading && blog; else loadingOrNoBlog">
+  <h2>{{ blog.title }}</h2>
+  <p>By {{ blog.author }} on {{ blog.createdAt | date: 'medium' }}</p>
+
+  <!-- Translation Controls -->
+  <div class="translation-controls">
+    <span *ngIf="isTranslated">Translated to: {{ translatedLanguage }}</span>
+    <button (click)="translateBlog('es')" [disabled]="isTranslated && translatedLanguage === 'es'" class="translate-button">Translate to Spanish</button>
+    <button (click)="translateBlog('fr')" [disabled]="isTranslated && translatedLanguage === 'fr'" class="translate-button">Translate to French</button>
+    <button *ngIf="isTranslated" (click)="revertToOriginal()" class="revert-button">Revert to Original</button>
+  </div>
+
+  <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="{{ blog.title }}" class="blog-image">
+  <p class="content">{{ blog.content }}</p>
+
+  <div class="like-section">
+    <button class="like-button" (click)="toggleLike()">
+      <span class="like-icon" [class.liked]="isLiked">♥</span>
+      <span class="like-text">{{ isLiked ? 'Unlike' : 'Like' }}</span>
+    </button>
+    <span class="like-count">{{ likeCount }} {{ likeCount === 1 ? 'Like' : 'Likes' }}</span>
+  </div>
+
+  <h3>Comments</h3>
+  <div *ngIf="blog.comments && blog.comments.length > 0; else noComments" class="comments-section">
+    <ul class="comment-list">
+      <li *ngFor="let comment of blog.comments">
+        <p>{{ comment.content }}</p>
+        <p class="comment-meta">By {{ comment.user }} on {{ comment.createdAt | date: 'medium' }}</p>
+      </li>
+    </ul>
+  </div>
+  <ng-template #noComments>
+    <p>No comments yet.</p>
+  </ng-template>
+
+  <div class="add-comment" *ngIf="blog">
+    <textarea [(ngModel)]="newCommentContent" placeholder="Add a comment..." class="comment-input"></textarea>
+    <button (click)="addComment()" [disabled]="!newCommentContent.trim()" class="submit-comment">Submit</button>
+  </div>
+
+  <button class="back-button" (click)="backToList()">Back to List</button>
+</div>
+
+<ng-template #loadingOrNoBlog>
+  <div *ngIf="loading" class="loading">Loading...</div>
+  <div *ngIf="!loading && error" class="error">{{ error }}</div>
+  <div *ngIf="!loading && !blog" class="no-blog">
+    <p>Blog not found.</p>
     <button class="back-button" (click)="backToList()">Back to List</button>
   </div>
-  
-  <ng-template #noBlog>
-    <div class="no-blog">
-      <p>Blog not found.</p>
-      <button class="back-button" (click)="backToList()">Back to List</button>
-    </div>
-  </ng-template>
+</ng-template>

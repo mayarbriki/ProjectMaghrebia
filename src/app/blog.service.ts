@@ -1,18 +1,27 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+export interface Comment {
+  id: number;
+  content: string;
+  user: string;
+  createdAt: Date;
+  approved: boolean;
+}
 
 export interface Blog {
   id: number;
   title: string;
   author: string;
   content: string;
-  createdAt?: string;
+  createdAt?: Date;
   type: 'NEWS' | 'ARTICLE';
   image?: string;
   scheduledPublicationDate?: string;
   published?: boolean;
   likes?: number;
+  comments?: Comment[];
 }
 
 export interface BlogStatistics {
@@ -103,9 +112,38 @@ export class BlogService {
     return this.http.get(`${this.apiUrl}/export`, { params, responseType: 'blob' });
   }
 
-  // New method to export a specific blog by ID
   exportBlogById(id: number, format: 'csv' | 'pdf' = 'csv'): Observable<Blob> {
     let params = new HttpParams().set('format', format);
     return this.http.get(`${this.apiUrl}/${id}/export`, { params, responseType: 'blob' });
+  }
+
+  addComment(blogId: number, comment: { content: string; user: string }): Observable<Comment> {
+    const headers = new HttpHeaders({
+      'X-User': comment.user,
+      'Content-Type': 'application/json'
+    });
+    return this.http.post<Comment>(
+      `${this.apiUrl}/${blogId}/comments`,
+      { content: comment.content },
+      { headers }
+    ).pipe(
+      map(response => ({
+        ...response,
+        createdAt: new Date(response.createdAt) // Ensure createdAt is properly typed
+      }))
+    );
+  }
+
+  getComments(blogId: number, page: number = 0, size: number = 10): Observable<Comment[]> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    return this.http.get<Comment[]>(`${this.apiUrl}/${blogId}/comments`, { params });
+  }
+  translateBlog(id: number, targetLanguage: string): Observable<Blog> {
+    return this.http.post<Blog>(
+      `${this.apiUrl}/${id}/translate?targetLanguage=${targetLanguage}`,
+      {}
+    );
   }
 }

@@ -62,3 +62,160 @@
       }
     }
   }
+  .translation-controls {
+    margin: 10px 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  
+    span {
+      font-style: italic;
+      color: #555;
+    }
+  
+    .translate-button, .revert-button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background-color 0.3s;
+  
+      &:disabled {
+        background-color: #ccc;
+        cursor: not-allowed;
+      }
+    }
+  
+    .translate-button {
+      background-color: #007bff;
+      color: white;
+  
+      &:hover:not(:disabled) {
+        background-color: #0056b3;
+      }
+    }
+  
+    .revert-button {
+      background-color: #dc3545;
+      color: white;
+  
+      &:hover:not(:disabled) {
+        background-color: #b02a37;
+      }
+    }
+  }
+  
+  // Existing styles remain unchanged...
+  .blog-single-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .blog-image {
+    max-width: 100%;
+    height: auto;
+    margin: 10px 0;
+  }
+  
+  .content {
+    line-height: 1.6;
+  }
+  
+  .like-section {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .like-button {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border: none;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .like-icon {
+    font-size: 18px;
+    color: #ccc;
+  }
+  
+  .like-icon.liked {
+    color: #ff0000;
+  }
+  
+  .like-text, .like-count {
+    font-size: 14px;
+  }
+  
+  .comments-section {
+    margin-top: 20px;
+  }
+  
+  .comment-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .comment-list li {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+  }
+  
+  .comment-meta {
+    font-size: 12px;
+    color: #666;
+  }
+  
+  .add-comment {
+    margin-top: 20px;
+  }
+  
+  .comment-input {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: vertical;
+  }
+  
+  .submit-comment {
+    margin-top: 10px;
+    padding: 8px 16px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .submit-comment:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .back-button {
+    margin-top: 20px;
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .loading, .error, .no-blog {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .error {
+    color: #dc3545;
+  }

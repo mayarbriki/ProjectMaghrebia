@@ -1,0 +1,185 @@
+<app-header-front></app-header-front>
+<div class="container mx-auto p-4 max-w-3xl">
+  <h2 class="text-3xl font-bold mb-6 text-gray-800">Report an Incident</h2>
+  
+  <form [formGroup]="incidentForm" (ngSubmit)="submitIncident()" class="space-y-6 bg-white p-6 rounded-lg shadow-md">
+    <!-- Title -->
+    <div>
+      <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Title*</label>
+      <input id="title" type="text" formControlName="title" 
+             class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+             [class.border-red-500]="incidentForm.get('title')?.invalid && incidentForm.get('title')?.touched">
+      <div *ngIf="incidentForm.get('title')?.invalid && incidentForm.get('title')?.touched" class="text-red-500 text-sm mt-1">
+        Title is required
+      </div>
+    </div>
+
+    <!-- Description -->
+    <div>
+      <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Description*</label>
+      <textarea id="description" formControlName="description" rows="4"
+                class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="incidentForm.get('description')?.invalid && incidentForm.get('description')?.touched"></textarea>
+      <div *ngIf="incidentForm.get('description')?.invalid && incidentForm.get('description')?.touched" class="text-red-500 text-sm mt-1">
+        Description is required
+      </div>
+    </div>
+
+    <!-- Date and Location -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="dateOfIncident" class="block text-sm font-medium text-gray-700 mb-1">Date of Incident*</label>
+        <input id="dateOfIncident" type="date" formControlName="dateOfIncident"
+               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               [class.border-red-500]="incidentForm.get('dateOfIncident')?.invalid && incidentForm.get('dateOfIncident')?.touched">
+        <div *ngIf="incidentForm.get('dateOfIncident')?.invalid && incidentForm.get('dateOfIncident')?.touched" class="text-red-500 text-sm mt-1">
+          Date is required
+        </div>
+      </div>
+      
+      <div>
+        <label for="locationDetails" class="block text-sm font-medium text-gray-700 mb-1">Location Details</label>
+        <input id="locationDetails" type="text" formControlName="locationDetails"
+               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+
+    <!-- Severity and Category -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="severity" class="block text-sm font-medium text-gray-700 mb-1">Severity*</label>
+        <select id="severity" formControlName="severity"
+                class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="incidentForm.get('severity')?.invalid && incidentForm.get('severity')?.touched">
+          <option value="">Select severity</option>
+          <option value="Low">Low</option>
+          <option value="Medium">Medium</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+        <div *ngIf="incidentForm.get('severity')?.invalid && incidentForm.get('severity')?.touched" class="text-red-500 text-sm mt-1">
+          Severity is required
+        </div>
+      </div>
+      
+      <div>
+        <label for="incidentCategory" class="block text-sm font-medium text-gray-700 mb-1">Category*</label>
+        <select id="incidentCategory" formControlName="incidentCategory"
+                class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                [class.border-red-500]="incidentForm.get('incidentCategory')?.invalid && incidentForm.get('incidentCategory')?.touched">
+          <option value="">Select category</option>
+          <option value="Fire">Fire</option>
+          <option value="Water">Water</option>
+          <option value="Electrical">Electrical</option>
+          <option value="Structural">Structural</option>
+          <option value="Theft">Theft</option>
+          <option value="Vandalism">Vandalism</option>
+          <option value="Other">Other</option>
+        </select>
+        <div *ngIf="incidentForm.get('incidentCategory')?.invalid && incidentForm.get('incidentCategory')?.touched" class="text-red-500 text-sm mt-1">
+          Category is required
+        </div>
+      </div>
+    </div>
+
+    <!-- Incident Cause -->
+    <div>
+      <label for="incidentCause" class="block text-sm font-medium text-gray-700 mb-1">Cause</label>
+      <input id="incidentCause" type="text" formControlName="incidentCause"
+             class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+    </div>
+
+    <!-- Contact Info -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label for="userEmail" class="block text-sm font-medium text-gray-700 mb-1">Email*</label>
+        <input id="userEmail" type="email" formControlName="userEmail"
+               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               [class.border-red-500]="incidentForm.get('userEmail')?.invalid && incidentForm.get('userEmail')?.touched">
+        <div *ngIf="incidentForm.get('userEmail')?.errors?.['required'] && incidentForm.get('userEmail')?.touched" class="text-red-500 text-sm mt-1">
+          Email is required
+        </div>
+        <div *ngIf="incidentForm.get('userEmail')?.errors?.['email'] && incidentForm.get('userEmail')?.touched" class="text-red-500 text-sm mt-1">
+          Please enter a valid email
+        </div>
+      </div>
+      
+      <div>
+        <label for="userPhone" class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+        <input id="userPhone" type="tel" formControlName="userPhone"
+               class="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+
+    <!-- Map Location Section -->
+<div class="bg-white rounded-lg shadow p-6">
+  <h2 class="text-xl font-semibold mb-4">Location on Map</h2>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+    <div>
+      <label for="latitude" class="block text-sm font-medium text-gray-700 mb-1">Latitude*</label>
+      <input id="latitude" type="number" formControlName="latitude"
+             class="w-full p-3 border rounded-md"
+             [class.border-red-500]="incidentForm.get('latitude')?.invalid && incidentForm.get('latitude')?.touched"
+             (change)="updateMarkerPosition()">
+      <div *ngIf="incidentForm.get('latitude')?.invalid && incidentForm.get('latitude')?.touched" class="text-red-500 text-sm mt-1">
+        Latitude is required
+      </div>
+    </div>
+    <div>
+      <label for="longitude" class="block text-sm font-medium text-gray-700 mb-1">Longitude*</label>
+      <input id="longitude" type="number" formControlName="longitude"
+             class="w-full p-3 border rounded-md"
+             [class.border-red-500]="incidentForm.get('longitude')?.invalid && incidentForm.get('longitude')?.touched"
+             (change)="updateMarkerPosition()">
+      <div *ngIf="incidentForm.get('longitude')?.invalid && incidentForm.get('longitude')?.touched" class="text-red-500 text-sm mt-1">
+        Longitude is required
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-4">
+    <button type="button" (click)="getCurrentPosition()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+      Get Current Location
+    </button>
+  </div>
+
+  <div style="height: 400px; border: 1px solid #ccc; border-radius: 4px;"
+       leaflet 
+       [leafletOptions]="mapOptions" 
+       (leafletMapReady)="onMapReady($event)">
+  </div>
+  <p class="text-sm text-gray-600 mt-2">Click the map or drag the marker to update coordinates.</p>
+</div>
+
+
+    <!-- Checkboxes -->
+    <div class="space-y-3">
+      <div class="flex items-center">
+        <input id="policeReportFiled" type="checkbox" formControlName="policeReportFiled" 
+               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+        <label for="policeReportFiled" class="ml-2 block text-sm text-gray-700">Police Report Filed</label>
+      </div>
+      
+      <div class="flex items-center">
+        <input id="insuranceClaimFiled" type="checkbox" formControlName="insuranceClaimFiled" 
+               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+        <label for="insuranceClaimFiled" class="ml-2 block text-sm text-gray-700">Insurance Claim Filed</label>
+      </div>
+      
+      <div class="flex items-center">
+        <input id="faultAcknowledged" type="checkbox" formControlName="faultAcknowledged" 
+               class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+        <label for="faultAcknowledged" class="ml-2 block text-sm text-gray-700">I acknowledge my fault</label>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <div class="pt-4">
+      <button type="submit" [disabled]="incidentForm.invalid"
+              class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-blue-300 transition-colors">
+        Submit Incident
+      </button>
+    </div>
+  </form>
+</div>

@@ -10,14 +10,15 @@ import { ConferenceComponent } from '../conference/conference.component';
 import { HomeFrontComponent } from '../home-front/home-front.component';
 import { ClaimsComponent } from '../claims/claims.component';
 import { ContractsComponent } from "../contracts/contracts.component";
-import { PropertiesComponent } from '../properties/properties.component';
-import { IncidentsComponent } from "../incidents/incidents.component";
+import { IncidentFormComponent } from '../incidents/incident-form/incident-form.component';
+import { PropertiesComponent } from "../../@theme/pages/property/properties/properties.component";
+import { PropertiessComponent } from "../property/properties/properties.component";
 
 @Component({
   selector: 'app-all-template-front',
   templateUrl: './all-template-front.component.html',
   styleUrls: ['./all-template-front.component.css'],
-  imports: [HeaderFrontComponent, RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent]
+  imports: [HeaderFrontComponent, RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, IncidentFormComponent, PropertiesComponent, PropertiessComponent]
 })
 export class AllTemplateFrontComponent {
 

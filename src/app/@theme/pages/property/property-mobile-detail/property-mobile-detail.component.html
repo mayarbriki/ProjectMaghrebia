@@ -1,0 +1,31 @@
+<div class="mobile-detail">
+    <header class="header">
+      <h1 class="title">{{ property?.name }}</h1>
+    </header>
+  
+    <section class="content" *ngIf="property; else loadingTpl">
+      <!-- Image gallery -->
+      <div class="image-gallery" *ngIf="property.images && property.images.length > 0">
+        <div class="image-container" *ngFor="let img of property.images">
+          <img [src]="propertyService.getImageUrl(img)" alt="{{ property.name }}" />
+        </div>
+      </div>
+  
+      <!-- Property Details -->
+      <div class="details">
+        <p class="description">{{ property.description }}</p>
+        <p class="type"><strong>Type:</strong> {{ property.type | titlecase }}</p>
+        <p class="value"><strong>Estimated Value:</strong> {{ property.estimatedValue | currency:'USD':'symbol':'1.0-0' }}</p>
+        <!-- Additional details as needed -->
+      </div>
+    </section>
+  
+    <ng-template #loadingTpl>
+      <p class="loading">Loading property details...</p>
+    </ng-template>
+  
+    <footer class="footer">
+      <button class="share-button">Share Property</button>
+    </footer>
+  </div>
+  

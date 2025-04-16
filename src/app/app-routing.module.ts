@@ -14,15 +14,22 @@ import { ArticlesComponent } from './@theme/pages/articles/articles.component';
 import { AssesementsComponent } from './@theme/pages/assesements/assesements.component';
 import { BlogsComponent } from '../app/front-office/blogs/blogs.component';
 import { ClaimsComponent } from './front-office/claims/claims.component';
-import { IncidentsComponent } from './@theme/pages/incidents/incidents.component';
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
 import { NewsComponent } from './@theme/pages/news/news.component';
-import { PropertiesComponent } from './@theme/pages/properties/properties.component';
+import { PropertiesComponent } from './@theme/pages/property/properties/properties.component';
 import { MessageComponent } from './message/message.component';
 import { SigninComponent } from './front-office/register/signin/signin.component';
 import { SignupComponent } from './front-office/register/signup/signup.component';
 import { ServicesComponent } from './front-office/services/services.component';
 import { ProductsComponent } from './front-office/products/products.component';
+import { TransactionsComponent } from './front-office/transactions/transactions.component';
+import { TransactionsComponentB } from './@theme/pages/transactions/transactions.component';
+import { PropertyListComponent } from './@theme/pages/property/property-list/property-list.component';
+import { PropertyMobileDetailComponent } from './@theme/pages/property/property-mobile-detail/property-mobile-detail.component';
+import { PropertiessComponent } from './front-office/property/properties/properties.component';
+import { PropertiesComponentF } from './front-office/properties/properties.component';
+import { PropertyCollageComponent } from './@theme/pages/property/property-collage/property-collage.component';
+import { IncidentFormComponent } from './front-office/incidents/incident-form/incident-form.component';
 
 // Combined Routes
 const routes: Routes = [
@@ -60,7 +67,28 @@ const routes: Routes = [
     path:'blogs',
     component:BlogsComponent
   },
-
+  {
+    path:'transactions',
+    component:TransactionsComponent
+  },
+  {
+    path:'list',
+    component:PropertyListComponent
+  },
+  { path: 'property-mobile-detail/:id', component: PropertyMobileDetailComponent },
+  {
+    path:'prop',
+    component:PropertiessComponent
+  },
+  {
+    path: 'propertiesF',
+    component: PropertiesComponentF
+  },
+  {
+    path: 'report-incident/:propertyId',
+    component: IncidentFormComponent
+  },
+  
   // Back-Office Routes
   {
     path: 'admin',
@@ -104,10 +132,6 @@ const routes: Routes = [
         component: ClaimsComponent
       },
       {
-        path: 'incidents',
-        component: IncidentsComponent
-      },
-      {
         path: 'joboffers',
         component: JoboffersComponent
       },
@@ -118,6 +142,14 @@ const routes: Routes = [
       {
         path: 'properties',
         component: PropertiesComponent
+      },
+      {
+        path: 'transactions',
+        component: TransactionsComponentB
+      },
+      {
+        path: 'propertylistB',
+        component: PropertyListComponent
       },
     ]
   },

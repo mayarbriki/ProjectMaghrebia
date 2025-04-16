@@ -1,67 +1,8 @@
-.blog-single-container {
-    max-width: 800px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+.language-error {
+    font-style: italic;
+    color: #dc3545;
   }
   
-  h2 {
-    font-size: 2.2rem;
-    color: #333;
-    margin-bottom: 20px;
-    font-weight: 600;
-  }
-  
-  img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    display: block;
-  }
-  
-  p {
-    font-size: 1.1rem;
-    line-height: 1.8;
-    color: #444;
-    margin-bottom: 20px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s ease;
-  
-    &:hover {
-      background-color: #0056b3;
-    }
-  }
-  
-  .no-blog {
-    text-align: center;
-    padding: 40px;
-    color: #666;
-  
-    p {
-      font-size: 1.2rem;
-      margin-bottom: 20px;
-    }
-  
-    button {
-      background-color: #6c757d; /* Gray for "not found" state */
-      
-      &:hover {
-        background-color: #5a6268;
-      }
-    }
-  }
   .translation-controls {
     margin: 10px 0;
     display: flex;
@@ -106,11 +47,11 @@
     }
   }
   
-  // Existing styles remain unchanged...
   .blog-single-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 20px;
+    position: relative;
   }
   
   .blog-image {
@@ -184,6 +125,24 @@
     border: 1px solid #ddd;
     border-radius: 4px;
     resize: vertical;
+  
+    &.invalid {
+      border-color: #dc3545;
+      background-color: #fff5f5;
+    }
+  }
+  
+  .bad-words-warning {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .error-message {
+    color: #dc3545;
+    font-size: 14px;
+    margin-top: 5px;
+    font-weight: bold;
   }
   
   .submit-comment {
@@ -194,11 +153,11 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-  }
   
-  .submit-comment:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+    &:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
   }
   
   .back-button {
@@ -218,4 +177,49 @@
   
   .error {
     color: #dc3545;
+  }
+  
+  /* Modal Styles */
+  .modal {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 5px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+    position: relative;
+  }
+  
+  .modal h2 {
+    margin: 0 0 10px 0;
+    color: #dc3545;
+  }
+  
+  .modal p {
+    margin: 0 0 15px 0;
+  }
+  
+  .modal-close {
+    padding: 8px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #0056b3;
+    }
   }

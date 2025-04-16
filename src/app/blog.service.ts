@@ -2,6 +2,8 @@ import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { ProfanityFilterService } from './profanity-filter.service';
+
 export interface Comment {
   id: number;
   content: string;
@@ -36,7 +38,10 @@ export interface BlogStatistics {
 export class BlogService {
   private apiUrl = 'http://localhost:6969/api/blogs';
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private profanityFilterService: ProfanityFilterService // Inject the service
+  ) {}
 
   getBlogs(sortBy: string = 'createdAt', direction: string = 'ASC'): Observable<Blog[]> {
     let params = new HttpParams()
@@ -118,6 +123,15 @@ export class BlogService {
   }
 
   addComment(blogId: number, comment: { content: string; user: string }): Observable<Comment> {
+    if (!comment.content.trim()) {
+      throw new Error('Comment content cannot be empty');
+    }
+
+    // Check for bad words before sending to the backend
+    if (this.profanityFilterService.containsBadWords(comment.content)) {
+      throw new Error('Comment contains inappropriate language. Please revise your comment.');
+    }
+
     const headers = new HttpHeaders({
       'X-User': comment.user,
       'Content-Type': 'application/json'
@@ -140,15 +154,22 @@ export class BlogService {
       .set('size', size.toString());
     return this.http.get<Comment[]>(`${this.apiUrl}/${blogId}/comments`, { params });
   }
+
   translateBlog(id: number, targetLanguage: string): Observable<Blog> {
     return this.http.post<Blog>(
       `${this.apiUrl}/${id}/translate?targetLanguage=${targetLanguage}`,
       {}
     );
   }
+
   detectLanguage(text: string): Observable<string> {
     return this.http.post<{ language: string }>(`${this.apiUrl}/detect`, { text }).pipe(
       map(response => response.language)
     );
+  }
+
+  // Optional: Fetch bad words from the backend
+  loadBadWords(): Observable<string[]> {
+    return this.http.get<string[]>(`${this.apiUrl}/bad-words`);
   }
 }

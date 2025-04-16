@@ -4,6 +4,8 @@ import { BlogService, Blog, Comment } from '../blog.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { HeaderFrontComponent } from '../front-office/header-front/header-front.component';
+import { ProfanityFilterService } from '../profanity-filter.service';
+import { AuthService, User } from '../auth.service'; // Import AuthService and User interface
 
 @Component({
   selector: 'app-blog-single',
@@ -18,21 +20,29 @@ export class BlogSingleComponent implements OnInit {
   isLiked: boolean = false;
   likeCount: number = 0;
   newCommentContent: string = '';
-  currentUser: string = 'nermine';
+  currentUser: string = 'Guest'; // Default value if no user is logged in
   loading: boolean = true;
   error: string | null = null;
   isTranslated: boolean = false;
   translatedLanguage: string | null = null;
-  originalLanguage: string | null = null; // No default value, will be set by detection
+  originalLanguage: string | null = null;
+  hasBadWords: boolean = false;
+  showBadWordModal: boolean = false; // Controls modal visibility
 
   constructor(
     private blogService: BlogService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private profanityFilterService: ProfanityFilterService,
+    private authService: AuthService // Inject AuthService
   ) {}
 
   ngOnInit(): void {
     this.loadBlog();
+    // Subscribe to user$ to update currentUser dynamically
+    this.authService.user$.subscribe((user: User | null) => {
+      this.currentUser = user ? user.username : 'Guest'; // Set currentUser to username or default to 'Guest'
+    });
   }
 
   loadBlog(): void {
@@ -46,7 +56,6 @@ export class BlogSingleComponent implements OnInit {
             this.originalBlog = { ...blog };
             this.likeCount = blog.likes || 0;
             this.isLiked = this.checkIfLiked(blog.id);
-            // Detect the language of the blog title
             this.detectBlogLanguage(blog.title);
           } else {
             this.router.navigate(['/']);
@@ -64,7 +73,6 @@ export class BlogSingleComponent implements OnInit {
 
   detectBlogLanguage(text: string): void {
     if (!text || text.trim() === '') {
-      // If the title is empty, use a fallback or skip detection
       this.originalLanguage = null;
       this.error = 'Cannot detect language: Blog title is empty';
       return;
@@ -79,7 +87,7 @@ export class BlogSingleComponent implements OnInit {
       error: (err) => {
         console.error('Error detecting language:', err);
         this.error = 'Failed to detect blog language';
-        this.originalLanguage = null; // No fallback, handle in UI
+        this.originalLanguage = null;
       }
     });
   }
@@ -132,13 +140,25 @@ export class BlogSingleComponent implements OnInit {
     });
   }
 
+  validateComment(): void {
+    this.hasBadWords = this.profanityFilterService.containsBadWords(this.newCommentContent);
+  }
+
   addComment(): void {
     if (!this.blog || !this.newCommentContent.trim()) return;
+
+    // Check for bad words before proceeding
+    if (this.profanityFilterService.containsBadWords(this.newCommentContent)) {
+      this.showBadWordModal = true;
+      this.hasBadWords = true;
+      this.error = 'Comment contains inappropriate language. Please revise your comment.';
+      return;
+    }
 
     this.blogService
       .addComment(this.blog.id, {
         content: this.newCommentContent,
-        user: this.currentUser
+        user: this.currentUser // Use dynamic currentUser
       })
       .subscribe({
         next: (comment) => {
@@ -147,12 +167,25 @@ export class BlogSingleComponent implements OnInit {
           }
           this.blog!.comments.push(comment);
           this.newCommentContent = '';
+          this.hasBadWords = false;
+          this.error = null;
         },
         error: (err) => {
+          // Handle backend rejection (e.g., 400 for bad words)
+          if (err.status === 400) {
+            this.showBadWordModal = true;
+            this.hasBadWords = true;
+            this.error = 'Comment contains inappropriate language. Please revise your comment.';
+          } else {
+            this.error = 'Failed to add comment. Please try again.';
+          }
           console.error('Error adding comment:', err);
-          this.error = 'Failed to add comment. Please try again.';
         }
       });
+  }
+
+  closeModal(): void {
+    this.showBadWordModal = false;
   }
 
   translateBlog(targetLanguage: string): void {
@@ -179,7 +212,6 @@ export class BlogSingleComponent implements OnInit {
       this.blog = { ...this.originalBlog };
       this.isTranslated = false;
       this.translatedLanguage = null;
-      // Re-detect the language after reverting
       this.detectBlogLanguage(this.originalBlog.title);
     }
   }

@@ -40,11 +40,34 @@
   </ng-template>
 
   <div class="add-comment" *ngIf="blog">
-    <textarea [(ngModel)]="newCommentContent" placeholder="Add a comment..." class="comment-input"></textarea>
-    <button (click)="addComment()" [disabled]="!newCommentContent.trim()" class="submit-comment">Submit</button>
+    <textarea
+      [(ngModel)]="newCommentContent"
+      (ngModelChange)="validateComment()"
+      placeholder="Add a comment..."
+      class="comment-input"
+      [class.invalid]="hasBadWords"
+    ></textarea>
+    <div *ngIf="hasBadWords" class="bad-words-warning">
+      Your comment contains inappropriate language. Please revise it.
+    </div>
+    <div *ngIf="error && !hasBadWords" class="error-message">{{ error }}</div>
+    <button
+      (click)="addComment()"
+      [disabled]="!newCommentContent.trim() || hasBadWords"
+      class="submit-comment"
+    >Submit</button>
   </div>
 
   <button class="back-button" (click)="backToList()">Back to List</button>
+
+  <!-- Modal Popup -->
+  <div class="modal" *ngIf="showBadWordModal">
+    <div class="modal-content">
+      <h2>Invalid Comment</h2>
+      <p>You cannot upload a comment containing inappropriate language. Please revise your comment.</p>
+      <button class="modal-close" (click)="closeModal()">Close</button>
+    </div>
+  </div>
 </div>
 
 <ng-template #loadingOrNoBlog>

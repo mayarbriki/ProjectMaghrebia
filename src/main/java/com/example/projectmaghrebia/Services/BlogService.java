@@ -1,7 +1,9 @@
 package com.example.projectmaghrebia.Services;
 
 import com.example.projectmaghrebia.Entities.Blog;
+import com.example.projectmaghrebia.Entities.Comment;
 import com.example.projectmaghrebia.Repositories.BlogRepository;
+import com.example.projectmaghrebia.Repositories.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,8 @@ public class BlogService implements IBlogService {
 
     @Autowired
     private BlogRepository blogRepository;
+    @Autowired
+    private CommentRepository commentRepository;
 
     @Override
     public Blog createBlog(Blog blog) {
@@ -126,5 +130,45 @@ public class BlogService implements IBlogService {
     public List<Blog> searchBlogs(String query, String sortBy, String direction) {
         Sort sort = Sort.by(Sort.Direction.fromString(direction), sortBy);
         return blogRepository.searchBlogs(query, sort);
+    }
+    @Override
+    public Comment addComment(int blogId, Comment comment) {
+        Optional<Blog> blogOpt = blogRepository.findById(blogId);
+        if (blogOpt.isEmpty()) {
+            throw new RuntimeException("Blog not found with ID: " + blogId);
+        }
+        Blog blog = blogOpt.get();
+        comment.setBlog(blog);
+        comment.setCreatedAt(LocalDateTime.now());
+        comment.setApproved(false); // Default to unapproved
+        blog.addComment(comment); // Maintain bidirectional relationship
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public Comment approveComment(int commentId) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            throw new RuntimeException("Comment not found with ID: " + commentId);
+        }
+        Comment comment = commentOpt.get();
+        comment.setApproved(true);
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public Comment declineComment(int commentId) {
+        Optional<Comment> commentOpt = commentRepository.findById(commentId);
+        if (commentOpt.isEmpty()) {
+            throw new RuntimeException("Comment not found with ID: " + commentId);
+        }
+        Comment comment = commentOpt.get();
+        comment.setApproved(false);
+        return commentRepository.save(comment);
+    }
+
+    @Override
+    public List<Comment> getCommentsByBlogId(int blogId, boolean approved) {
+        return commentRepository.findByBlogIdAndApproved(blogId, approved);
     }
 }

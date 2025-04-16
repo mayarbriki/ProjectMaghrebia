@@ -2,6 +2,7 @@ package com.example.projectmaghrebia.Controllers;
 
 import com.example.projectmaghrebia.Entities.Blog;
 import com.example.projectmaghrebia.Entities.BlogType;
+import com.example.projectmaghrebia.Entities.Comment;
 import com.example.projectmaghrebia.Services.FileStorageService;
 import com.example.projectmaghrebia.Services.IBlogService;
 import com.itextpdf.text.Document;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.ByteArrayOutputStream;
@@ -27,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.logging.Logger; // Added for logging
 
@@ -45,6 +48,115 @@ public class BlogController {
     // Inject the upload directory from application.properties
     @Value("${file.upload-dir}")
     private String UPLOAD_DIR; // Will be set to "upload-dir" based on application.properties
+    @Value("${translator.api-key}")
+    private String translatorApiKey;
+
+    @Value("${translator.endpoint}")
+    private String translatorEndpoint;
+
+    @Value("${translator.region}")
+    private String translatorRegion;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
+    // Existing methods remain unchanged...
+
+    // New translation endpoint
+    @PostMapping("/{id}/translate")
+    public ResponseEntity<?> translateBlog(
+            @PathVariable int id,
+            @RequestParam("targetLanguage") String targetLanguage) {
+        try {
+            // Fetch the blog by ID
+            Optional<Blog> blogOpt = blogService.getBlogById(id);
+            if (blogOpt.isEmpty()) {
+                return ResponseEntity.status(404).body("Blog not found");
+            }
+
+            Blog blog = blogOpt.get();
+
+            // Prepare the text to translate (title and content)
+            String[] textsToTranslate = new String[]{blog.getTitle(), blog.getContent()};
+            String[] translatedTexts = translateText(textsToTranslate, targetLanguage);
+
+            if (translatedTexts == null) {
+                return ResponseEntity.status(500).body("Error translating blog content");
+            }
+
+            // Create a response object with translated content
+            Blog translatedBlog = new Blog();
+            translatedBlog.setId(blog.getId());
+            translatedBlog.setTitle(translatedTexts[0]); // Translated title
+            translatedBlog.setContent(translatedTexts[1]); // Translated content
+            translatedBlog.setAuthor(blog.getAuthor());
+            translatedBlog.setType(blog.getType());
+            translatedBlog.setImage(blog.getImage());
+            translatedBlog.setCreatedAt(blog.getCreatedAt());
+            translatedBlog.setScheduledPublicationDate(blog.getScheduledPublicationDate());
+            translatedBlog.setPublished(blog.isPublished());
+            translatedBlog.setLikes(blog.getLikes());
+
+            return ResponseEntity.ok(translatedBlog);
+        } catch (Exception e) {
+            LOGGER.severe("Error translating blog: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error translating blog: " + e.getMessage());
+        }
+    }
+
+    // Helper method to call Microsoft Translator API
+    private String[] translateText(String[] texts, String targetLanguage) {
+        try {
+            String path = "/translate?api-version=3.0&to=" + targetLanguage;
+            String url = translatorEndpoint + path;
+
+            // Prepare headers
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Ocp-Apim-Subscription-Key", translatorApiKey);
+            headers.set("Ocp-Apim-Subscription-Region", translatorRegion);
+            headers.set("Content-Type", "application/json");
+            headers.set("X-ClientTraceId", UUID.randomUUID().toString());
+
+            // Prepare the request body
+            List<Map<String, String>> body = new java.util.ArrayList<>();
+            for (String text : texts) {
+                body.add(Map.of("Text", text));
+            }
+
+            // Create the HTTP entity
+            org.springframework.http.HttpEntity<List<Map<String, String>>> requestEntity =
+                    new org.springframework.http.HttpEntity<>(body, headers);
+
+            // Make the API call
+            ResponseEntity<List> response = restTemplate.exchange(
+                    url,
+                    org.springframework.http.HttpMethod.POST,
+                    requestEntity,
+                    List.class
+            );
+
+            // Parse the response
+            List<Map<String, List<Map<String, String>>>> translations = response.getBody();
+            if (translations == null || translations.size() != texts.length) {
+                return null;
+            }
+
+            // Extract translated texts
+            String[] translatedTexts = new String[texts.length];
+            for (int i = 0; i < translations.size(); i++) {
+                List<Map<String, String>> translationList = translations.get(i).get("translations");
+                if (translationList != null && !translationList.isEmpty()) {
+                    translatedTexts[i] = translationList.get(0).get("text");
+                } else {
+                    return null;
+                }
+            }
+
+            return translatedTexts;
+        } catch (Exception e) {
+            LOGGER.severe("Error calling Translator API: " + e.getMessage());
+            return null;
+        }
+    }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createBlog(
@@ -370,5 +482,59 @@ public class BlogController {
     private String escapeCsv(String value) {
         if (value == null) return "";
         return value.replace("\"", "\"\"");
+    }
+    @PostMapping("/{id}/comments")
+    public ResponseEntity<?> addComment(
+            @PathVariable int id,
+            @RequestBody Comment comment,
+            @RequestHeader(value = "X-User", required = false) String user) {
+        try {
+            if (user == null || user.isEmpty()) {
+                return ResponseEntity.status(400).body("User must be provided in the X-User header");
+            }
+            comment.setUser(user);
+            Comment savedComment = blogService.addComment(id, comment);
+            return ResponseEntity.ok(savedComment);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error adding comment: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<List<Comment>> getComments(
+            @PathVariable int id,
+            @RequestParam(defaultValue = "true") boolean approved) {
+        List<Comment> comments = blogService.getCommentsByBlogId(id, approved);
+        return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/comments/{commentId}/approve")
+    public ResponseEntity<?> approveComment(
+            @PathVariable int commentId,
+            @RequestHeader(value = "X-Role", required = false) String role) {
+        try {
+            if (!"ADMIN".equalsIgnoreCase(role)) {
+                return ResponseEntity.status(403).body("Only admins can approve comments");
+            }
+            Comment approvedComment = blogService.approveComment(commentId);
+            return ResponseEntity.ok(approvedComment);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error approving comment: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/comments/{commentId}/decline")
+    public ResponseEntity<?> declineComment(
+            @PathVariable int commentId,
+            @RequestHeader(value = "X-Role", required = false) String role) {
+        try {
+            if (!"ADMIN".equalsIgnoreCase(role)) {
+                return ResponseEntity.status(403).body("Only admins can decline comments");
+            }
+            Comment declinedComment = blogService.declineComment(commentId);
+            return ResponseEntity.ok(declinedComment);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error declining comment: " + e.getMessage());
+        }
     }
 }

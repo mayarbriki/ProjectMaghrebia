@@ -1,6 +1,5 @@
 package com.example.projectmaghrebia.Controllers;
 
-import com.example.projectmaghrebia.Entities.MailRequest;
 import com.example.projectmaghrebia.Entities.Property;
 import com.example.projectmaghrebia.Entities.PropertyImage;
 import com.example.projectmaghrebia.Entities.PropertyType;
@@ -14,8 +13,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,8 +31,6 @@ public class PropertyController {
     private PropertyService propertyService;
 
 
-    @Autowired
-    private JavaMailSender mailSender;
 
     // Create property with images
     @PostMapping
@@ -164,32 +159,6 @@ public class PropertyController {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Failed to delete image: " + e.getMessage());
             return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @PostMapping("/sendMail")
-    public ResponseEntity<?> sendPropertyMail(@RequestBody MailRequest mailRequest) {
-        try {
-            if (mailRequest == null || mailRequest.getProperty() == null || mailRequest.getRecipient() == null) {
-                return ResponseEntity.badRequest().body("Invalid request payload");
-            }
-
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(mailRequest.getRecipient());
-            message.setSubject("Property Details for " + mailRequest.getProperty().getName());
-
-            String body = "Property Name: " + mailRequest.getProperty().getName() + "\n" +
-                    "Description: " + mailRequest.getProperty().getDescription() + "\n" +
-                    "Estimated Value: " + mailRequest.getProperty().getEstimatedValue();
-            message.setText(body);
-
-            mailSender.send(message);
-
-            return ResponseEntity.ok("Mail sent successfully");
-        } catch (Exception e) {
-            e.printStackTrace(); // This should log the detailed exception to the console
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error sending mail: " + e.getMessage());
         }
     }
 

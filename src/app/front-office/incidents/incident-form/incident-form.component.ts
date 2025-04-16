@@ -7,8 +7,8 @@ import { HeaderFrontComponent } from "../../header-front/header-front.component"
 import jsPDF from 'jspdf';
 import { icon, latLng, Map, marker, Marker, tileLayer, latLngBounds, LatLngBounds } from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import * as rasterizeHTML from 'rasterizehtml';
 import html2canvas from 'html2canvas';
-import L, { TileLayer } from 'leaflet';
 
 @Component({
   standalone: true,
@@ -79,7 +79,8 @@ export class IncidentFormComponent implements OnInit {
     return selectedDate <= today ? null : { futureDate: true };
   }
 
-  submitIncident(): void {
+  async submitIncident(): Promise<void> {
+    // Validate form
     if (this.incidentForm.invalid) {
       this.incidentForm.markAllAsTouched();
       alert('Please fill all required fields correctly.');
@@ -88,6 +89,7 @@ export class IncidentFormComponent implements OnInit {
   
     this.isLoading = true;
   
+    // Prepare incident data
     const formValue = this.incidentForm.value;
     const incident: Incident = {
       ...formValue,
@@ -95,64 +97,30 @@ export class IncidentFormComponent implements OnInit {
       dateOfIncident: new Date(formValue.dateOfIncident).toISOString()
     };
   
-    const mapElement = document.querySelector('.leaflet-container') as HTMLElement;
-  
-    if (!mapElement) {
-      console.error('Map not found.');
+    // ✅ Generate static map image URL from OpenStreetMap
+    const lat = formValue.latitude;
+    const lng = formValue.longitude;
+    const mapImageUrl = this.generateLocationIQStaticImageUrl(lat, lng);  
+    try {
+      await this.submitIncidentData(incident);
+      alert('Incident submitted successfully!');
+      this.generateIncidentPDF(incident, mapImageUrl);
+      this.router.navigate(['/properties', this.propertyId]);
+    } catch (error) {
+      console.error('Incident submission failed:', error);
+      alert('Incident submission failed.');
+    } finally {
       this.isLoading = false;
-      return;
     }
+  }
   
-    // ✅ Wait until all tiles are loaded before screenshot
-    const waitForTilesLoaded = new Promise<void>((resolve) => {
-      let resolved = false;
-      let tilesToLoad = 0;
-    
-      this.map.eachLayer((layer: any) => {
-        if (layer instanceof TileLayer) {
-          tilesToLoad++;
-          layer.once('load', () => {
-            tilesToLoad--;
-            if (tilesToLoad === 0 && !resolved) {
-              resolved = true;
-              resolve();
-            }
-          });
-        }
-      });
-    
-      // Fallback: resolve after 3 seconds if tiles didn’t finish loading
-      setTimeout(() => {
-        if (!resolved) {
-          console.warn('Tile load timed out, continuing without full map render.');
-          resolve();
-        }
-      }, 3000);
-    
-      if (tilesToLoad === 0) resolve();
-    });
-    
   
-    waitForTilesLoaded.then(() => {
-      html2canvas(mapElement).then(canvas => {
-        const mapImage = canvas.toDataURL('image/png');
   
-        this.incidentService.createIncidentWithFiles(incident, this.selectedFiles).subscribe({
-          next: () => {
-            alert('Incident submitted successfully!');
-            this.generateIncidentPDF(incident, mapImage);
-            this.router.navigate(['/properties', this.propertyId]);
-          },
-          error: err => {
-            console.error('Error submitting incident:', err);
-            alert('Incident submission failed.');
-          },
-          complete: () => this.isLoading = false
-        });
-      }).catch(err => {
-        console.error('Map screenshot failed:', err);
-        alert('Failed to capture map screenshot.');
-        this.isLoading = false;
+  private submitIncidentData(incident: Incident, mapImage?: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.incidentService.createIncidentWithFiles(incident, this.selectedFiles).subscribe({
+        next: () => resolve(),
+        error: (err) => reject(err)
       });
     });
   }
@@ -161,7 +129,7 @@ export class IncidentFormComponent implements OnInit {
   
   
 
-  generateIncidentPDF(data: Incident, mapImage?: string): void {
+  generateIncidentPDF(data: Incident, mapImageUrl?: string): void {
     const doc = new jsPDF({ orientation: 'portrait' });
     const lineHeight = 8;
     let y = 20;
@@ -190,19 +158,32 @@ export class IncidentFormComponent implements OnInit {
       }
     });
   
-    if (mapImage) {
-      const pageHeight = doc.internal.pageSize.height;
-      if (y + 80 > pageHeight) {
-        doc.addPage();
-        y = 20;
-      }
+    if (mapImageUrl) {
+      const image = new Image();
+      image.crossOrigin = 'anonymous';
+      image.src = mapImageUrl;
   
-      doc.text('Map Preview:', 14, y + 10);
-      doc.addImage(mapImage, 'PNG', 14, y + 15, 180, 100);
+      image.onload = () => {
+        const pageHeight = doc.internal.pageSize.height;
+        if (y + 80 > pageHeight) {
+          doc.addPage();
+          y = 20;
+        }
+  
+        doc.text('Map Preview:', 14, y + 10);
+        doc.addImage(image, 'PNG', 14, y + 15, 180, 100);
+        doc.save(`incident-report-${data.title}.pdf`);
+      };
+  
+      image.onerror = () => {
+        console.error('Map image failed to load. Saving PDF without map.');
+        doc.save(`incident-report-${data.title}.pdf`);
+      };
+    } else {
+      doc.save(`incident-report-${data.title}.pdf`);
     }
-  
-    doc.save(`incident-report-${data.title}.pdf`);
   }
+  
   
 
   onMapReady(map: Map) {
@@ -298,5 +279,12 @@ isImage(fileUrl: string): boolean {
 isVideo(fileUrl: string): boolean {
   return fileUrl.match(/video\//i) != null;
 }
+
+
+private generateLocationIQStaticImageUrl(lat: number, lng: number): string {
+  const apiKey = 'pk.f6cff4e27cbf77dec5fb32896647a75c'; // Use your own LocationIQ key
+  return `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${lat},${lng}&zoom=18&size=600x400&markers=icon:large-red-cutout|${lat},${lng}`;
+}
+
 
 }

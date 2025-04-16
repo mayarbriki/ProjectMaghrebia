@@ -1,0 +1,111 @@
+<div class="container mt-4">
+  <h3 class="mb-4 text-primary">Formulaire d'inscription</h3>
+
+  <!-- ✅ Messages de feedback -->
+  <div *ngIf="successMessage" class="alert alert-success">
+    {{ successMessage }}
+  </div>
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  <!-- 📝 Formulaire avec validation -->
+  <form (ngSubmit)="onSubmit()" #enrollForm="ngForm" novalidate>
+
+    <!-- NOM -->
+    <div class="mb-3">
+      <label for="nom" class="form-label">Nom</label>
+      <input
+        id="nom"
+        class="form-control"
+        [(ngModel)]="enrollment.nom"
+        name="nom"
+        required
+        minlength="2"
+        pattern="^[A-Za-zÀ-ÿ\\s'-]+$"
+        #nom="ngModel"
+        placeholder="Entrez votre nom"
+      />
+      <div class="text-danger" *ngIf="nom.invalid && nom.touched">
+        <small *ngIf="nom.errors && nom.errors['required']">Le nom est requis.</small>
+        <small *ngIf="nom.errors && nom.errors['minlength']">Le nom doit avoir au moins 2 lettres.</small>
+        <small *ngIf="nom.errors && nom.errors['pattern']">Caractères non valides.</small>
+      </div>
+    </div>
+
+    <!-- PRENOM -->
+    <div class="mb-3">
+      <label for="prenom" class="form-label">Prénom</label>
+      <input
+        id="prenom"
+        class="form-control"
+        [(ngModel)]="enrollment.prenom"
+        name="prenom"
+        required
+        minlength="2"
+        pattern="^[A-Za-zÀ-ÿ\\s'-]+$"
+        #prenom="ngModel"
+        placeholder="Entrez votre prénom"
+      />
+      <div class="text-danger" *ngIf="prenom.invalid && prenom.touched">
+        <small *ngIf="prenom.errors && prenom.errors['required']">Le prénom est requis.</small>
+        <small *ngIf="prenom.errors && prenom.errors['minlength']">Le prénom doit avoir au moins 2 lettres.</small>
+        <small *ngIf="prenom.errors && prenom.errors['pattern']">Caractères non valides.</small>
+      </div>
+    </div>
+
+    <!-- CIN -->
+    <div class="mb-3">
+      <label for="cin" class="form-label">CIN</label>
+      <input
+        id="cin"
+        class="form-control"
+        [(ngModel)]="enrollment.cin"
+        name="cin"
+        required
+        pattern="^[0-9]{8}$"
+        #cin="ngModel"
+        placeholder="Numéro de CIN (8 chiffres)"
+      />
+      <div class="text-danger" *ngIf="cin.invalid && cin.touched">
+        <small *ngIf="cin.errors && cin.errors['required']">Le numéro CIN est requis.</small>
+        <small *ngIf="cin.errors && cin.errors['pattern']">Le CIN doit contenir exactement 8 chiffres.</small>
+      </div>
+    </div>
+
+    <!-- FORMATION -->
+    <div class="mb-3">
+      <label for="formation" class="form-label">Formation</label>
+      <input
+        id="formation"
+        class="form-control"
+        [(ngModel)]="enrollment.formation"
+        name="formation"
+        readonly
+        required
+      />
+    </div>
+
+    <!-- DATE -->
+    <div class="mb-3">
+      <label for="date" class="form-label">Date</label>
+      <input
+        type="date"
+        id="date"
+        class="form-control"
+        [(ngModel)]="enrollment.dateInscription"
+        name="dateInscription"
+        required
+        #dateInscription="ngModel"
+      />
+      <div class="text-danger" *ngIf="dateInscription.invalid && dateInscription.touched">
+        <small *ngIf="dateInscription.errors && dateInscription.errors['required']">La date est obligatoire.</small>
+      </div>
+    </div>
+
+    <!-- BOUTON -->
+    <button class="btn btn-primary w-100" type="submit" [disabled]="enrollForm.invalid">
+      ✅ S'inscrire
+    </button>
+  </form>
+</div>

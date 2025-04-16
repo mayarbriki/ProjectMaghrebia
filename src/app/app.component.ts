@@ -1,27 +1,33 @@
-// angular import
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { Router, NavigationStart, NavigationEnd, NavigationCancel, NavigationError, RouterModule } from '@angular/router';
 import { SharedModule } from './demo/shared/shared.module';
+import { ContractService } from './contract.service';
+import { TransactionService } from './transaction.service';
 
 @Component({
   selector: 'app-root',
   imports: [SharedModule, RouterModule],
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
+  providers: [ContractService]
 })
-export class AppComponent {
-  private router = inject(Router);
 
-  // public props
+export class AppComponent implements OnInit {
+  title = 'Contract-app';
+  contracts: any[] = [];
+  private router = inject(Router);
   isSpinnerVisible = true;
 
-  // constructor
-  constructor() {
+  constructor(private contractService: ContractService) {
     this.router.events.subscribe(
-      (event) => {
+      event => {
         if (event instanceof NavigationStart) {
           this.isSpinnerVisible = true;
-        } else if (event instanceof NavigationEnd || event instanceof NavigationCancel || event instanceof NavigationError) {
+        } else if (
+          event instanceof NavigationEnd ||
+          event instanceof NavigationCancel ||
+          event instanceof NavigationError
+        ) {
           this.isSpinnerVisible = false;
         }
       },
@@ -30,4 +36,17 @@ export class AppComponent {
       }
     );
   }
+
+  ngOnInit() {
+    console.log('On init...');
+    this.contractService.getContracts().subscribe(
+      (data: any[]) => {
+        this.contracts = data;
+      },
+      error => {
+        console.error('Error fetching contracts:', error);
+      }
+    );
+  }
+  
 }

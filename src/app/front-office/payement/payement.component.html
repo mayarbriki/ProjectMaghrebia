@@ -1,0 +1,22 @@
+<div class="payment-container">
+    <div class="payment-box shadow-lg p-4">
+        <h4 class="text-center">💰 Paiement pour Transaction #{{ transactionId }}</h4>
+
+        <div class="card-payment mb-3">
+            <h6 class="text-center">💳 Paiement par Carte Bancaire</h6>
+            
+            <div class="card-input">
+              <label for="card-element" class="form-label">Numéro de carte :</label>
+              <div id="card-element" class="form-control"></div>
+            </div>
+
+            <button class="btn btn-primary w-100 mt-3 pay-button" (click)="payWithCard()">
+              💳 Payer {{ amount }} $
+            </button>
+        </div>
+
+        <hr class="divider">
+        <button class="btn btn-outline-danger" (click)="closePayment()">❌ Annuler</button>
+
+    </div>
+</div>

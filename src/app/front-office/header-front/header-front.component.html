@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 <header id="header">
   <div class="container">
     <link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
@@ -74,3 +75,49 @@
     </nav><!-- #nav-menu-container -->
   </div>
 </header><!-- #header -->
+=======
+<!--==========================
+    Header
+  ============================-->
+  <header id="header">
+    <div class="container">
+<link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
+      <div id="logo" class="pull-left">
+        <a href="#" class="scrollto"><img src="../../../assets/FrontOffice/img/maghrebia (2).png" alt="" title=""></a>
+      </div>
+
+      <nav id="nav-menu-container">
+        <ul class="nav-menu">
+          <li class="menu-active"><a href="#intro">Home</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="/claims">Claims</a></li>
+          <li><a href="/assessments">Assessments</a></li>
+          <li><a href="#contracts">Contracts</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#sponsors">Sponsors</a></li>
+          <li><a href="/signin">News</a></li>
+          <li><a href="/services">Services</a></li>
+
+          <!-- Conditional rendering -->
+          <ng-container *ngIf="!isAuthenticated; else profileMenu">
+            <li><a href="/signup">SignUp</a></li>
+            <li class="buy-tickets"><a href="/signin">Login</a></li>
+          </ng-container>
+
+          <ng-template #profileMenu>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img src="/assets/FrontOffice/img/user-profile.png" alt="" width="30" height="30" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu">
+              </ul>
+            </li>
+          </ng-template>
+          
+          
+
+        </ul>
+      </nav><!-- #nav-menu-container -->
+    </div>
+  </header><!-- #header -->
+>>>>>>> Stashed changes

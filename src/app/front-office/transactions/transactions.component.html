@@ -1,0 +1,110 @@
+<div class="transactions-container">
+  <link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
+<app-header-front></app-header-front>
+  <h2 class="text-center mb-4">💰 Transaction Management</h2>
+
+  <!-- ✅ Add Transaction Form -->
+  <div class="transaction-form">
+    <h3>➕ Add New Transaction</h3>
+    <form (ngSubmit)="addTransaction()" class="form-container">
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>💲 Amount:</label>
+          <input type="number" [(ngModel)]="transactionForm.amount" name="amount" required (input)="validateForm()" />
+          <small class="error-message" *ngIf="amountError">{{ amountError }}</small>
+        </div>
+
+        <div class="form-group">
+          <label>💳 Payment Method:</label>
+          <select [(ngModel)]="transactionForm.payment_method" name="payment_method" required>
+            <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>📅 Transaction Date:</label>
+          <input type="datetime-local" [(ngModel)]="transactionForm.transaction_date" name="transaction_date" required (change)="validateForm()" />
+          <small class="error-message" *ngIf="dateError">{{ dateError }}</small>
+        </div>
+
+        <div class="form-group">
+          <label>📜 Contract ID:</label>
+          <input type="number" [(ngModel)]="transactionForm.contract_id" name="contract_id" (input)="validateForm()" />
+          <small class="error-message" *ngIf="contractIdError">{{ contractIdError }}</small>
+        </div>
+      </div>
+
+      <div class="form-group full-width">
+        <label>📌 Status:</label>
+        <select [(ngModel)]="transactionForm.status" name="status" required>
+          <option value="PENDING">⏳ PENDING</option>
+        </select>
+      </div>
+
+      <!-- ✅ Button Below the Status Field -->
+      <div class="form-actions full-width">
+        <button type="submit" class="btn-primary" [disabled]="!isValid">
+          ➕ Add Transaction
+        </button>
+        <button type="button" class="btn-cancel" (click)="resetForm()" *ngIf="isEditing">❌ Cancel</button>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- ✅ Transactions Table -->
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>User ID</th>
+          <th>Amount</th>
+          <th>Payment Method</th>
+          <th>Transaction Date</th>
+          <th>Status</th>
+          <th>Actions</th>
+          <th>Pay</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let transaction of transactions">
+          <td>{{ transaction.transaction_id }}</td>
+          <td>{{ transaction.user_id }}</td>
+          <td class="text-success fw-bold">{{ transaction.amount | currency }}</td>
+          <td class="text-primary">{{ transaction.payment_method }}</td>
+          <td>{{ transaction.transaction_date | date:'short' }}</td>
+          <td>
+            <span class="badge success" *ngIf="transaction.status === 'COMPLETED'">✔ Completed</span>
+            <span class="badge danger" *ngIf="transaction.status === 'FAILED'">❌ Failed</span>
+            <span class="badge warning" *ngIf="transaction.status === 'PENDING'">⏳ Pending</span>
+          </td>
+          <td>
+            <button (click)="editTransaction(transaction)" class="btn-edit">✏️ Edit</button>
+            <button (click)="deleteTransaction(transaction.transaction_id!)" class="btn-delete">🗑️ Delete</button>
+          </td>
+          <td>
+            <button (click)="openPayment(transaction)" class="btn-pay">💳 Pay</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ✅ No Transactions Placeholder -->
+  <ng-template #noTransactions>
+    <p class="no-data">📌 No transactions available.</p>
+  </ng-template>
+
+  <!-- ✅ Payment Component -->
+  <app-payement
+    *ngIf="selectedTransaction"
+    [transactionId]="selectedTransaction?.transaction_id ?? 0"
+    [amount]="selectedTransaction?.amount ?? 0"
+    (close)="selectedTransaction = null">
+  </app-payement>
+
+</div>

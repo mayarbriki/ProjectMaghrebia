@@ -17,7 +17,7 @@ export interface Incident {
   providedIn: 'root'
 })
 export class IncidentService {
-  private baseUrl = 'http://localhost:6969/api/incidents';
+  private baseUrl = 'http://localhost:6969';
 
   constructor(private http: HttpClient) {}
 

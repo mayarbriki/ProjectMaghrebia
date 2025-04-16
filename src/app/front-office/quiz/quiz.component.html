@@ -1,0 +1,40 @@
+<div class="container mt-4" *ngIf="mode === 'faire'">
+    <h2 class="text-center text-primary mb-4">🎯 Quiz</h2>
+  
+    <form *ngIf="quizzes.length > 0" (ngSubmit)="submitQuiz()">
+      <div *ngFor="let quiz of quizzes; let i = index" class="mb-4">
+        <h5>Question {{ i + 1 }} : {{ quiz.question }}</h5>
+  
+        <div *ngFor="let option of quiz.options" class="form-check">
+          <input type="radio"
+                 class="form-check-input"
+                 [name]="'question_' + i"
+                 [value]="option"
+                 [(ngModel)]="quiz.userAnswer"
+                 [id]="'q' + i + '_' + option"
+                 [disabled]="quizSubmitted" />
+          <label class="form-check-label" [for]="'q' + i + '_' + option">
+            {{ option }}
+          </label>
+        </div>
+  
+        <div *ngIf="quizSubmitted" class="mt-2">
+          <span *ngIf="quiz.userAnswer === quiz.correctAnswer" class="text-success">✅ Bonne réponse</span>
+          <span *ngIf="quiz.userAnswer !== quiz.correctAnswer" class="text-danger">
+            ❌ Mauvaise réponse. Bonne réponse : {{ quiz.correctAnswer }}
+          </span>
+        </div>
+  
+        <hr />
+      </div>
+    
+      <button *ngIf="!quizSubmitted" class="btn btn-success w-100" type="submit">
+        ✔ Soumettre mes réponses
+      </button>
+      <button *ngIf="quizSubmitted && isQuizPassed" class="btn btn-outline-success mt-3" (click)="downloadCertificate()">
+        🎓 Télécharger le Certificat
+      </button>
+      
+    </form>
+  </div>
+  

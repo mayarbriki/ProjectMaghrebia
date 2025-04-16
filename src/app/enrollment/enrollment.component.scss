@@ -1,0 +1,63 @@
+/* Appliquer sur toute la page */
+body, html {
+    height: 100%;
+    margin: 0;
+    background-color: #f8f9fa;
+  }
+  
+  /* Centrer le container verticalement et horizontalement */
+  .full-page-wrapper {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+  }
+  
+  /* Le formulaire */
+  .container {
+    max-width: 1300px;
+    width: 100%;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 1000px 2500px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Titre */
+  h3 {
+    text-align: center;
+    font-weight: bold;
+    color: #0d6efd;
+    margin-bottom: 30px;
+  }
+  
+  /* Formulaire */
+  .form-label {
+    font-weight: 700;
+    color: #011128;
+  }
+  
+  input.form-control {
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+  }
+  
+  input.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.1rem rgba(13, 110, 253, 0.25);
+  }
+  
+  button.btn-primary {
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+  }
+  
+  button.btn-primary:disabled {
+    background-color: #c5c5c5;
+    border-color: #c5c5c5;
+    cursor: not-allowed;
+  }
+  

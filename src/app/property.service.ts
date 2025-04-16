@@ -16,7 +16,7 @@ export interface Property {
   providedIn: 'root'
 })
 export class PropertyService {
-  private baseUrl = 'http://localhost:6969/api/properties';
+  private baseUrl = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 

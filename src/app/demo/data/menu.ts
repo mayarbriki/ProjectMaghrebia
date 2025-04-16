@@ -72,6 +72,27 @@ export const menus: Navigation[] = [
         icon: '#custom-password-check',
         //target: true,
         breadcrumbs: false
+      },
+      
+      {
+        id: 'training',
+        title: 'training',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/training-gallery',
+        icon: '#custom-password-check',
+        //target: true,
+        breadcrumbs: false
+      },
+      {
+        id: 'register',
+        title: 'Transactions',
+        type: 'item',
+        classes: 'nav-item',
+        url: '/admin/transactions',
+        icon: '#custom-password-check',
+        //target: true,
+        breadcrumbs: false
       }
     ]
   },

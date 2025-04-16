@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MessageService {
-  private apiUrl = 'http://localhost:6969/api/message';
+  private apiUrl = 'http://localhost:6969';
 
   constructor(private http: HttpClient) {}
 

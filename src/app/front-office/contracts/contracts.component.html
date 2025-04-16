@@ -1,73 +1,110 @@
-<!--==========================
-  Contracts Section
-============================-->
-<section id="contracts" class="wow fadeInUp">
-    <div class="container">
-        <div class="section-header">
-            <h2>Contracts</h2>
-            <p>Here are some of the contracts we offer</p>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<body>
+  <!-- ✅ Navbar -->
+  <app-header-front></app-header-front>
 
-        <div class="row">
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/1.jpg" alt="Contract 1" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Car Insurance Contract</a></h3>
-                        <p>Comprehensive car insurance with flexible coverage.</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/2.jpg" alt="Contract 2" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Home Insurance Contract</a></h3>
-                        <p>Protect your home with customized coverage plans.</p>
-                    </div>
-                </div>
-            </div>
+  <!-- ✅ Main Content -->
+  <div class="main-content">
+    <div class="contracts-container">
+      <!-- ✅ Section Formulaire - Ajout / Édition -->
+      <div class="contract-form">
+        <h3>Add Contract</h3>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/3.jpg" alt="Contract 3" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Health Insurance Contract</a></h3>
-                        <p>Comprehensive health insurance for individuals and families.</p>
-                    </div>
-                </div>
-            </div>
+        <form #contractForm="ngForm" (ngSubmit)="saveContract()" novalidate>
+          <div class="form-group">
+            <label for="contract_type">Contract Type:</label>
+            <select id="contract_type" [(ngModel)]="currentContract.contract_type" name="contract_type" required (change)="updateAmount()">
+              <option value="TOUS_RISQUE">TOUS RISQUE</option>
+              <option value="NORMAL">NORMAL</option>
+              <option value="MINIMAL">MINIMAL</option>
+            </select>
+          </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/4.jpg" alt="Contract 4" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Travel Insurance Contract</a></h3>
-                        <p>Travel worry-free with our global insurance coverage.</p>
-                    </div>
-                </div>
-            </div>
+          <div class="form-group">
+            <label for="start_date">Start Date:</label>
+            <input id="start_date" type="date" [(ngModel)]="currentContract.start_date" name="start_date" required (change)="validateForm()" />
+          </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/5.jpg" alt="Contract 5" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Business Insurance Contract</a></h3>
-                        <p>Secure your business from risks with customized plans.</p>
-                    </div>
-                </div>
-            </div>
+          <div class="form-group">
+            <label for="end_date">End Date:</label>
+            <input id="end_date" type="date" [(ngModel)]="currentContract.end_date" name="end_date" required (change)="validateForm()" />
+            <small class="error-message" *ngIf="dateError">{{ dateError }}</small>
+          </div>
 
-            <div class="col-lg-4 col-md-6">
-                <div class="contract">
-                    <img src="/assets/FrontOffice/img/speakers/6.jpg" alt="Contract 6" class="img-fluid">
-                    <div class="details">
-                        <h3><a href="contract-details.html">Life Insurance Contract</a></h3>
-                        <p>Ensure financial security for your loved ones.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+          <div class="form-group">
+            <label for="amount">Declared Amount:</label>
+            <input id="amount" type="number" step="0.01" [(ngModel)]="currentContract.amount" name="amount" placeholder="Enter declared amount" required (input)="updateAmount()" />
+            <small class="error-message" *ngIf="amountError">{{ amountError }}</small>
+          </div>
+
+          <div class="form-group">
+            <label for="payment_type">Payment Frequency:</label>
+            <select id="payment_type" [(ngModel)]="currentContract.payment_type" name="payment_type" required (change)="updateAmount()">
+              <option value="MONTHLY">MONTHLY</option>
+              <option value="YEARLY">YEARLY</option>
+              <option value="ONE_TIME">ONE TIME</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="signed_document">Signed Document:</label>
+            <input id="signed_document" type="text" [(ngModel)]="currentContract.signed_document" name="signed_document" placeholder="Document URL or name" />
+          </div>
+
+          <h3>💰 Insurance Amount: {{ calculatedAmount | number:'1.2-2' }} €</h3>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-create" [disabled]="!isValid">{{ isEditing ? 'Update' : 'Create' }}</button>
+            <button type="button" class="btn-cancel" (click)="cancel()">Cancel</button>
+            <button type="button" class="btn-transaction" (click)="navigateToTransaction()">📂 Transactions</button>
+          </div>
+        </form>
+      </div>
+      <hr />
+
+      <!-- ✅ Tableau des contrats -->
+      <h3>📜 Contracts List</h3>
+      <div *ngIf="contracts && contracts.length; else noContracts">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Contract Type</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Payment Frequency</th>
+              <th (click)="sortByAmount()">Amount 
+                <span *ngIf="sortAscending">🔼</span>
+                <span *ngIf="!sortAscending">🔽</span>
+              </th>
+              <th>Signed Document</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let contract of contracts">
+              <td>{{ contract.contract_id }}</td>
+              <td>{{ contract.contract_type }}</td>
+              <td>{{ contract.start_date | date:'yyyy-MM-dd' }}</td>
+              <td>{{ contract.end_date | date:'yyyy-MM-dd' }}</td>
+              <td>{{ contract.payment_type }}</td>
+              <td>{{ contract.amount }}</td>
+              <td>{{ contract.signed_document }}</td>
+              <td class="action-buttons">
+                <button class="edit-btn" (click)="editContract(contract)">✏️ Edit</button>
+                <button class="delete-btn" *ngIf="contract.contract_id !== undefined" (click)="deleteContract(contract.contract_id!)">🗑️ Delete</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ✅ Message si aucun contrat -->
+      <ng-template #noContracts>
+        <p class="no-contracts">No contracts available.</p>
+      </ng-template>
     </div>
-</section>
+  </div>
+</body>
+</html>

@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ApiService {
-  private apiUrl = 'http://localhost:6969/api/message'; // Your Spring Boot API URL
+  private apiUrl = 'http://localhost:6969/contracts';
+
 
   constructor(private http: HttpClient) {}
 

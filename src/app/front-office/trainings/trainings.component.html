@@ -1,0 +1,142 @@
+<div class="container py-4">
+  <h2 class="text-center mb-4 text-primary"><i class="bi bi-journal-text"></i> Liste des Formations</h2>
+
+  <!-- 📎 Upload PDF -->
+  <div class="mb-3">
+    <label class="form-label fw-bold">📎 Fichier PDF du cours</label>
+    <input type="file" class="form-control" accept=".pdf" (change)="onPdfSelected($event)" />
+  </div>
+
+  <!-- 💼 Formulaire d’ajout -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-primary text-white fw-semibold">
+      {{ editMode ? '✏️ Modifier une formation' : '➕ Ajouter une formation' }}
+    </div>
+    <div class="card-body">
+      <form (ngSubmit)="onSubmit()" #formRef="ngForm" novalidate>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Titre</label>
+            <input type="text" class="form-control" [(ngModel)]="form.title" name="title" required />
+            <div *ngIf="formRef.submitted && !form.title" class="text-danger">Titre requis</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Description</label>
+            <input type="text" class="form-control" [(ngModel)]="form.description" name="description" />
+            <div *ngIf="formRef.submitted && !form.description" class="text-danger">Description requise</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Date de début</label>
+            <input type="date" class="form-control" [(ngModel)]="form.startDate" name="startDate" required />
+            <div *ngIf="formRef.submitted && !form.startDate" class="text-danger">Date requise</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Date de fin</label>
+            <input type="date" class="form-control" [(ngModel)]="form.endDate" name="endDate" required />
+            <div *ngIf="formRef.submitted && !form.endDate" class="text-danger">Date requise</div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Lieu</label>
+            <input type="text" class="form-control" [(ngModel)]="form.location" name="location" required />
+            <div *ngIf="formRef.submitted && !form.location" class="text-danger">Lieu requis</div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label fw-semibold">Mode</label>
+            <select class="form-select" [(ngModel)]="form.mode" name="mode" required>
+              <option [ngValue]="null">-- Choisir un mode --</option>
+              <option value="PRESENTIEL">Présentiel</option>
+              <option value="EN_LIGNE">En ligne</option>
+              <option value="HYBRIDE">Hybride</option>
+            </select>
+            <div *ngIf="formRef.submitted && !form.mode" class="text-danger">Mode requis</div>
+          </div>
+        </div>
+
+        <!-- 📷 Image -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">📷 Image de la formation</label>
+          <input type="file" class="form-control" (change)="onImageSelected($event)" />
+          <img *ngIf="imagePreview" [src]="imagePreview" width="100" class="img-thumbnail mt-2" alt="Aperçu image" />
+        </div>
+
+        <!-- ❓ Quiz -->
+        <div class="border rounded p-3 bg-light mb-3">
+          <h5 class="fw-semibold">❓ Quiz de la formation</h5>
+          <button type="button" class="btn btn-outline-primary btn-sm mb-3" (click)="addQuiz()">+ Ajouter une question</button>
+
+          <div *ngFor="let q of form.quizzes; let i = index" class="p-2 border rounded bg-white mb-3">
+            <label>Question {{ i + 1 }}</label>
+            <input type="text" class="form-control mb-2" [(ngModel)]="q.question" name="question{{i}}" required>
+            <div *ngIf="formRef.submitted && !q.question" class="text-danger">Question requise</div>
+
+            <div *ngFor="let opt of q.options; let j = index" class="mb-2">
+              <input type="text" class="form-control" [(ngModel)]="q.options[j]" name="option{{i}}_{{j}}" placeholder="Option {{ j + 1 }}" required />
+              <div *ngIf="formRef.submitted && !q.options[j]" class="text-danger">Option {{ j + 1 }} requise</div>
+            </div>
+
+            <label>✅ Bonne réponse</label>
+            <input type="text" class="form-control" [(ngModel)]="q.correctAnswer" name="correctAnswer{{i}}" required />
+            <div *ngIf="formRef.submitted && !q.correctAnswer" class="text-danger">Bonne réponse requise</div>
+          </div>
+        </div>
+
+        <!-- ✅ Actions -->
+        <div class="text-end">
+          <button class="btn btn-success me-2" type="submit" [disabled]="!formRef.valid">
+            {{ editMode ? 'Mettre à jour' : 'Ajouter' }}
+          </button>
+          <button class="btn btn-secondary" type="button" (click)="cancelEdit()">Annuler</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+
+  <!-- 🔁 Galerie -->
+  <div class="text-end mb-4">
+    <a routerLink="/training-gallery" class="btn btn-outline-info">
+      🎨 Voir la galerie des formations
+    </a>
+  </div>
+
+  <!-- 📋 Tableau des formations -->
+  <div class="card">
+    <div class="card-header bg-dark text-white fw-semibold">📋 Formations enregistrées</div>
+    <div class="table-responsive">
+      <table class="table table-striped align-middle mb-0 text-center">
+        <thead class="table-primary">
+          <tr>
+            <th>Image</th>
+            <th>Titre</th>
+            <th>Mode</th>
+            <th>Début</th>
+            <th>Fin</th>
+            <th>Lieu</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let t of trainings">
+            <td><img *ngIf="t.imageUrl" [src]="'http://localhost:6969' + t.imageUrl" width="60" class="img-thumbnail" /></td>
+            <td>{{ t.title }}</td>
+            <td>{{ t.mode }}</td>
+            <td>{{ t.startDate }}</td>
+            <td>{{ t.endDate }}</td>
+            <td>{{ t.location }}</td>
+            <td>
+              <button class="btn btn-outline-warning btn-sm me-1" (click)="editTraining(t)">Modifier</button>
+              <button class="btn btn-outline-danger btn-sm" (click)="deleteTraining(t.trainingId)">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

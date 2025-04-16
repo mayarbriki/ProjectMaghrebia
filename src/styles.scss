@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @include mat.core();
 
+
 // font
 @import 'scss/fonts/tabler-icons.min.css';
 
@@ -11,7 +12,9 @@
 @import './app/@theme/styles/theme-palette-colors.scss';
 @import './app/@theme/styles/theme.scss';
 @include mat.all-component-typographies(theme-typography("'Inter var', sans-serif")); // theme typography
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 // default theme
 @include mat.all-component-themes(get-light-theme($blue-theme));
 
@@ -31,3 +34,12 @@
 
 // grid
 @import './app/@theme/styles/grid';
+@import "bootstrap-icons/font/bootstrap-icons.css";
+
+.bi {
+  font-size: 1.2rem;
+  margin: 0 1px;
+}
+.bi-star-fill {
+  color: gold !important;
+}

@@ -1,0 +1,94 @@
+<div class="container mt-4">
+  <h2 class="text-center fw-bold display-5 text-primary mb-5">
+    <i class="bi bi-journals me-2"></i> Galerie des Formations
+  </h2>
+
+  <div class="row g-4">
+    <div class="col-lg-4 col-md-6" *ngFor="let training of trainings">
+      <div class="training-card h-100 shadow-sm border-0 d-flex flex-column justify-content-between">
+
+        <!-- 🖼 Image + Badge -->
+        <div class="image-container position-relative">
+          <img [src]="'http://localhost:6969' + training.imageUrl"
+               class="img-fluid w-100"
+               [alt]="training.title"
+               style="height: 220px; object-fit: cover;" />
+
+          <div class="status-badge"
+               [ngClass]="{
+                 'bg-success': isOngoing(training),
+                 'bg-primary': isUpcoming(training),
+                 'bg-danger': isExpired(training)
+               }">
+            {{ isOngoing(training) ? '✅ En cours' : isUpcoming(training) ? '⏳ Bientôt' : '❌ Expirée' }}
+          </div>
+        </div>
+
+        <!-- 📄 Infos formation -->
+        <div class="p-4 d-flex flex-column justify-content-between">
+          <h5 class="mb-3 fw-semibold text-dark">{{ training.title }}</h5>
+
+          <p class="text-muted mb-2">
+            <i class="bi bi-calendar-event me-1"></i> Du {{ training.startDate }} au {{ training.endDate }}
+          </p>
+          <p class="text-muted mb-2">
+            <i class="bi bi-geo-alt me-1"></i> {{ training.location }}
+          </p>
+          <p class="text-muted">
+            <i class="bi bi-mortarboard me-1"></i> {{ training.mode }}
+          </p>
+
+          <!-- ✅ Si inscrit, afficher PDF -->
+          <a *ngIf="isEnrolledMap[training.trainingId!] && training.coursePdfUrl"
+             [href]="'http://localhost:6969' + training.coursePdfUrl"
+             target="_blank"
+             class="btn btn-outline-primary w-100 mt-2">
+            📄 Consulter le cours (PDF)
+          </a>
+
+          <!-- ✅ Si PAS encore inscrit, afficher bouton inscription -->
+          <button *ngIf="!isEnrolledMap[training.trainingId!]"
+                  class="btn btn-outline-primary w-100 mt-2"
+                  [routerLink]="['/enrollment']"
+                  [queryParams]="{ formation: training.title, trainingId: training.trainingId }">
+            📝 Inscription
+          </button>
+
+          <!-- ✅ Si inscrit, afficher bouton Quiz -->
+          <button *ngIf="isEnrolledMap[training.trainingId!]"
+                  class="btn btn-success w-100 mt-2"
+                  [routerLink]="['/quiz', training.trainingId]">
+            🎯 Commencer le Quiz
+          </button>
+
+          <!-- ⭐ Notation par utilisateur -->
+          <div class="d-flex justify-content-center gap-1 mt-2">
+            <button *ngFor="let star of [1,2,3,4,5]"
+                    class="btn btn-sm"
+                    (click)="rateTraining(training.trainingId!, star)">
+              <i class="bi bi-star-fill"
+                 [class.text-warning]="ratingValues[training.trainingId!] >= star">
+              </i>
+            </button>
+          </div>
+
+          <!-- ⭐ Note moyenne -->
+          <div class="text-center mt-3">
+            <ng-container *ngFor="let star of [1, 2, 3, 4, 5]">
+              <i class="bi"
+                 [ngClass]="{
+                   'bi-star-fill text-warning': averageRatingMap[training.trainingId!] >= star,
+                   'bi-star text-secondary': averageRatingMap[training.trainingId!] < star
+                 }">
+              </i>
+            </ng-container>
+            <small class="text-muted d-block">
+              ({{ averageRatingMap[training.trainingId!]?.toFixed(1) || '0.0' }} / 5)
+            </small>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,49 @@
+.payment-container {
+    position: absolute;
+    top: 50px; // Adjust height based on transaction table
+    right: 20px;
+    width: 360px;
+    background-color: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}
+
+
+.payment-box {
+    width: 100%;
+    border-radius: 12px;
+}
+
+.card-input {
+    margin-top: 10px;
+    text-align: left;
+}
+
+.divider {
+    margin: 15px 0;
+    border: 0;
+    border-top: 1px solid #ddd;
+}
+
+.pay-button {
+    background-color: #007bff;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.pay-button:hover {
+    background-color: #0056b3;
+}
+
+.btn {
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 6px;
+}

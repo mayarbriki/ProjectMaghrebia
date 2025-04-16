@@ -27,7 +27,8 @@
             "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
-              "src/app/@theme/styles/material-overrides.scss"
+              "src/app/@theme/styles/material-overrides.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
             ],
             "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
@@ -84,24 +85,24 @@
           },
           "defaultConfiguration": "production"
         },
-      "serve": {
-  "builder": "@angular-devkit/build-angular:dev-server",
-  "options": {
-    "buildTarget": "able-pro-angular-free:build"
-  },
-  "configurations": {
-    "production": {
-      "buildTarget": "able-pro-angular-free:build:production"
-    },
-    "development": {
-      "buildTarget": "able-pro-angular-free:build:development"
-    },
-    "staging": {
-      "buildTarget": "able-pro-angular-free:build:staging"
-    }
-  },
-  "defaultConfiguration": "development"
-},
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "able-pro-angular-free:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "able-pro-angular-free:build:production"
+            },
+            "development": {
+              "buildTarget": "able-pro-angular-free:build:development"
+            },
+            "staging": {
+              "buildTarget": "able-pro-angular-free:build:staging"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
@@ -115,7 +116,10 @@
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": ["src/favicon.ico", "src/assets"],
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.css"
+            ],
             "scripts": []
           }
         },

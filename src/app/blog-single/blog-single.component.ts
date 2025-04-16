@@ -14,15 +14,16 @@ import { HeaderFrontComponent } from '../front-office/header-front/header-front.
 })
 export class BlogSingleComponent implements OnInit {
   blog: Blog | null = null;
-  originalBlog: Blog | null = null; // Store the original blog content
+  originalBlog: Blog | null = null;
   isLiked: boolean = false;
   likeCount: number = 0;
   newCommentContent: string = '';
   currentUser: string = 'nermine';
   loading: boolean = true;
   error: string | null = null;
-  isTranslated: boolean = false; // Track if the blog is translated
-  translatedLanguage: string | null = null; // Track the current language
+  isTranslated: boolean = false;
+  translatedLanguage: string | null = null;
+  originalLanguage: string | null = null; // No default value, will be set by detection
 
   constructor(
     private blogService: BlogService,
@@ -42,9 +43,11 @@ export class BlogSingleComponent implements OnInit {
         next: (blog) => {
           if (blog.published) {
             this.blog = blog;
-            this.originalBlog = { ...blog }; // Store the original blog
+            this.originalBlog = { ...blog };
             this.likeCount = blog.likes || 0;
             this.isLiked = this.checkIfLiked(blog.id);
+            // Detect the language of the blog title
+            this.detectBlogLanguage(blog.title);
           } else {
             this.router.navigate(['/']);
           }
@@ -57,6 +60,28 @@ export class BlogSingleComponent implements OnInit {
         }
       });
     }
+  }
+
+  detectBlogLanguage(text: string): void {
+    if (!text || text.trim() === '') {
+      // If the title is empty, use a fallback or skip detection
+      this.originalLanguage = null;
+      this.error = 'Cannot detect language: Blog title is empty';
+      return;
+    }
+
+    this.blogService.detectLanguage(text).subscribe({
+      next: (language) => {
+        this.originalLanguage = language;
+        this.isTranslated = false;
+        this.translatedLanguage = null;
+      },
+      error: (err) => {
+        console.error('Error detecting language:', err);
+        this.error = 'Failed to detect blog language';
+        this.originalLanguage = null; // No fallback, handle in UI
+      }
+    });
   }
 
   getBlogImageUrl(imageFileName?: string): string {
@@ -154,6 +179,8 @@ export class BlogSingleComponent implements OnInit {
       this.blog = { ...this.originalBlog };
       this.isTranslated = false;
       this.translatedLanguage = null;
+      // Re-detect the language after reverting
+      this.detectBlogLanguage(this.originalBlog.title);
     }
   }
 

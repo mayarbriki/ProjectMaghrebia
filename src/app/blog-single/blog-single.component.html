@@ -7,8 +7,11 @@
   <!-- Translation Controls -->
   <div class="translation-controls">
     <span *ngIf="isTranslated">Translated to: {{ translatedLanguage }}</span>
-    <button (click)="translateBlog('es')" [disabled]="isTranslated && translatedLanguage === 'es'" class="translate-button">Translate to Spanish</button>
-    <button (click)="translateBlog('fr')" [disabled]="isTranslated && translatedLanguage === 'fr'" class="translate-button">Translate to French</button>
+    <span *ngIf="!isTranslated && originalLanguage">Original Language: {{ originalLanguage }}</span>
+    <span *ngIf="!isTranslated && !originalLanguage" class="language-error">Language: Unknown</span>
+    <button (click)="translateBlog('en')" [disabled]="originalLanguage === 'en' && !isTranslated || translatedLanguage === 'en'" class="translate-button">Translate to English</button>
+    <button (click)="translateBlog('es')" [disabled]="translatedLanguage === 'es'" class="translate-button">Translate to Spanish</button>
+    <button (click)="translateBlog('fr')" [disabled]="translatedLanguage === 'fr'" class="translate-button">Translate to French</button>
     <button *ngIf="isTranslated" (click)="revertToOriginal()" class="revert-button">Revert to Original</button>
   </div>
 

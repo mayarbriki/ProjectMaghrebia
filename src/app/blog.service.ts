@@ -146,4 +146,9 @@ export class BlogService {
       {}
     );
   }
+  detectLanguage(text: string): Observable<string> {
+    return this.http.post<{ language: string }>(`${this.apiUrl}/detect`, { text }).pipe(
+      map(response => response.language)
+    );
+  }
 }

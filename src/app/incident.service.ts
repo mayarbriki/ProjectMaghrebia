@@ -21,6 +21,7 @@ export interface Incident {
   longitude: number;
   property?: { id: number };
   submittedAt?: string;
+  mediaUrls?: string[];
 }
 
 
@@ -35,11 +36,19 @@ export class IncidentService {
   constructor(private http: HttpClient) {}
 
   // Create new incident
-  createIncident(incident: Incident): Observable<Incident> {
-    return this.http.post<Incident>(this.apiUrl, incident).pipe(
+  createIncidentWithFiles(incident: Incident, files: File[]): Observable<Incident> {
+    const formData = new FormData();
+    formData.append('incident', new Blob([JSON.stringify(incident)], { type: 'application/json' }));
+  
+    files.forEach(file => {
+      formData.append('files', file);
+    });
+  
+    return this.http.post<Incident>(this.apiUrl, formData).pipe(
       catchError(this.handleError)
     );
   }
+  
 
   // Get incidents by property ID
   getIncidentsByPropertyId(propertyId: number): Observable<Incident[]> {
@@ -74,4 +83,14 @@ export class IncidentService {
     console.error('An error occurred:', error);
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+
+  uploadFiles(files: File[]): Observable<string[]> {
+    const formData = new FormData();
+    files.forEach(file => formData.append('files', file)); // field name must match backend
+  
+    return this.http.post<string[]>(`${this.apiUrl}/upload`, formData).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
 }

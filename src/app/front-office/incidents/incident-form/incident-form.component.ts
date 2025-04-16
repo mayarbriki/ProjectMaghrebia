@@ -7,6 +7,8 @@ import { HeaderFrontComponent } from "../../header-front/header-front.component"
 import jsPDF from 'jspdf';
 import { icon, latLng, Map, marker, Marker, tileLayer, latLngBounds, LatLngBounds } from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import html2canvas from 'html2canvas';
+import L, { TileLayer } from 'leaflet';
 
 @Component({
   standalone: true,
@@ -65,7 +67,8 @@ export class IncidentFormComponent implements OnInit {
       faultAcknowledged: [false],
       needsAssessment: [true],
       latitude: [34, Validators.required],
-      longitude: [9, Validators.required]
+      longitude: [9, Validators.required],
+      mediaFiles: [null]
     });
   }
 
@@ -82,40 +85,91 @@ export class IncidentFormComponent implements OnInit {
       alert('Please fill all required fields correctly.');
       return;
     }
-
+  
     this.isLoading = true;
-
+  
     const formValue = this.incidentForm.value;
     const incident: Incident = {
       ...formValue,
       property: { id: this.propertyId },
       dateOfIncident: new Date(formValue.dateOfIncident).toISOString()
     };
-
-    this.incidentService.createIncident(incident).subscribe({
-      next: () => {
-        alert('Incident submitted successfully!');
-        this.generateIncidentPDF(incident);
-        this.router.navigate(['/properties', this.propertyId]);
-      },
-      error: (err) => {
-        console.error('Error submitting incident:', err);
-        alert('Error submitting incident. Please try again.');
+  
+    const mapElement = document.querySelector('.leaflet-container') as HTMLElement;
+  
+    if (!mapElement) {
+      console.error('Map not found.');
+      this.isLoading = false;
+      return;
+    }
+  
+    // ✅ Wait until all tiles are loaded before screenshot
+    const waitForTilesLoaded = new Promise<void>((resolve) => {
+      let resolved = false;
+      let tilesToLoad = 0;
+    
+      this.map.eachLayer((layer: any) => {
+        if (layer instanceof TileLayer) {
+          tilesToLoad++;
+          layer.once('load', () => {
+            tilesToLoad--;
+            if (tilesToLoad === 0 && !resolved) {
+              resolved = true;
+              resolve();
+            }
+          });
+        }
+      });
+    
+      // Fallback: resolve after 3 seconds if tiles didn’t finish loading
+      setTimeout(() => {
+        if (!resolved) {
+          console.warn('Tile load timed out, continuing without full map render.');
+          resolve();
+        }
+      }, 3000);
+    
+      if (tilesToLoad === 0) resolve();
+    });
+    
+  
+    waitForTilesLoaded.then(() => {
+      html2canvas(mapElement).then(canvas => {
+        const mapImage = canvas.toDataURL('image/png');
+  
+        this.incidentService.createIncidentWithFiles(incident, this.selectedFiles).subscribe({
+          next: () => {
+            alert('Incident submitted successfully!');
+            this.generateIncidentPDF(incident, mapImage);
+            this.router.navigate(['/properties', this.propertyId]);
+          },
+          error: err => {
+            console.error('Error submitting incident:', err);
+            alert('Incident submission failed.');
+          },
+          complete: () => this.isLoading = false
+        });
+      }).catch(err => {
+        console.error('Map screenshot failed:', err);
+        alert('Failed to capture map screenshot.');
         this.isLoading = false;
-      },
-      complete: () => this.isLoading = false
+      });
     });
   }
+  
+  
+  
+  
 
-  generateIncidentPDF(data: Incident): void {
+  generateIncidentPDF(data: Incident, mapImage?: string): void {
     const doc = new jsPDF({ orientation: 'portrait' });
     const lineHeight = 8;
     let y = 20;
-
+  
     doc.setFontSize(16);
     doc.text('Incident Report', 14, y);
     y += 10;
-
+  
     doc.setFontSize(12);
     const paragraphs = [
       `On ${data.dateOfIncident}, an incident titled "${data.title}" occurred at the following location: ${data.locationDetails || 'unspecified location'}.`,
@@ -127,7 +181,7 @@ export class IncidentFormComponent implements OnInit {
       `Fault Acknowledged: ${data.faultAcknowledged ? 'Yes' : 'No'} | Needs Assessment: ${data.needsAssessment ? 'Yes' : 'No'}`,
       `Submitted: ${data.submittedAt ?? new Date().toISOString()}`
     ];
-
+  
     paragraphs.forEach(p => {
       if (p) {
         const lines = doc.splitTextToSize(p, 180);
@@ -135,9 +189,21 @@ export class IncidentFormComponent implements OnInit {
         y += lines.length * lineHeight;
       }
     });
-
+  
+    if (mapImage) {
+      const pageHeight = doc.internal.pageSize.height;
+      if (y + 80 > pageHeight) {
+        doc.addPage();
+        y = 20;
+      }
+  
+      doc.text('Map Preview:', 14, y + 10);
+      doc.addImage(mapImage, 'PNG', 14, y + 15, 180, 100);
+    }
+  
     doc.save(`incident-report-${data.title}.pdf`);
   }
+  
 
   onMapReady(map: Map) {
     this.map = map;
@@ -203,4 +269,34 @@ export class IncidentFormComponent implements OnInit {
       alert('Geolocation is not supported.');
     }
   }
+
+
+
+
+
+  previewUrls: string[] = [];
+selectedFiles: File[] = [];
+
+onFileChange(event: Event): void {
+  const target = event.target as HTMLInputElement;
+  if (target.files) {
+    this.selectedFiles = Array.from(target.files);
+    this.previewUrls = [];
+
+    this.selectedFiles.forEach(file => {
+      const reader = new FileReader();
+      reader.onload = (e: any) => this.previewUrls.push(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  }
+}
+
+isImage(fileUrl: string): boolean {
+  return fileUrl.match(/image\//i) != null;
+}
+
+isVideo(fileUrl: string): boolean {
+  return fileUrl.match(/video\//i) != null;
+}
+
 }

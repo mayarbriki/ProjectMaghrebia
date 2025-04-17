@@ -96,5 +96,12 @@ export class IncidentService {
       catchError(this.handleError)
     );
   }
+
+  getAssessment(id: number): Observable<string> {
+    return this.http.get(`${this.apiUrl}/${id}/assessment`, { responseType: 'text' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
   
 }

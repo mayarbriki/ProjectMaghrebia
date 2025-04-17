@@ -8,6 +8,7 @@ import jsPDF from 'jspdf';
 import { icon, latLng, Map, marker, Marker, tileLayer, latLngBounds, LatLngBounds } from 'leaflet';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { HttpClient } from '@angular/common/http';
+import { VoiceNavigationService } from '../../header-front/voice-navigation.service';
 
 @Component({
   standalone: true,
@@ -45,8 +46,7 @@ export class IncidentFormComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private incidentService: IncidentService,
-    private http: HttpClient
-
+    private http: HttpClient,
   ) {}
 
   ngOnInit(): void {
@@ -118,8 +118,6 @@ export class IncidentFormComponent implements OnInit {
     }
   }
   
-  
-  
   private submitIncidentData(incident: Incident, mapImage?: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.incidentService.createIncidentWithFiles(incident, this.selectedFiles).subscribe({
@@ -129,10 +127,6 @@ export class IncidentFormComponent implements OnInit {
     });
   }
   
-  
-  
-  
-
   generateIncidentPDF(data: Incident, mapImageUrl?: string): void {
     const doc = new jsPDF({ orientation: 'portrait' });
     const lineHeight = 8;
@@ -188,9 +182,6 @@ export class IncidentFormComponent implements OnInit {
       doc.save(`incident-report-${data.title}.pdf`);
     }
   }
-  
-  
-  
 
   onMapReady(map: Map) {
     this.map = map;

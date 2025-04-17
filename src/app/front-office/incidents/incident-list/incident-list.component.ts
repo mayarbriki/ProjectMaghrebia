@@ -130,8 +130,98 @@ export class IncidentListComponent implements OnInit {
   
 
     generateLocationIQStaticImageUrl(lat: number, lng: number): string {
-      const apiKey = 'pk.f6cff4e27cbf77dec5fb32896647a75c'; // Use your actual key
+      const apiKey = 'pk.62f59925984db03f65104b771e7244a0'; // Use your actual key
       return `https://maps.locationiq.com/v3/staticmap?key=${apiKey}&center=${lat},${lng}&zoom=18&size=600x400&markers=icon:large-red-cutout|${lat},${lng}`;
     }
     
+    generateDamageAssessmentPDF(incident: Incident, assessment: string): void {
+      const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+      const margin = 20;
+      let y = margin;
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const pageHeight = doc.internal.pageSize.getHeight();
+  
+      doc.setFontSize(18);
+      doc.setTextColor(33, 37, 41);
+      doc.text('Damage Assessment Report', margin, y);
+      y += 10;
+      doc.setDrawColor(200);
+      doc.line(margin, y, pageWidth - margin, y);
+      y += 8;
+  
+      doc.setFontSize(12);
+      const property = (incident as any).property || {};
+  
+      // 🔍 Risk score calculation
+      let riskScore = 0;
+      if (incident.severity === 'Critical') riskScore += 30;
+      if (incident.severity === 'High') riskScore += 20;
+      if (property.estimatedValue && property.estimatedValue > 100000) riskScore += 20;
+      if (property.year && property.year < new Date().getFullYear() - 10) riskScore += 10;
+      if (property.constructionType && property.constructionType.toLowerCase().includes('wood')) riskScore += 15;
+      if (property.smoker === true) riskScore += 10;
+  
+      const details: string[] = [
+        `Incident Title: ${incident.title}`,
+        `Description: ${incident.description}`,
+        `Date: ${incident.dateOfIncident}`,
+        `Category: ${incident.incidentCategory}`,
+        `Severity: ${incident.severity}`,
+        incident.incidentCause && `Cause: ${incident.incidentCause}`,
+        incident.locationDetails && `Location: ${incident.locationDetails}`,
+        property.type && `Property Type: ${property.type}`,
+        property.estimatedValue && `Estimated Value: ${property.estimatedValue} TND`,
+        property.squareFootage && `Square Footage: ${property.squareFootage} m²`,
+        property.yearBuilt && `Year Built: ${property.yearBuilt}`,
+        property.constructionType && `Construction Type: ${property.constructionType}`,
+        property.make && `Car Make: ${property.make}`,
+        property.model && `Car Model: ${property.model}`,
+        property.year && `Car Year: ${property.year}`,
+        property.licensePlate && `License Plate: ${property.licensePlate}`,
+        property.vin && `VIN: ${property.vin}`,
+        property.businessName && `Business Name: ${property.businessName}`,
+        property.annualRevenue && `Annual Revenue: ${property.annualRevenue}`,
+        property.numberOfEmployees && `Employees: ${property.numberOfEmployees}`,
+        property.destination && `Destination: ${property.destination}`,
+        property.departureDate && `Departure Date: ${property.departureDate}`,
+        property.returnDate && `Return Date: ${property.returnDate}`,
+        property.travelPurpose && `Travel Purpose: ${property.travelPurpose}`,
+        property.fullName && `Full Name: ${property.fullName}`,
+        property.dateOfBirth && `Date of Birth: ${property.dateOfBirth}`,
+        property.occupation && `Occupation: ${property.occupation}`,
+        typeof property.smoker === 'boolean' && `Smoker: ${property.smoker ? 'Yes' : 'No'}`,
+        '',
+        ` Risk Score: ${riskScore}/100`,
+        '',
+        ' Suggested Action:',
+        assessment
+      ].filter(Boolean);
+  
+      details.forEach(line => {
+        const lines = doc.splitTextToSize(line, pageWidth - margin * 2);
+        doc.text(lines, margin, y);
+        y += lines.length * 8 + 4;
+      });
+  
+      this.addPDFPageFooter(doc, pageWidth, pageHeight);
+      doc.save(`assessment-${incident.title}.pdf`);
+    }
+  
+    getAssessment(incident: Incident): void {
+      const incidentId = (incident as any)['id'];
+      if (!incidentId) {
+        alert('Incident ID missing. Cannot assess.');
+        return;
+      }
+  
+      this.incidentService.getAssessment(incidentId).subscribe({
+        next: (result: string) => this.generateDamageAssessmentPDF(incident, result),
+        error: (err) => alert('Failed to assess incident: ' + err.message)
+      });
+    }
+  
+  
+  
+  
+  
 }

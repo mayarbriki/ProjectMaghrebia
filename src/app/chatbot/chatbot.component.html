@@ -1,10 +1,10 @@
-<div class="chatbot-container">
-    <div class="chat-header">
-        <h3>Chatbot</h3>
-        <button (click)="toggleChat()">×</button>
+<div class="chatbot-container" [ngClass]="{'chatbot-open': isChatOpen}">
+    <div class="chat-header" (click)="toggleChat()">
+        <h3 >Insurance Assistant</h3>
+        <button *ngIf="isChatOpen" (click)="closeChat($event)">×</button>
     </div>
     <div class="chat-body" *ngIf="isChatOpen">
-        <div class="message bot">Hello! How can I help you?</div>
+        Hello! How can I assist you with your insurance today?
         <div *ngFor="let message of messages" class="message" [ngClass]="message.sender">
             {{ message.text }}
         </div>

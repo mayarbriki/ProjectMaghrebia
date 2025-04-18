@@ -1,10 +1,9 @@
-/* Style pour le chatbot */
 .chatbot-container {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 350px;
-    max-width: 100%;
+    width: 230px; 
+    height: 50px; 
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
@@ -12,6 +11,13 @@
     z-index: 1000;
     font-family: 'Arial', sans-serif;
     transition: all 0.3s ease-in-out;
+}
+
+/* Largeur du chatbot quand il est ouvert */
+.chatbot-container.chatbot-open {
+    width: 450px;
+    height: auto; /* Hauteur s'adapte au contenu du chat */
+    border-radius: 15px;
 }
 
 /* Header du chatbot */
@@ -41,7 +47,7 @@
 }
 
 .chat-header button:hover {
-    color: #ff6347; /* change color on hover */
+    color: #ff6347;
 }
 
 /* Corps du chatbot */

@@ -9,6 +9,7 @@ export interface Claim {
     description: string;
     supportingDocuments: { name: string, url: string }[];
     assessment?: Assessment | null; 
+    isUpdating?: boolean; // Ajout temporaire pour l'UI
  }
   
   export enum StatusClaim {

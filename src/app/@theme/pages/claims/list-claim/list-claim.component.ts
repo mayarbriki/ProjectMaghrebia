@@ -51,36 +51,29 @@ statusClaims = Object.values(StatusClaim);
     );
   }
 
-  changeStatus(claim: Claim, newStatus: string) {
-    const confirmation = confirm('Are you sure you want to update the status of this claim?');
+  updatingClaims: Set<string> = new Set();
+
+  changeStatus(claim: Claim, selectedStatus: string) {
+    if (claim.statusClaim === selectedStatus) return; // rien à faire
   
-    if (confirmation) {
-      // Check if the status is different before sending the update
-      if (claim.statusClaim !== newStatus) {
-        this.claimService.updateClaimStatus(claim.idClaim, newStatus).subscribe(
-          (updatedClaim) => {
-            // Update the claim's status in the UI after the backend update
-            const index = this.claims.findIndex(c => c.idClaim === claim.idClaim);
-            if (index !== -1) {
-              // Update the status locally
-              this.claims[index].statusClaim = updatedClaim.statusClaim;
-              this.filteredClaims = [...this.claims]; // Trigger change detection for filtered claims
-              
-              // Manually trigger Angular change detection
-              this.cdr.detectChanges();
-            }
-            console.log('Status updated successfully:', updatedClaim.statusClaim);
-          },
-          (error) => {
-            console.error('Error updating status:', error);
-          }
-        );
+    const confirmation = confirm('Are you sure you want to update the status of this claim?');
+    if (!confirmation) return;
+  
+    this.updatingClaims.add(claim.idClaim);
+    this.claimService.updateClaimStatus(claim.idClaim, selectedStatus).subscribe(
+      (updatedClaim) => {
+        claim.statusClaim = updatedClaim.statusClaim;
+        this.updatingClaims.delete(claim.idClaim);
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Erreur mise à jour statut:', error);
+        this.updatingClaims.delete(claim.idClaim);
       }
-    }
+    );
   }
   
-
-
+  
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>
       claim.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||

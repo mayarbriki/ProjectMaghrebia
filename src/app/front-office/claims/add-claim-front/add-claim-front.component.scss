@@ -1,32 +1,33 @@
 .add-claim-container {
   max-width: 600px;
-  margin: 160px auto; /* Less margin for a more centered look */
+  margin: 160px auto; /* Centrer le formulaire */
   padding: 60px;
-  background-color: white; /* White background */
+  background-color: white;
   border-radius: 12px;
   font-family: 'Roboto', sans-serif;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow to lift the form */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 button.back {
-  background: none; /* No background color */
-  border: none; /* Remove the default border */
-  padding: 0; /* No padding */
+  background: none;
+  border: none;
+  padding: 0;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  justify-content: flex-start; /* Align the icons to the left */
+  justify-content: flex-start;
 }
 
 button.back svg {
-  width: 24px; /* Adjust size of the icon */
+  width: 24px;
   height: 24px;
-  fill: currentColor; /* Use the current text color for the icon */
-  color: #34495e; /* Dark color for the icon */
+  fill: currentColor;
+  color: #34495e;
   transition: color 0.3s ease;
 }
 
 button.back:hover svg {
-  color: #2980b9; /* Change icon color on hover */
+  color: #2980b9;
 }
 
 h3 {
@@ -41,7 +42,7 @@ form {
   background-color: #fff;
   padding: 40px;
   border-radius: 12px;
-  border: 2px solid black; /* Black border around the form */
+  border: 2px solid black;
 }
 
 label {
@@ -51,17 +52,20 @@ label {
   margin-bottom: 8px;
 }
 
+/* Aligner tous les champs d'entrée à la même largeur */
 input[type="text"], input[type="date"], select, textarea {
   width: 100%;
   padding: 12px;
   margin-bottom: 18px;
-  border: 2px solid #34495e; /* Black border */
+  border: 2px solid #34495e;
   border-radius: 8px;
   font-size: 1em;
   background-color: #f7f7f7;
   transition: border-color 0.3s ease, background-color 0.3s ease;
 }
 
+
+/* Focus sur les champs */
 input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus {
   border-color: #2980b9;
   background-color: #fff;
@@ -72,15 +76,17 @@ textarea {
   min-height: 120px;
 }
 
+/* Alignement du bouton upload avec le champ de texte */
 .file-upload-container {
   display: flex;
   align-items: center;
-  gap: 0; /* No gap between input and button */
+  gap: 20px; /* Ajout d'un petit écart entre le champ de texte et le bouton */
+  width: 100%;
 }
 
 .file-upload-container input[type="text"] {
   flex-grow: 1;
-  padding-right: 10px; /* Optional: Space for the file input button */
+  padding-right: 10px; /* Assurer un espacement pour le bouton */
 }
 
 .file-input {
@@ -92,12 +98,30 @@ textarea {
   color: #2980b9;
   text-align: center;
   transition: 0.3s;
-  width: auto; /* Set width to auto to avoid stretching */
+  width: auto;
 }
 
 .file-input:hover {
   border-color: #1f6f8b;
   background-color: #f1f4f7;
+}
+
+/* Bouton upload */
+.upload-btn {
+  padding: 12px 20px;
+  font-size: 1em;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #7f8c8d;
+  color: white;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.upload-btn:hover {
+  background-color: #95a5a6;
 }
 
 .button-group {
@@ -117,7 +141,7 @@ button {
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
-/* Primary Button - Custom Dark Background with White Text */
+/* Primary Button */
 button.btn-primary {
   background-color: blue;
   color: #fff;
@@ -134,7 +158,7 @@ button.btn-primary:disabled {
   cursor: not-allowed;
 }
 
-/* Secondary Button - Custom Gray with White Text */
+/* Secondary Button */
 button.btn-secondary {
   background-color: #7f8c8d;
   color: #fff;
@@ -144,20 +168,6 @@ button.btn-secondary {
 button.btn-secondary:hover {
   background-color: #95a5a6;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-.upload-btn {
-  margin-left: 10px; /* Adds space between input and button */
-  padding: 12px 20px;
-  font-size: 1em;
-  border-radius: 8px;
-  cursor: pointer;
-  background-color: #7f8c8d;
-  color: white;
-  border: none;
-}
-
-.upload-btn:hover {
-  background-color: #95a5a6;
 }
 
 /* Error messages */
@@ -169,14 +179,11 @@ button.btn-secondary:hover {
 
 @media (max-width: 768px) {
   .add-claim-container {
-    max-width: 90%; /* Make the form container more adaptable on smaller screens */
+    max-width: 90%;
     margin: 50px auto;
   }
 
   button {
-    width: 100%; /* Full width for buttons on mobile */
+    width: 100%;
   }
-  
-
-  
 }

@@ -41,8 +41,11 @@ export class ClaimService {
   }
 
   updateClaimStatus(idClaim: string, newStatus: string): Observable<Claim> {
-    return this.http.put<Claim>(`${this.baseUrl}/${idClaim}/status?status=${newStatus}`, {});
-}
-
+    return this.http.put<Claim>(
+      `${this.baseUrl}/${idClaim}/status`,
+      {}, 
+      { params: { status: newStatus } } 
+    );
+  }
 
 }

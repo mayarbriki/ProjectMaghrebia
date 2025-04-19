@@ -23,7 +23,26 @@
         font-size: 1.8em;
         font-weight: 700;
     }
-
+    td select {
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 1em;
+        background-color: white;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    
+        &:hover {
+            border-color: #007bff;
+        }
+    
+        &:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+    }
     .table {
         width: 100%;
         border-collapse: collapse;
@@ -159,4 +178,6 @@
         outline: none;
         box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
     }
+
+    
 }

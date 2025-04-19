@@ -40,4 +40,25 @@ export class AssessmentService {
   deleteAssessment(id: string): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
   }
+
+ // Update status
+updateStatus(id: string, status: string): Observable<Assessment> {
+  return this.http.put<Assessment>(
+    `${this.baseUrl}/${id}/status`,
+    {}, 
+    { params: { status } } 
+  );
+}
+
+// Update final decision 
+updateFinalDecision(id: string, decision: string): Observable<Assessment> {
+  return this.http.put<Assessment>(
+    `${this.baseUrl}/${id}/final-decision`,
+    {},
+    { params: { decision } }
+  );
+}
+
+
+  
 }

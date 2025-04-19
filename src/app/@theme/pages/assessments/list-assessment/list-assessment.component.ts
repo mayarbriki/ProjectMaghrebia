@@ -19,6 +19,7 @@ export class ListAssessmentComponent implements OnInit {
   selectedSort: string = 'assessmentDate'; // Default sorting by date
   sortDirection: boolean = true; // true for ascending, false for descending
 
+  
   constructor(
     private assessmentService: AssessmentService,
     private router: Router
@@ -89,4 +90,48 @@ export class ListAssessmentComponent implements OnInit {
   navigateToAddAssessment(): void {
     this.router.navigate(['admin/assessments/AddAssessment']);
   }
+
+  statusOptions: string[] = ['PENDING', 'COMPLETED', 'REJECTED'];
+  decisionOptions: string[] = ['APPROVED', 'REJECTED'];
+  updatingAssessments: Set<string> = new Set();
+  changeStatus(assessment: Assessment, selectedStatus: string) {
+    if (assessment.statusAssessment === selectedStatus) return;
+  
+    const confirmChange = confirm('Are you sure you want to update the status?');
+    if (!confirmChange) return;
+  
+    this.updatingAssessments.add(assessment.idAssessment);
+  
+    this.assessmentService.updateStatus(assessment.idAssessment, selectedStatus).subscribe(
+      updated => {
+        assessment.statusAssessment = updated.statusAssessment;
+        this.updatingAssessments.delete(assessment.idAssessment);
+      },
+      error => {
+        console.error('Error updating status:', error);
+        this.updatingAssessments.delete(assessment.idAssessment);
+      }
+    );
+  }
+  
+  changeFinalDecision(assessment: Assessment, selectedDecision: string) {
+    if (assessment.finalDecision === selectedDecision) return;
+  
+    const confirmChange = confirm('Are you sure you want to update the final decision?');
+    if (!confirmChange) return;
+  
+    this.updatingAssessments.add(assessment.idAssessment);
+  
+    this.assessmentService.updateFinalDecision(assessment.idAssessment, selectedDecision).subscribe(
+      updated => {
+        assessment.finalDecision = updated.finalDecision;
+        this.updatingAssessments.delete(assessment.idAssessment);
+      },
+      error => {
+        console.error('Error updating decision:', error);
+        this.updatingAssessments.delete(assessment.idAssessment);
+      }
+    );
+  }
+  
 }

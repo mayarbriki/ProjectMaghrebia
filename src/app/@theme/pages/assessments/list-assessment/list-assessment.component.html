@@ -39,8 +39,26 @@
           <tr *ngFor="let assessment of filteredAssessments; let i = index">
               <td>{{ i + 1 }}</td>
               <td>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</td>
-              <td>{{ assessment.statusAssessment }}</td>
-              <td>{{ assessment.finalDecision }}</td>
+              <td>
+                <select
+                  [ngModel]="assessment.statusAssessment"
+                  (ngModelChange)="changeStatus(assessment, $event)"
+                  class="form-control"
+                  [disabled]="updatingAssessments.has(assessment.idAssessment)">
+                  <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                </select>
+              </td>
+              
+              <td>
+                <select
+                  [ngModel]="assessment.finalDecision"
+                  (ngModelChange)="changeFinalDecision(assessment, $event)"
+                  class="form-control"
+                  [disabled]="updatingAssessments.has(assessment.idAssessment)">
+                  <option *ngFor="let decision of decisionOptions" [value]="decision">{{ decision }}</option>
+                </select>
+              </td>
+              
               <td class="actions">
                   <div class="action-buttons">
                       <!-- Bouton Voir -->

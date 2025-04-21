@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Assessment } from '../../../../models/assessment.model';
 import { AssessmentService } from '../../../../assessment.service';
 import { CommonModule } from '@angular/common';
-
+import {AuthService} from "../../../../auth.service";
 @Component({
   selector: 'app-list-assessment',
   templateUrl: './list-assessment.component.html',
@@ -22,6 +22,7 @@ export class ListAssessmentComponent implements OnInit {
   
   constructor(
     private assessmentService: AssessmentService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -30,7 +31,16 @@ export class ListAssessmentComponent implements OnInit {
   }
 
   fetchAssessments(): void {
-    this.assessmentService.getAllAssessments().subscribe(
+    const user = this.authService.getUser(); 
+    const userId = user?.id;
+    const role = user?.role;
+  
+    if (!userId || !role) {
+      console.error('User ID or role is missing');
+      return;
+    }
+  
+    this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
       (data) => {
         this.assessments = data;
         this.filteredAssessments = data;
@@ -39,7 +49,7 @@ export class ListAssessmentComponent implements OnInit {
         console.error('Error fetching assessments:', error);
       }
     );
-  }
+  }  
 
   applySearch(): void {
     this.filteredAssessments = this.assessments.filter(assessment =>

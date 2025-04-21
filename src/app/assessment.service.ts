@@ -59,6 +59,14 @@ updateFinalDecision(id: string, decision: string): Observable<Assessment> {
   );
 }
 
-
+// Get Assessments by current user (or all if admin/agent)
+getAssessmentsByUser(userId: number, role: string): Observable<Assessment[]> {
+  return this.http.get<Assessment[]>(`${this.baseUrl}/assessmentByUser`, {
+    params: {
+      userId: userId.toString(),
+      role: role
+    }
+  });
+}
   
 }

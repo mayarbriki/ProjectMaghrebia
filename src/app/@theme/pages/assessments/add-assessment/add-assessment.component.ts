@@ -33,28 +33,46 @@ export class AddAssessmentComponent implements OnInit {
   claims: Claim[] = [];
   currentUser: User | null = null;
 
-  constructor(private assessmentService: AssessmentService, private router: Router,private claimService: ClaimService,private authService: AuthService) {}
+  constructor(
+    private assessmentService: AssessmentService, 
+    private authService: AuthService,
+    private claimService: ClaimService,
+    private router: Router,
+   ) {}
 
   ngOnInit(): void {
-    this.loadClaims(); // ✅ Récupérer les claims au démarrage
+    this.loadClaims(); 
   }
 
-  // ✅ Récupérer les claims depuis l'API
   private loadClaims(): void {
-   /*// const userId = this.authService.getCurrentUserId(); // assure-toi que cette méthode existe
-    if (!userId) {
-      console.error('User ID not found.');
-      return;
-    }
-  
-    this.claimService.getAllClaims(userId).subscribe(
-      (data: Claim[]) => {
-        this.claims = data;
-      },
-      (error: any) => {
-        console.error('Erreur lors du chargement des claims', error);
+    const user = this.authService.getUser();  
+    if (user) {
+      const userId = user.id;
+      const role = user.role;
+
+      // Si l'utilisateur est un admin, il peut voir tous les claims
+      if (role === 'ADMIN') {
+        this.claimService.getAllClaims().subscribe(
+          (data: Claim[]) => {
+            this.claims = data;
+          },
+          (error: any) => {
+            console.error('Error fetching claims', error);
+          }
+        );
+      } else {
+        this.claimService.getAllClaims(userId).subscribe(
+          (data: Claim[]) => {
+            this.claims = data;
+          },
+          (error: any) => {
+            console.error('Error fetching claims', error);
+          }
+        );
       }
-    );*/
+    } else {
+      console.error('User not connected');
+    }
   }
   
   

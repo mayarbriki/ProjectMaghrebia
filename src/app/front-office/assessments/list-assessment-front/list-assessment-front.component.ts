@@ -6,6 +6,7 @@ import { AssessmentService } from '../../../assessment.service';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-list-assessment-front',
@@ -23,6 +24,7 @@ export class ListAssessmentComponentFront implements OnInit {
 
   constructor(
     private assessmentService: AssessmentService,
+    private authService: AuthService,
     private router: Router
   ) {}
 
@@ -31,7 +33,16 @@ export class ListAssessmentComponentFront implements OnInit {
   }
 
   fetchAssessments(): void {
-    this.assessmentService.getAllAssessments().subscribe(
+    const user = this.authService.getUser();
+    const userId = user?.id;
+    const role = user?.role;
+
+    if (!userId || !role) {
+      console.error('User ID or role is missing');
+      return;
+    }
+
+    this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
       (data) => {
         this.assessments = data;
         this.filteredAssessments = data;

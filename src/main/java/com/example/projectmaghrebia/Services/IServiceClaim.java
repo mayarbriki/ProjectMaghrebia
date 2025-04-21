@@ -10,4 +10,5 @@ public interface IServiceClaim {
     List<Claim> getAllClaims();
     Claim updateClaim(UUID id, Claim claim);
     void deleteClaim(UUID id);
+    Claim updateClaimStatus(UUID id, String status);
 }

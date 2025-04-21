@@ -18,10 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @AllArgsConstructor
 @Slf4j
@@ -149,4 +146,40 @@ public class ControllerAssessment {
         serviceAssessment.deleteAssessment(id);
         return ResponseEntity.noContent().build();
     }
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Assessment> updateStatusAssessment(
+            @PathVariable UUID id,
+            @RequestParam("status") String status) {
+
+        Assessment assessment = assessmentRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Assessment not found with ID: " + id)
+        );
+
+        try {
+            assessment.setStatusAssessment(statusAssessment.valueOf(status.toUpperCase()));
+            Assessment updated = assessmentRepository.save(assessment);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // statut invalide
+        }
+    }
+
+    @PutMapping("/{id}/final-decision")
+    public ResponseEntity<Assessment> updateFinalDecision(
+            @PathVariable UUID id,
+            @RequestParam("decision") String decision) {
+
+        Assessment assessment = assessmentRepository.findById(id).orElseThrow(() ->
+                new NoSuchElementException("Assessment not found with ID: " + id)
+        );
+
+        try {
+            assessment.setFinalDecision(finalDecision.valueOf(decision.toUpperCase()));
+            Assessment updated = assessmentRepository.save(assessment);
+            return ResponseEntity.ok(updated);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().build(); // décision invalide
+        }
+    }
+
 }

@@ -31,6 +31,8 @@ public class Claim {
     private String claimReason;
     private String description;
 
+    private Long userId;
+
     @ElementCollection
     private List<String> supportingDocuments = new ArrayList<>();
 

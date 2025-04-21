@@ -8,7 +8,7 @@ import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-f
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx'; // Importation de la bibliothèque XLSX
-
+import {AuthService} from 'src/app/auth.service';
 @Component({
   selector: 'app-view-claim-front',
   templateUrl: './view-claim-front.component.html',
@@ -25,6 +25,7 @@ export class ViewClaimComponentFront implements OnInit {
     statusClaim: StatusClaim.PENDING,
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -37,27 +38,34 @@ export class ViewClaimComponentFront implements OnInit {
 
   constructor(
     private claimService: ClaimService,
+    private authService: AuthService, 
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
     const claimId = this.route.snapshot.paramMap.get('id');
-    if (claimId) {
-      this.claimService.getClaimById(claimId).subscribe(
+    const user = this.authService.getUser();
+  
+    if (claimId && user) {
+      const userId = user.id;
+      const role = user.role;
+  
+      this.claimService.getClaimById(claimId, userId, role).subscribe(
         (data) => {
           this.claim = data;
-          console.log('Claim data:', this.claim); // Afficher les données de la réclamation
-          console.log('Supporting documents:', this.claim.supportingDocuments); // Afficher les documents de support
+          console.log('Claim data:', this.claim);
+          console.log('Supporting documents:', this.claim.supportingDocuments);
         },
         (error) => {
           console.error('Error fetching claim details', error);
         }
       );
+    } else {
+      console.error('Claim ID or user is missing');
     }
   }
   
-
   isImage(url: string): boolean {
     // Vérifier si l'URL est définie et si elle correspond à une image (par extension)
     if (!url) return false; // Assurez-vous que l'URL existe
@@ -70,26 +78,37 @@ export class ViewClaimComponentFront implements OnInit {
   }
 
   deleteClaim(id: string): void {
-    if (!id) {
-      console.error('Invalid claim ID');
+    const user = this.authService.getUser();
+  
+    if (!id || !user) {
+      console.error('Invalid claim ID or user');
       return;
     }
   
     if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(id).subscribe(() => {
-        // Filter out the deleted claim from the list
-        this.claims = this.claims.filter(claim => claim.idClaim !== id);
-  
-        // Navigate to the claims list (you can adjust the route path as needed)
-        this.router.navigate(['/claims']); // Example route
-      }, (error) => {
-        console.error('Error deleting claim:', error);
-      });
+      this.claimService.deleteClaim(id, user.id, user.role).subscribe(
+        () => {
+          this.claims = this.claims.filter(claim => claim.idClaim !== id);
+          this.router.navigate(['/claims']);
+        },
+        (error) => {
+          console.error('Error deleting claim:', error);
+        }
+      );
     }
   }
+  
+  
 
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser();
+  
+    if (!user) {
+      console.error('User not found');
+      return;
+    }
+  
+    this.claimService.getClaimById(idClaim, user.id, user.role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
@@ -108,8 +127,8 @@ export class ViewClaimComponentFront implements OnInit {
       }
     );
   }
+  
 
-  // Nouvelle méthode pour télécharger les détails de la réclamation en PDF
   downloadPDF(): void {
     const doc = new jsPDF();
   

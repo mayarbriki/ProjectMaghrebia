@@ -14,6 +14,15 @@
             <label for="fullName">Full Name</label>
             <input type="text" id="fullName" class="form-control" required [(ngModel)]="claim.fullName" name="fullName" #fullName="ngModel">
         </div>
+        <!-- User ID Field (visible and editable) -->
+<div class="form-group">
+    <label for="userId">User ID</label>
+    <input type="number" id="userId" class="form-control" [(ngModel)]="claim.userId" name="userId" required #userId="ngModel" >
+    <div *ngIf="userId.invalid && userId.touched" class="error-message">
+      User ID is required.
+    </div>
+  </div>
+  
 
         <!-- Claim Name -->
         <div class="form-group">

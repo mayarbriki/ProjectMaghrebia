@@ -22,7 +22,7 @@ export class ModifyAssessmentComponent implements OnInit {
     statusAssessment: StatusAssessment.PENDING,
     finalDecision: FinalDecision.REJECTED,
     submissionDate: new Date(),
-    claim: { idClaim: '', fullName: '', claimName: '', submissionDate: new Date(), statusClaim: StatusClaim.PENDING, claimReason: '', description: '', supportingDocuments: [], assessment: null }
+    claim: { idClaim: '', fullName: '', claimName: '', submissionDate: new Date(), statusClaim: StatusClaim.PENDING, claimReason: '', description: '',userId:0, supportingDocuments: [], assessment: null }
   };
 
   statusAssessments = Object.values(StatusAssessment);

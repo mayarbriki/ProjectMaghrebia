@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
-
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-modify-claim-front',
   templateUrl: './modify-claim-front.component.html',
@@ -23,6 +23,7 @@ export class ModifyClaimComponentFront implements OnInit {
     statusClaim: StatusClaim.PENDING,
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -31,16 +32,32 @@ export class ModifyClaimComponentFront implements OnInit {
   temporaryOtherClaimReason: string = '';
   fileName: string = '';
 
-  constructor(private claimService: ClaimService, private router: Router, private route: ActivatedRoute) {}
+  constructor(
+    private claimService: ClaimService, 
+    private authService: AuthService,
+    private router: Router, 
+    private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('id');
-    if (id) {
-      this.claimService.getClaimById(id).subscribe(data => {
-        this.claim = data;
-      });
+    ngOnInit(): void {
+      const id = this.route.snapshot.paramMap.get('id');
+      const user = this.authService.getUser(); 
+    
+      if (id && user) {
+        this.claimService.getClaimById(id, user.id, user.role).subscribe({
+          next: (data) => {
+            this.claim = data;
+          },
+          error: (err) => {
+            console.error('Error loading claim:', err);
+            alert('Error retrieving claim.');
+          }
+        });
+      } else {
+        alert('Missing claim ID or user information');
+        this.router.navigate(['/claims']);
+      }
     }
-  }
+    
 
   checkClaimReason(): void {
     if (this.claim.claimReason !== 'Other') {
@@ -58,63 +75,62 @@ export class ModifyClaimComponentFront implements OnInit {
 
   onUpdate(): void {
     const formData = new FormData();
-
-    // Validation du nom complet
+  
     if (!this.claim.fullName || this.claim.fullName.trim().length === 0) {
       alert("Full Name is required.");
       return;
     }
-
-    // Validation du nom de la réclamation
+  
     if (!this.claim.claimName || this.claim.claimName.trim().length === 0) {
       alert("Claim Name is required.");
       return;
     }
-
-    // Validation de la date de soumission
+  
     const submissionDate = new Date(this.claim.submissionDate);
     if (!(submissionDate instanceof Date) || isNaN(submissionDate.getTime())) {
       alert("Please provide a valid submission date.");
       return;
     }
-
-    // Validation de la raison de la réclamation
+  
     if (!this.claim.claimReason) {
       alert("Claim Reason is required.");
       return;
     }
-
-    // Validation de la description
+  
     if (!this.claim.description || this.claim.description.trim().length === 0) {
       alert("Claim Description is required.");
       return;
     }
-
-    // Si l'utilisateur a choisi 'Other' comme raison, vérifier la saisie de la raison personnalisée
+  
     if (this.claim.claimReason === 'Other' && !this.temporaryOtherClaimReason) {
       alert("Please specify the other reason.");
       return;
     }
-
+  
     formData.append("fullName", this.claim.fullName);
     formData.append("claimName", this.claim.claimName);
     formData.append("submissionDate", submissionDate.toISOString());  
     formData.append("statusClaim", this.claim.statusClaim);
     formData.append("claimReason", this.claim.claimReason);
     formData.append("description", this.claim.description);
-
-    // Ajouter les fichiers à formData
+  
     this.selectedFiles.forEach((file) => {
       formData.append("supportingDocuments", file);
     });
-
-    this.claimService.updateClaim(this.claim.idClaim, formData).subscribe(response => {
+  
+    const user = this.authService.getUser(); 
+    if (!user) {
+      alert('User is not authenticated.');
+      return;
+    }
+  
+    this.claimService.updateClaim(this.claim.idClaim, formData, user.id, user.role).subscribe(response => {
       alert('Claim updated successfully!');
       this.router.navigate(['/claims']);
     }, error => {
       alert('Failed to update claim.');
     });
-  }
+  }  
 
   onCancel(): void {
     this.router.navigate(['/claims']);

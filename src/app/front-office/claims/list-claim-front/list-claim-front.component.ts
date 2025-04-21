@@ -8,6 +8,8 @@ import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-f
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { AuthService, User } from 'src/app/auth.service'; 
+
 
 @Component({
   selector: 'app-list-claim-front',
@@ -25,23 +27,49 @@ export class ListClaimComponentFront implements OnInit {
   pageSize: number = 3; // Nombre d'éléments par page
   showStatistics: boolean = false;
 
-  constructor(private claimService: ClaimService, private router: Router) {}
+  constructor(private claimService: ClaimService, private router: Router,private authService: AuthService) {}
+  currentUser: User | null = null;
 
   ngOnInit(): void {
     this.fetchClaims();
+    this.currentUser = this.authService.getUser();
+
   }
 
+  isCustomer(): boolean {
+    return this.currentUser?.role === 'CUSTOMER';
+  }
+
+  isAgent(): boolean {
+    return this.currentUser?.role === 'AGENT';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
+  }
   fetchClaims(): void {
-    this.claimService.getAllClaims().subscribe(
+    this.currentUser = this.authService.getUser();
+  
+    if (!this.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const isCustomer = this.currentUser.role === 'CUSTOMER';
+  
+    // Si CUSTOMER => passer l'userId, sinon appeler sans userId (admin ou agent)
+    this.claimService.getAllClaims(isCustomer ? this.currentUser.id : undefined).subscribe(
       (data) => {
         this.claims = data;
-        this.filteredClaims = data;
+        this.filteredClaims = [...this.claims];
       },
       (error) => {
-        console.error(' Error fetching claims:', error);
+        console.error('Error fetching claims:', error);
       }
     );
   }
+  
+  
   toggleStatistics(): void {
     this.showStatistics = !this.showStatistics;
   }
@@ -57,7 +85,7 @@ export class ListClaimComponentFront implements OnInit {
       claim.claimReason.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) // Search by assessment date
+      new Date(claim.submissionDate).toISOString().includes(this.searchQuery)
     );
     this.page = 1; // Reset to page 1 after a search
   }
@@ -102,16 +130,30 @@ export class ListClaimComponentFront implements OnInit {
       console.error('Invalid claim ID');
       return;
     }
-
+  
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
     if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(id).subscribe(() => {
-        this.claims = this.claims.filter(claim => claim.idClaim !== id);
-        this.applySearch(); // Reapply search after deletion
-      }, (error) => {
-        console.error('Error deleting claim:', error);
-      });
+      // Appel à la méthode deleteClaim avec id, userId, et role
+      this.claimService.deleteClaim(id, userId, role).subscribe(
+        () => {
+          this.claims = this.claims.filter(claim => claim.idClaim !== id);
+          this.applySearch(); 
+        },
+        (error) => {
+          console.error('Error deleting claim:', error);
+        }
+      );
     }
   }
+  
 
   getTotalClaims(): number {
     return this.claims.length;
@@ -122,7 +164,16 @@ export class ListClaimComponentFront implements OnInit {
   }
 
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    this.claimService.getClaimById(idClaim, userId, role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
@@ -141,4 +192,5 @@ export class ListClaimComponentFront implements OnInit {
       }
     );
   }
+  
 }

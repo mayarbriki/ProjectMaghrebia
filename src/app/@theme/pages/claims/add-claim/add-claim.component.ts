@@ -4,6 +4,7 @@ import { Claim, StatusClaim } from '../../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AuthService, User } from 'src/app/auth.service'; 
 
 
 @Component({
@@ -22,6 +23,7 @@ export class AddClaimComponent implements OnInit {
     statusClaim: StatusClaim.PENDING, // Par défaut le statut est PENDING
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -31,11 +33,17 @@ export class AddClaimComponent implements OnInit {
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
   fileName: string = '';
-
-  constructor(private claimService: ClaimService, private router: Router) {}
+  currentUser: User | null = null;
+  constructor(private claimService: ClaimService,
+    private authService: AuthService,
+     private router: Router) {}
 
   ngOnInit(): void {}
 
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
+  }
+  
   checkClaimReason(): void {
     if (this.claim.claimReason !== 'Other') {
       this.temporaryOtherClaimReason = ''; 
@@ -54,6 +62,8 @@ export class AddClaimComponent implements OnInit {
 
   onSubmit(): void {
     const formData = new FormData();
+    formData.append("userId", this.claim.userId.toString()); 
+
 
     // Validation de la date de soumission
     const submissionDate = new Date(this.claim.submissionDate);
@@ -99,6 +109,7 @@ export class AddClaimComponent implements OnInit {
     formData.append("statusClaim", this.claim.statusClaim);
     formData.append("claimReason", this.claim.claimReason);
     formData.append("description", this.claim.description);
+    formData.append("userId", this.claim.userId.toString()); 
 
     // Ajouter les fichiers à formData
     this.selectedFiles.forEach((file, index) => {
@@ -108,7 +119,7 @@ export class AddClaimComponent implements OnInit {
     this.claimService.createClaim(formData).subscribe(response => {
       console.log('Claim created successfully', response);
       alert('Claim added successfully!');
-      this.router.navigate(['/claims']);
+      this.router.navigate(['/admin/claims']);
     }, error => {
       console.error('Error creating claim', error);
       alert('Failed to create claim.');
@@ -125,6 +136,7 @@ export class AddClaimComponent implements OnInit {
       statusClaim: StatusClaim.PENDING, // Réinitialisation du statut à PENDING
       claimReason: '',
       description: '',
+      userId: 0,
       supportingDocuments: [],
       assessment: null
     };

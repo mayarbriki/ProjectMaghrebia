@@ -36,6 +36,31 @@
       font-weight: 700;
     }
   
+    .form-group {
+      margin-bottom: 20px;
+  
+      input[type="number"] {
+        width: 97%;
+        padding: 12px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        font-size: 1em;
+        background-color: #f8f8f8;
+        transition: border 0.3s ease;
+  
+        &:focus {
+          border-color: #007bff;
+          background-color: #fff;
+        }
+      }
+  
+      .error-message {
+        color: #dc3545;
+        font-size: 0.9em;
+        margin-top: 5px;
+      }
+    }
+    
     form {
       background-color: #fff;
       padding: 25px;

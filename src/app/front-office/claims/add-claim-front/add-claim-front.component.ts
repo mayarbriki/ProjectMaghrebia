@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { AuthService } from 'src/app/auth.service'; 
 
 
 @Component({
@@ -21,9 +22,10 @@ export class AddClaimComponentFront implements OnInit {
     fullName: '',
     claimName: '',
     submissionDate: new Date(),
-    statusClaim: StatusClaim.PENDING, // Par défaut le statut est PENDING
+    statusClaim: StatusClaim.PENDING, 
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -33,11 +35,18 @@ export class AddClaimComponentFront implements OnInit {
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
   fileName: string = '';
-
-  constructor(private claimService: ClaimService, private router: Router) {}
-
-  ngOnInit(): void {}
-
+  currentUser: any;
+  constructor(
+    private claimService: ClaimService, 
+    private router: Router,
+    private authService: AuthService 
+  ) {}
+  ngOnInit(): void {
+    this.currentUser = this.authService.getUser();
+    if (this.currentUser) {
+      this.claim.userId = this.currentUser.id; 
+    }
+  }
   checkClaimReason(): void {
     if (this.claim.claimReason !== 'Other') {
       this.temporaryOtherClaimReason = ''; 
@@ -48,7 +57,7 @@ export class AddClaimComponentFront implements OnInit {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.selectedFiles = Array.from(input.files);
-      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; // Update file name
+      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; 
     }
   }
 
@@ -57,7 +66,6 @@ export class AddClaimComponentFront implements OnInit {
   onSubmit(): void {
     const formData = new FormData();
 
-    // Validation de la date de soumission
     const submissionDate = new Date(this.claim.submissionDate);
     if (!(submissionDate instanceof Date) || isNaN(submissionDate.getTime())) {
       console.error("Invalid submissionDate");
@@ -65,31 +73,26 @@ export class AddClaimComponentFront implements OnInit {
       return; 
     }
 
-    // Validation du nom complet
     if (!this.claim.fullName || this.claim.fullName.trim().length === 0) {
       alert("Full Name is required.");
       return;
     }
 
-    // Validation du nom de la réclamation
     if (!this.claim.claimName || this.claim.claimName.trim().length === 0) {
       alert("Claim Name is required.");
       return;
     }
 
-    // Validation de la raison de la réclamation
     if (!this.claim.claimReason) {
       alert("Claim Reason is required.");
       return;
     }
 
-    // Validation de la description
     if (!this.claim.description || this.claim.description.trim().length === 0) {
       alert("Claim Description is required.");
       return;
     }
 
-    // Si l'utilisateur a choisi 'Other' comme raison, vérifier la saisie de la raison personnalisée
     if (this.claim.claimReason === 'Other' && !this.temporaryOtherClaimReason) {
       alert("Please specify the other reason.");
       return;
@@ -101,8 +104,8 @@ export class AddClaimComponentFront implements OnInit {
     formData.append("statusClaim", this.claim.statusClaim);
     formData.append("claimReason", this.claim.claimReason);
     formData.append("description", this.claim.description);
+    formData.append("userId", this.claim.userId.toString()); 
 
-    // Ajouter les fichiers à formData
     this.selectedFiles.forEach((file, index) => {
       formData.append("supportingDocuments", file);
     });
@@ -124,9 +127,10 @@ export class AddClaimComponentFront implements OnInit {
       fullName: '',
       claimName: '',
       submissionDate: new Date(),
-      statusClaim: StatusClaim.PENDING, // Réinitialisation du statut à PENDING
+      statusClaim: StatusClaim.PENDING, 
       claimReason: '',
       description: '',
+      userId: 0,
       supportingDocuments: [],
       assessment: null
     };

@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Claim } from '../../../../models/claim.model';
 import { ClaimService } from 'src/app/claim.service';
+import { AuthService, User } from 'src/app/auth.service'; 
 
 @Component({
   selector: 'app-add-assessment',
@@ -30,8 +31,9 @@ export class AddAssessmentComponent implements OnInit {
   decisionOptions = Object.values(FinalDecision);
   selectedFiles: File[] = [];
   claims: Claim[] = [];
+  currentUser: User | null = null;
 
-  constructor(private assessmentService: AssessmentService, private router: Router,private claimService: ClaimService) {}
+  constructor(private assessmentService: AssessmentService, private router: Router,private claimService: ClaimService,private authService: AuthService) {}
 
   ngOnInit(): void {
     this.loadClaims(); // ✅ Récupérer les claims au démarrage
@@ -39,15 +41,22 @@ export class AddAssessmentComponent implements OnInit {
 
   // ✅ Récupérer les claims depuis l'API
   private loadClaims(): void {
-    this.claimService.getAllClaims().subscribe(
+   /*// const userId = this.authService.getCurrentUserId(); // assure-toi que cette méthode existe
+    if (!userId) {
+      console.error('User ID not found.');
+      return;
+    }
+  
+    this.claimService.getAllClaims(userId).subscribe(
       (data: Claim[]) => {
         this.claims = data;
       },
       (error: any) => {
         console.error('Erreur lors du chargement des claims', error);
       }
-    );
+    );*/
   }
+  
   
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

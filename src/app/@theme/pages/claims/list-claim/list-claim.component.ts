@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../../../claim.service';
-import { AssessmentService } from '../../../../assessment.service'; // Import du service d'évaluation
+import { AssessmentService } from '../../../../assessment.service';
 import { Claim,StatusClaim } from '../../../../models/claim.model';
 import { Assessment } from '../../../../models/assessment.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { AuthService, User } from 'src/app/auth.service'; 
 
 
 @Component({
@@ -22,14 +23,15 @@ export class ListClaimComponent implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'id';
   sortDirection: boolean = true; 
-  statusOptions = Object.values(StatusClaim); // Récupérer les valeurs de StatusClaim
-  // true for ascending, false for descending
+  statusOptions = Object.values(StatusClaim);
 
-// Define the list of possible claim statuses
 statusClaims = Object.values(StatusClaim);
+currentUser: User | null = null;
+
   constructor(
     private claimService: ClaimService, 
-    private assessmentService: AssessmentService, // Ajout du service d'évaluation
+    private authService: AuthService,
+    private assessmentService: AssessmentService, 
     private router: Router,
     private cdr: ChangeDetectorRef
 
@@ -37,30 +39,46 @@ statusClaims = Object.values(StatusClaim);
 
   ngOnInit(): void {
     this.fetchClaims();
+    this.currentUser = this.authService.getUser();
   }
 
   fetchClaims(): void {
-    this.claimService.getAllClaims().subscribe(
+    this.currentUser = this.authService.getUser();
+  
+    if (!this.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+      this.claimService.getAllClaims().subscribe(
       (data) => {
         this.claims = data;
-        this.filteredClaims = data;
+        this.filteredClaims = [...this.claims];
       },
       (error) => {
         console.error('Error fetching claims:', error);
       }
     );
   }
-
+  
   updatingClaims: Set<string> = new Set();
 
-  changeStatus(claim: Claim, selectedStatus: string) {
-    if (claim.statusClaim === selectedStatus) return; // rien à faire
-  
+  changeStatus(claim: Claim, selectedStatus: string): void {
+    if (claim.statusClaim === selectedStatus) return; // Rien à faire si le statut est déjà sélectionné
+    
     const confirmation = confirm('Are you sure you want to update the status of this claim?');
     if (!confirmation) return;
   
+    const user = this.authService.getUser();
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userId = user.id;
+    const role = user.role; 
+  
     this.updatingClaims.add(claim.idClaim);
-    this.claimService.updateClaimStatus(claim.idClaim, selectedStatus).subscribe(
+    this.claimService.updateClaimStatus(claim.idClaim, selectedStatus, userId, role).subscribe(
       (updatedClaim) => {
         claim.statusClaim = updatedClaim.statusClaim;
         this.updatingClaims.delete(claim.idClaim);
@@ -72,8 +90,7 @@ statusClaims = Object.values(StatusClaim);
       }
     );
   }
-  
-  
+ 
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>
       claim.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -81,7 +98,7 @@ statusClaims = Object.values(StatusClaim);
       claim.claimReason.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) // Search by assessment date
+      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) 
 
     );
   }
@@ -102,7 +119,7 @@ statusClaims = Object.values(StatusClaim);
 
   toggleSortDirection(): void {
     this.sortDirection = !this.sortDirection;
-    this.applySort(); // Reapply sorting after direction toggle
+    this.applySort();
   }
 
 
@@ -119,16 +136,28 @@ statusClaims = Object.values(StatusClaim);
       console.error('Invalid claim ID');
       return;
     }
-
-    if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(id).subscribe(() => {
-        this.claims = this.claims.filter(claim => claim.idClaim !== id);
-        this.applySearch();
-      }, (error) => {
-        console.error('Error deleting claim:', error);
-      });
+  
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      return;
     }
-  }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    if (confirm('Are you sure you want to delete this claim?')) {
+      this.claimService.deleteClaim(id, userId, role).subscribe(
+        () => {
+          this.claims = this.claims.filter(claim => claim.idClaim !== id);
+          this.applySearch(); 
+        },
+        (error) => {
+          console.error('Error deleting claim:', error);
+        }
+      );
+    }
+  }  
 
   navigateToAddClaim(): void {
     this.router.navigate(['admin/claims/AddClaim']);
@@ -136,11 +165,21 @@ statusClaims = Object.values(StatusClaim);
 
  
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      alert('User not authenticated. Please log in.');
+      return;
+    }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    this.claimService.getClaimById(idClaim, userId, role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
-          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]); 
+          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]);
         } else {
           alert('No assessment found for this claim.');
         }
@@ -154,7 +193,6 @@ statusClaims = Object.values(StatusClaim);
         }
       }
     );
-  }
-  
+  }  
   
 }

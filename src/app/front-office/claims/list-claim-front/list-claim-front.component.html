@@ -17,7 +17,14 @@
                 <option value="date">Sort by Date</option>
             </select>
 
-            <button class="btn btn-success" (click)="navigateToAddClaim()">Add Claim</button>
+            <!-- Bouton visible uniquement pour les CUSTOMERS -->
+<button 
+*ngIf="isCustomer()" 
+class="btn btn-success" 
+(click)="navigateToAddClaim()">
+Add Claim
+</button>
+
             <button class="btn btn-secondary" (click)="toggleStatistics()">Statistics</button>
         </div>
     </div>

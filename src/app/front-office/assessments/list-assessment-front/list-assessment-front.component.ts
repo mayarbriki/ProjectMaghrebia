@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
-import { AuthService } from 'src/app/auth.service';
+import { AuthService, User } from 'src/app/auth.service'; 
 
 @Component({
   selector: 'app-list-assessment-front',
@@ -28,9 +28,23 @@ export class ListAssessmentComponentFront implements OnInit {
     private authService: AuthService,
     private router: Router
   ) {}
+  currentUser: User | null = null;
 
   ngOnInit(): void {
     this.fetchAssessments();
+    this.currentUser = this.authService.getUser();
+  }
+
+  isCustomer(): boolean {
+    return this.currentUser?.role === 'CUSTOMER';
+  }
+
+  isAgent(): boolean {
+    return this.currentUser?.role === 'AGENT';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
   }
 
   fetchAssessments(): void {
@@ -115,6 +129,10 @@ export class ListAssessmentComponentFront implements OnInit {
   }
 
   navigateToAddAssessment(): void {
-    this.router.navigate(['admin/assessments/AddAssessment']);
+    this.router.navigate(['assessmentsFront/AddAssessment']);
+  }
+
+  goBack() : void {
+    this.router.navigate(['/claims']);
   }
 }

@@ -80,10 +80,6 @@ export class ViewAssessmentComponentFront implements OnInit {
     this.router.navigate(['/assessments']);
   }
 
-  navigateToAddAssessment(): void {
-    this.router.navigate(['/assessmentsFront/AddAssessment']);
-  }
-
   navigateToEditAssessment(): void {
     this.router.navigate([`/assessmentsFront/EditAssessment/${this.assessment.idAssessment}`]);
   }

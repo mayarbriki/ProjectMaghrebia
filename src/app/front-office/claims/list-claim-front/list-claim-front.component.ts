@@ -163,6 +163,10 @@ export class ListClaimComponentFront implements OnInit {
     this.router.navigate(['claimsFront/AddClaim']);
   }
 
+  navigateToAssessments() {
+    this.router.navigate(['/assessments']);
+  }
+  
   viewAssessment(idClaim: string): void {
     const user = this.authService.getUser(); 
     if (!user) {

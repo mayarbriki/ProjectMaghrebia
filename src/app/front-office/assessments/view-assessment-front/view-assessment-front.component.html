@@ -20,12 +20,23 @@
         </li>
       </ul>-->
     </div>
-    <div *ngIf="userRole === 'ADMIN' || userRole === 'AGENT'" class="action-buttons">
-      <button class="btn btn-success" (click)="navigateToAddAssessment()">Add Assessment</button>
-      <button class="btn btn-warning" (click)="navigateToEditAssessment()">Edit Assessment</button>
+
+    <div *ngIf="userRole === 'ADMIN' || userRole === 'AGENT'" class="action-buttons d-flex gap-2">
+      <button class="btn btn-warning btn-sm" (click)="navigateToEditAssessment()" title="Edit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+          <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+        </svg>
+      </button>
+    
+      <button class="btn btn-danger btn-sm" (click)="deleteAssessment()" title="Delete">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+          <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+        </svg>
+      </button>
     </div>
     
-
+  
   </div>
   <app-chatbot></app-chatbot> 
   <app-footer-front></app-footer-front>

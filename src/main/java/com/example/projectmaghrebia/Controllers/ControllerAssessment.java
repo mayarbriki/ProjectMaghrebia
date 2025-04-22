@@ -182,4 +182,14 @@ public class ControllerAssessment {
         }
     }
 
+    @GetMapping("/assessmentByUser")
+    public List<Assessment> getMyAssessments(@RequestParam("userId") Long userId, @RequestParam("role") String role) {
+        if (role.equals("ADMIN") || role.equals("AGENT")) {
+            return assessmentRepository.findAll(); // admin ou agent → tout voir
+        } else {
+            return assessmentRepository.findByClaimUserId(userId); // user → seulement ses assessments
+        }
+    }
+
+
 }

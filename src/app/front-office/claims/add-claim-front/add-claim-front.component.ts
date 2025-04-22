@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { AuthService } from 'src/app/auth.service'; 
 
@@ -14,7 +15,7 @@ import { AuthService } from 'src/app/auth.service';
   templateUrl: './add-claim-front.component.html',
   styleUrls: ['./add-claim-front.component.scss'],
   standalone: true, 
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent]
 })
 export class AddClaimComponentFront implements OnInit {
   claim: Claim = {

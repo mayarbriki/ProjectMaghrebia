@@ -1,0 +1,50 @@
+<div class="modify-assessment-container">
+<app-header-front></app-header-front>
+<!-- Back Button -->
+<button class="btn btn-light back-btn" (click)="goBack()">Back
+    <i class="fa fa-arrow-left"></i> 
+  </button>
+  
+  
+  <div class="modify-assessment-container">
+      <h3>Modify Assessment</h3>
+      <form (ngSubmit)="onUpdate()" #modifyAssessmentForm="ngForm" class="p-4 border rounded shadow">
+    
+        <!-- Findings -->
+        <div class="form-group">
+          <label for="findings" class="font-weight-bold">Findings</label>
+          <textarea id="findings" class="form-control" required [(ngModel)]="assessment.findings" name="findings"></textarea>
+        </div>
+    
+        <!-- Status Assessment -->
+        <div class="form-group">
+          <label for="statusAssessment" class="font-weight-bold">Status Assessment</label>
+          <select id="statusAssessment" class="form-control" required [(ngModel)]="assessment.statusAssessment" name="statusAssessment">
+            <option *ngFor="let status of statusAssessments" [value]="status">{{ status }}</option>
+          </select>
+        </div>
+    
+        <!-- Final Decision -->
+        <div class="form-group">
+          <label for="finalDecision" class="font-weight-bold">Final Decision</label>
+          <select id="finalDecision" class="form-control" required [(ngModel)]="assessment.finalDecision" name="finalDecision">
+            <option *ngFor="let decision of finalDecisions" [value]="decision">{{ decision }}</option>
+          </select>
+        </div>
+    
+        <!-- Assessment Documents -->
+        <div class="form-group">
+          <label class="font-weight-bold">Assessment Documents</label>
+          <input type="file" id="file-upload" class="form-control file-input" multiple (change)="onFileSelected($event)">
+        </div>
+    
+        <!-- Buttons -->
+        <div class="button-group">
+          <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!modifyAssessmentForm.form.valid">Update Assessment</button>
+          <button type="button" class="btn btn-secondary mt-3 w-100" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    </div>
+</div>
+<app-chatbot></app-chatbot> 
+<app-footer-front></app-footer-front>

@@ -6,6 +6,7 @@ import { AssessmentService } from '../../../assessment.service';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { AuthService } from 'src/app/auth.service';
 
 @Component({
@@ -13,7 +14,7 @@ import { AuthService } from 'src/app/auth.service';
   templateUrl: './list-assessment-front.component.html',
   styleUrls: ['./list-assessment-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent]
 })
 export class ListAssessmentComponentFront implements OnInit {
   assessments: Assessment[] = [];
@@ -42,15 +43,31 @@ export class ListAssessmentComponentFront implements OnInit {
       return;
     }
 
-    this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
-      (data) => {
-        this.assessments = data;
-        this.filteredAssessments = data;
-      },
-      (error) => {
-        console.error('Error fetching assessments:', error);
-      }
-    );
+    if (role === 'ADMIN' || role === 'AGENT') {
+      // ADMIN and AGENT can view all assessments
+      this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
+        (data) => {
+          this.assessments = data;
+          this.filteredAssessments = data;
+        },
+        (error) => {
+          console.error('Error fetching assessments:', error);
+        }
+      );
+    } else if (role === 'CUSTOMER') {
+      // CUSTOMER can only view their own assessments
+      this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
+        (data) => {
+          this.assessments = data;
+          this.filteredAssessments = data;
+        },
+        (error) => {
+          console.error('Error fetching customer assessments:', error);
+        }
+      );
+    } else {
+      console.error('Role is not recognized.');
+    }
   }
 
   applySearch(): void {

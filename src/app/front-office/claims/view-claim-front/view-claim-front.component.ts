@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx'; // Importation de la bibliothèque XLSX
 import {AuthService} from 'src/app/auth.service';
@@ -14,7 +15,7 @@ import {AuthService} from 'src/app/auth.service';
   templateUrl: './view-claim-front.component.html',
   styleUrls: ['./view-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent,ChatbotComponent]
 })
 export class ViewClaimComponentFront implements OnInit {
   claim: Claim = {

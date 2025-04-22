@@ -21,7 +21,8 @@ import { BlogsComponent } from '../blogs/blogs.component';
 import { ProductDisplayComponent } from 'src/app/product-display/product-display.component';
 import { BlogDetailComponent } from 'src/app/blog-detail/blog-detail.component';
 import { ListAssessmentComponent } from 'src/app/@theme/pages/assessments/list-assessment/list-assessment.component';
-
+import { AddAssessmentFrontComponent } from '../assessments/add-assessment-front/add-assessment-front.component';
+import { ModifyAssessmentFrontComponent } from '../assessments/modify-assessment-front/modify-assessment-front.component';
 @Component({
   selector: 'app-all-template-front',
   templateUrl: './all-template-front.component.html',
@@ -30,7 +31,7 @@ import { ListAssessmentComponent } from 'src/app/@theme/pages/assessments/list-a
   imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, 
             FooterFrontComponent, SponsorsComponent, 
             ListClaimComponentFront, AddClaimComponentFront, ModifyClaimComponentFront,ViewClaimComponentFront,
-            ListAssessmentComponentFront, ViewAssessmentComponentFront,
+            ListAssessmentComponentFront, ViewAssessmentComponentFront,AddAssessmentFrontComponent, ModifyAssessmentFrontComponent,
             ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent, BlogDetailComponent]
 })
 export class AllTemplateFrontComponent {

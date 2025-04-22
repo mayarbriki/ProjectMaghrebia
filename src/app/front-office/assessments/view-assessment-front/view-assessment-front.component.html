@@ -20,8 +20,12 @@
         </li>
       </ul>-->
     </div>
-  
-   
+    <div *ngIf="userRole === 'ADMIN' || userRole === 'AGENT'" class="action-buttons">
+      <button class="btn btn-success" (click)="navigateToAddAssessment()">Add Assessment</button>
+      <button class="btn btn-warning" (click)="navigateToEditAssessment()">Edit Assessment</button>
+    </div>
+    
+
   </div>
-  
+  <app-chatbot></app-chatbot> 
   <app-footer-front></app-footer-front>

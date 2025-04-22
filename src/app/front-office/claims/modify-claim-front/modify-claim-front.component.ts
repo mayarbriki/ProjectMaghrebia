@@ -4,6 +4,7 @@ import { ClaimService } from '../../../claim.service';
 import { Claim, StatusClaim } from '../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { AuthService } from 'src/app/auth.service';
@@ -12,7 +13,7 @@ import { AuthService } from 'src/app/auth.service';
   templateUrl: './modify-claim-front.component.html',
   styleUrls: ['./modify-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent,ChatbotComponent,ChatbotComponent]
 })
 export class ModifyClaimComponentFront implements OnInit {
   claim: Claim = {

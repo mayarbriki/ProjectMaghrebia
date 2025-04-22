@@ -7,13 +7,15 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
+import { AuthService, User } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-view-assessment-front',
   templateUrl: './view-assessment-front.component.html',
   styleUrls: ['./view-assessment-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent]
 })
 export class ViewAssessmentComponentFront implements OnInit {
   assessment: Assessment = {
@@ -29,14 +31,24 @@ export class ViewAssessmentComponentFront implements OnInit {
 
   statusAssessments = Object.values(StatusAssessment);
   finalDecisions = Object.values(FinalDecision);
+  userRole: string = '';
+  currentUser: User | null = null;
 
   constructor(
     private assessmentService: AssessmentService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.authService.user$.subscribe((user) => {
+      if (user) {
+        this.userRole = user.role;
+        this.currentUser = user;
+      }
+    });
+
     const assessmentId = this.route.snapshot.paramMap.get('id');
     if (assessmentId) {
       this.assessmentService.getAssessmentById(assessmentId).subscribe(
@@ -50,15 +62,12 @@ export class ViewAssessmentComponentFront implements OnInit {
     }
   }
 
-  editAssessment(): void {
-    this.router.navigate([`/admin/assessments/EditAssessment/${this.assessment.idAssessment}`]);
-  }
 
   deleteAssessment(): void {
     if (confirm('Are you sure you want to delete this assessment?')) {
       this.assessmentService.deleteAssessment(this.assessment.idAssessment).subscribe(
         () => {
-          this.router.navigate(['/admin/assessments']);
+          this.router.navigate(['/assessments']);
         },
         (error) => {
           console.error('Error deleting assessment:', error);
@@ -68,6 +77,15 @@ export class ViewAssessmentComponentFront implements OnInit {
   }
 
   goBack() : void {
-    this.router.navigate(['/claims']);
+    this.router.navigate(['/assessments']);
   }
+
+  navigateToAddAssessment(): void {
+    this.router.navigate(['/assessmentsFront/AddAssessment']);
+  }
+
+  navigateToEditAssessment(): void {
+    this.router.navigate([`/assessmentsFront/EditAssessment/${this.assessment.idAssessment}`]);
+  }
+
 }

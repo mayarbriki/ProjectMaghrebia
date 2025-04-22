@@ -1,14 +1,13 @@
-<div class="modify-assessment-container">
 <app-header-front></app-header-front>
-<button class="back" (click)="goBack()">
-  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-    <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
-  </svg>
-</button>
-  
-  
-  <div class="modify-assessment-container">
-      <h3>Modify Assessment</h3>
+<div class="modify-assessment-container">
+  <div class="top-bar">
+    <button class="back" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+        <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+      </svg>
+    </button>
+    <h3>Modify Assessment</h3>
+  </div>
       <form (ngSubmit)="onUpdate()" #modifyAssessmentForm="ngForm" class="p-4 border rounded shadow">
     
         <!-- Findings -->
@@ -46,6 +45,6 @@
         </div>
       </form>
     </div>
-</div>
-<app-chatbot></app-chatbot> 
-<app-footer-front></app-footer-front>
+
+    <app-chatbot></app-chatbot> 
+    <app-footer-front></app-footer-front>

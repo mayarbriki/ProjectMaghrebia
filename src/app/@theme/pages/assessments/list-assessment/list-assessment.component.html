@@ -28,6 +28,7 @@
       <thead>
           <tr>
               <th>ID</th>
+              <th>Selected Claim</th>
               <th>Assessment Date</th>
               <th>Status</th>
               <th>Final Decision</th>
@@ -37,6 +38,7 @@
       <tbody>
           <tr *ngFor="let assessment of filteredAssessments; let i = index">
               <td>{{ i + 1 }}</td>
+              <td>{{ assessment.claim.claimName || 'N/A' }}</td>
               <td>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</td>
               <td>
                 <select

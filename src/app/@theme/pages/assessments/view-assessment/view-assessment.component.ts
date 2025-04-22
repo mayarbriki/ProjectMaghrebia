@@ -20,7 +20,7 @@ export class ViewAssessmentComponent implements OnInit {
     findings: '',
     assessmentDocuments: [],
     statusAssessment: StatusAssessment.PENDING,
-    finalDecision: FinalDecision.REJECTED,
+    finalDecision: FinalDecision.IN_REVIEW,
     submissionDate: new Date(),
     claim: {} as Claim 
   };

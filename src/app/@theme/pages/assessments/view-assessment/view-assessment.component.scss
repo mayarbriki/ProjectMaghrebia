@@ -15,6 +15,23 @@
     font-size: 1.8em;
     font-weight: 700;
   }
+  button.back {
+    background: none; /* No background color */
+    border: none; /* Remove the default border */
+    padding: 0; /* No padding */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start; /* Align the icons to the left */
+  }
+  
+  button.back svg {
+    width: 24px; /* Adjust size of the icon */
+    height: 24px;
+    fill: currentColor; /* Use the current text color for the icon */
+    color: #34495e; /* Dark color for the icon */
+    transition: color 0.3s ease;
+  }
   
   .assessment-detail {
     background-color: #fff;

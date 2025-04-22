@@ -5,8 +5,8 @@
       <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
     </svg>
   </button>
-    <h3>Assessment Details</h3>
-    <div class="assessment-detail">
+  <h3>Assessment for {{ assessment.claim.claimName }}</h3>
+      <div class="assessment-detail">
       <p><strong>Assessment Date:</strong> {{ assessment.assessmentDate | date }}</p>
       <p><strong>Findings:</strong> {{ assessment.findings }}</p>
       <p><strong>Status:</strong> {{ assessment.statusAssessment }}</p>
@@ -36,7 +36,6 @@
       </button>
     </div>
     
-  
   </div>
   <app-chatbot></app-chatbot> 
   <app-footer-front></app-footer-front>

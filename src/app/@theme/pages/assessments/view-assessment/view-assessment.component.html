@@ -1,10 +1,10 @@
-<!-- Back Button -->
-<button class="btn btn-light back-btn" (click)="goBack()">Back
-  <i class="fa fa-arrow-left"></i> 
-</button>
-
 <div *ngIf="assessment" class="view-assessment-container">
-    <h3>Assessment Details</h3>
+  <button class="back" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+  </button>
+  <h3>Assessment for {{ assessment.claim.claimName }}</h3>
     <div class="assessment-detail">
       <p><strong>Assessment ID:</strong> {{ assessment.idAssessment }}</p>
       <p><strong>Assessment Date:</strong> {{ assessment.assessmentDate | date }}</p>
@@ -23,8 +23,18 @@
   
     <!-- Buttons for Edit and Delete -->
     <div class="action-buttons">
-      <button class="btn btn-warning" (click)="editAssessment()">Edit</button>
-      <button class="btn btn-danger" (click)="deleteAssessment()">Delete</button>
+      <button class="btn btn-warning btn-sm" (click)="editAssessment()" title="Edit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+          <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+        </svg>
+      </button>
+    
+      <button class="btn btn-danger btn-sm" (click)="deleteAssessment()" title="Delete">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+          <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+        </svg>
+      </button>
     </div>
   </div>
   

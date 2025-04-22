@@ -1,6 +1,6 @@
 <div class="list-assessment-container">
   <div class="header-container">
-      <h3>List of Assessments</h3>
+      <h3>List Assessments</h3>
       <div class="header-actions">
           <!-- Search -->
           <input 
@@ -20,7 +20,6 @@
               {{ sortDirection ? 'Sort Descending' : 'Sort Ascending' }}
           </button>
 
-          <!-- Add Assessment Button -->
           <button class="btn btn-success" (click)="navigateToAddAssessment()">Add Assessment</button>
       </div>
   </div>
@@ -61,7 +60,6 @@
               
               <td class="actions">
                   <div class="action-buttons">
-                      <!-- Bouton Voir -->
                       <button class="btn btn-primary btn-sm" (click)="viewAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                               <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
@@ -69,7 +67,6 @@
                           </svg>
                       </button>
 
-                      <!-- Bouton Modifier -->
                       <button class="btn btn-warning btn-sm" (click)="editAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                               <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
@@ -77,7 +74,6 @@
                           </svg>
                       </button>
 
-                      <!-- Bouton Supprimer -->
                       <button class="btn btn-danger btn-sm" (click)="deleteAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                               <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>

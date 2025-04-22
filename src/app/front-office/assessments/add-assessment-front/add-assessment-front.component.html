@@ -20,7 +20,6 @@
             </select>
         </div>
         
-
         <!-- Assessment Date -->
         <div class="form-group">
             <label for="assessmentDate" class="font-weight-bold">Assessment Date</label>
@@ -31,22 +30,6 @@
         <div class="form-group">
             <label for="findings" class="font-weight-bold">Findings</label>
             <textarea id="findings" class="form-control" required [(ngModel)]="assessment.findings" name="findings"></textarea>
-        </div>
-
-        <!-- Status Assessment -->
-        <div class="form-group">
-            <label for="statusAssessment" class="font-weight-bold">Status Assessment</label>
-            <select id="statusAssessment" class="form-control" required [(ngModel)]="assessment.statusAssessment" name="statusAssessment">
-                <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-            </select>
-        </div>
-
-        <!-- Final Decision -->
-        <div class="form-group">
-            <label for="finalDecision" class="font-weight-bold">Final Decision</label>
-            <select id="finalDecision" class="form-control" required [(ngModel)]="assessment.finalDecision" name="finalDecision">
-                <option *ngFor="let decision of decisionOptions" [value]="decision">{{ decision }}</option>
-            </select>
         </div>
 
         <!-- Submission Date -->

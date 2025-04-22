@@ -22,7 +22,7 @@ export class AddAssessmentComponent implements OnInit {
     findings: '',
     assessmentDocuments: [],
     statusAssessment: StatusAssessment.PENDING,
-    finalDecision: FinalDecision.APPROVED,
+    finalDecision: FinalDecision.IN_REVIEW,
     submissionDate: new Date(),
     claim: {} as Claim 
   };

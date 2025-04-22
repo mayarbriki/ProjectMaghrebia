@@ -102,7 +102,7 @@ export class ListAssessmentComponent implements OnInit {
   }
 
   statusOptions: string[] = ['PENDING', 'COMPLETED', 'REJECTED'];
-  decisionOptions: string[] = ['APPROVED', 'REJECTED'];
+  decisionOptions: string[] = ['IN_REVIEW','APPROVED', 'REJECTED'];
   updatingAssessments: Set<string> = new Set();
   changeStatus(assessment: Assessment, selectedStatus: string) {
     if (assessment.statusAssessment === selectedStatus) return;

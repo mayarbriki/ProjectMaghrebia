@@ -20,7 +20,7 @@ export class ModifyAssessmentComponent implements OnInit {
     findings: '',
     assessmentDocuments: [],
     statusAssessment: StatusAssessment.PENDING,
-    finalDecision: FinalDecision.REJECTED,
+    finalDecision: FinalDecision.IN_REVIEW,
     submissionDate: new Date(),
     claim: { idClaim: '', fullName: '', claimName: '', submissionDate: new Date(), statusClaim: StatusClaim.PENDING, claimReason: '', description: '',userId:0, supportingDocuments: [], assessment: null }
   };

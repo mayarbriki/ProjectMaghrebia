@@ -25,7 +25,7 @@ export class AddAssessmentFrontComponent implements OnInit {
     findings: '',
     assessmentDocuments: [],
     statusAssessment: StatusAssessment.PENDING,
-    finalDecision: FinalDecision.APPROVED,
+    finalDecision: FinalDecision.IN_REVIEW,
     submissionDate: new Date(),
     claim: {} as Claim
   };
@@ -35,6 +35,7 @@ export class AddAssessmentFrontComponent implements OnInit {
   selectedFiles: File[] = [];
   claims: Claim[] = [];
   currentUser: User | null = null;
+  selectedClaimName: string = '';
 
   constructor(
     private assessmentService: AssessmentService,

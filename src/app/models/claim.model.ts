@@ -24,10 +24,9 @@ export interface Claim {
     id: number;
     username: string;
     email: string;
-    accountBalance?: number;  // The ? makes this property optional
+    accountBalance?: number; 
     phoneNumber?: string;
     address?: string;
     role : 'ADMIN' | 'CUSTOMER' | 'AGENT';
     image?: string;
-    // Add any other properties your user object might have
   }

@@ -24,7 +24,7 @@ export class ListClaimComponentFront implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'id';
   page: number = 1; // Variable pour la page actuelle
-  pageSize: number = 3; // Nombre d'éléments par page
+  pageSize: number = 6; // Nombre d'éléments par page
   showStatistics: boolean = false;
 
   constructor(private claimService: ClaimService, private router: Router,private authService: AuthService) {}

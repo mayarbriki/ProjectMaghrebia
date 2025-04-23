@@ -8,13 +8,14 @@ import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-f
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { AuthService, User } from 'src/app/auth.service'; 
+import { NgxPaginationModule } from 'ngx-pagination';
 
 @Component({
   selector: 'app-list-assessment-front',
   templateUrl: './list-assessment-front.component.html',
   styleUrls: ['./list-assessment-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent]
+  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent,NgxPaginationModule]
 })
 export class ListAssessmentComponentFront implements OnInit {
   assessments: Assessment[] = [];
@@ -22,7 +23,8 @@ export class ListAssessmentComponentFront implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'assessmentDate'; // Default sorting by date
   sortDirection: boolean = true; // true for ascending, false for descending
-
+  page: number = 1; // Variable pour la page actuelle
+  pageSize: number = 4; // Nombre d'éléments par page
   constructor(
     private assessmentService: AssessmentService,
     private authService: AuthService,
@@ -85,13 +87,15 @@ export class ListAssessmentComponentFront implements OnInit {
   }
 
   applySearch(): void {
+    const query = this.searchQuery.toLowerCase();
     this.filteredAssessments = this.assessments.filter(assessment =>
-      assessment.idAssessment.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment ID
-      new Date(assessment.assessmentDate).toISOString().includes(this.searchQuery) // Search by assessment date
+      assessment.idAssessment.toLowerCase().includes(query) ||
+      new Date(assessment.assessmentDate).toISOString().includes(query) ||
+      (assessment.claim?.claimName?.toLowerCase().includes(query) ?? false)
     );
+        this.page = 1; // Reset to page 1 after a search
   }
   
-
   applySort(): void {
     if (this.selectedSort === 'assessmentDate') {
       this.filteredAssessments.sort((a, b) => {

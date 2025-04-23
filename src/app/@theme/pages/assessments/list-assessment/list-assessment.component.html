@@ -15,9 +15,8 @@
               <option value="assessmentDate">Sort by Date</option>
           </select>
 
-          <!-- Sort Direction Toggle -->
-          <button class="btn btn-info" (click)="toggleSortDirection()">
-              {{ sortDirection ? 'Sort Descending' : 'Sort Ascending' }}
+          <button class="btn-info" (click)="toggleSortDirection()">
+            {{ sortDirection ? '↓ Desc' : '↑ Asc' }}
           </button>
 
           <button class="btn btn-success" (click)="navigateToAddAssessment()">Add Assessment</button>

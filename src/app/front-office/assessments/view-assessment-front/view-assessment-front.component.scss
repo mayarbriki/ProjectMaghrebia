@@ -16,7 +16,50 @@
   gap: 15px;
   margin: 20px 0;
 }
+.claim-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 20px;
 
+  button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 1rem;
+    font-weight: 500;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+
+    svg {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .btn-warning {
+    background-color: #f39c12;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #e67e22;
+      transform: scale(1.05);
+    }
+  }
+
+  .btn-danger {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+
+    &:hover {
+      background-color: #c0392b;
+      transform: scale(1.05);
+    }
+  }
+}
 .btn-success {
   background-color: #28a745;
   color: white;

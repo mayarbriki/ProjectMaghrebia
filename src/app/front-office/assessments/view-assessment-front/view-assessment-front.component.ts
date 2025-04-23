@@ -9,6 +9,7 @@ import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-f
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { AuthService, User } from 'src/app/auth.service';
+import { jsPDF } from 'jspdf';
 
 @Component({
   selector: 'app-view-assessment-front',
@@ -82,6 +83,79 @@ export class ViewAssessmentComponentFront implements OnInit {
 
   navigateToEditAssessment(): void {
     this.router.navigate([`/assessmentsFront/EditAssessment/${this.assessment.idAssessment}`]);
+  }
+
+  downloadPDF(): void {
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+  
+    const logoImg = new Image();
+    logoImg.src = 'assets/FrontOffice/img/maghrebia (2).png';
+  
+    logoImg.onload = () => {
+      doc.addImage(logoImg, 'PNG', 20, 10, 50, 25);
+  
+      const title = 'Final Assessment Document';
+      doc.setTextColor(0, 102, 204);
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      const titleWidth = doc.getTextWidth(title);
+      doc.text(title, (pageWidth - titleWidth) / 2, 45);
+  
+      const boxX = 15;
+      const boxY = 55;
+      const boxWidth = pageWidth - 30;
+      const boxHeight = 90;
+      doc.setDrawColor(180);
+      doc.setLineWidth(0.5);
+      doc.rect(boxX, boxY, boxWidth, boxHeight);
+  
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(0, 0, 0);
+      doc.setFontSize(12);
+      let y = boxY + 12;
+      const lineHeight = 10;
+  
+      const drawLabelValue = (label: string, value: string | Date) => {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, boxX + 5, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`${value}`, boxX + 60, y);
+        y += lineHeight;
+      };
+  
+      drawLabelValue('Claim Name', this.assessment.claim?.claimName || 'N/A');
+      drawLabelValue('Assessment Date', new Date(this.assessment.assessmentDate).toLocaleDateString());
+      drawLabelValue('Findings', this.assessment.findings || 'N/A');
+      drawLabelValue('Status', this.assessment.statusAssessment);
+      drawLabelValue('Final Decision', this.assessment.finalDecision);
+      drawLabelValue('Submission Date', new Date(this.assessment.submissionDate).toLocaleDateString());
+  
+      const thankYouY = boxY + boxHeight + 20;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(11);
+      const line1 = 'Thank you for trusting Maghrebia Insurance.';
+      const line2 = 'We remain at your disposal for any further information.';
+      const line1Width = doc.getTextWidth(line1);
+      const line2Width = doc.getTextWidth(line2);
+      doc.text(line1, (pageWidth - line1Width) / 2, thankYouY);
+      doc.text(line2, (pageWidth - line2Width) / 2, thankYouY + 10);
+  
+      const contactY = 270;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100);
+      doc.text(
+        'Maghrebia Insurance — 64, rue de Palestine, 1002 / 24, Rue du Royaume d\'Arabie Saoudite, Tunis',
+        boxX,
+        contactY
+      );
+      doc.text('Phone: 00 216 71 788 800 | Fax: 00 216 71 788 334', boxX, contactY + 5);
+      doc.text('Email: relation.client@maghrebia.com.tn', boxX, contactY + 10);
+  
+      const fileName = `assessment_${this.assessment.claim?.fullName || 'document'}.pdf`;
+      doc.save(fileName);
+    };
   }
 
 }

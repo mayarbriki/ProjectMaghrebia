@@ -6,8 +6,22 @@
     </svg>
   </button>
   
-    <h3>Claim Details</h3>
+    <h3>Claim Overview</h3>
     <div class="claim-detail">
+      <div class="claim-actions">
+      <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)" title="Edit">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+          <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+          <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+        </svg>
+      </button>
+      
+      <button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)" title="Delete">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
+          <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+        </svg>
+      </button>
+      </div>
       <p><strong>Full Name:</strong> {{ claim.fullName }}</p>
       <p><strong>Claim Name:</strong> {{ claim.claimName }}</p>
       <p><strong>Submission Date:</strong> {{ claim.submissionDate | date }}</p>
@@ -33,17 +47,6 @@
     
 <!-- Buttons for Edit and Delete -->
 <div class="action-buttons">
-  <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)"> 
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-        <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
-        <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
-    </svg>Update
-</button>
-<button class="btn btn-danger btn-sm" (click)="deleteClaim(claim.idClaim)">
-  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
-      <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
-  </svg>Delete
-</button>
     <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">View Assessment</button>
     <button class="btn btn-primary" (click)="downloadPDF()">Download PDF</button>
     <button class="btn btn-secondary" (click)="downloadExcel()">Download Excel</button>

@@ -5,12 +5,14 @@ import { Assessment } from '../../../../models/assessment.model';
 import { AssessmentService } from '../../../../assessment.service';
 import { CommonModule } from '@angular/common';
 import {AuthService} from "../../../../auth.service";
+import { NgxPaginationModule } from 'ngx-pagination';
+
 @Component({
   selector: 'app-list-assessment',
   templateUrl: './list-assessment.component.html',
   styleUrls: ['./list-assessment.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule, NgxPaginationModule]
 })
 export class ListAssessmentComponent implements OnInit {
   assessments: Assessment[] = [];
@@ -18,7 +20,8 @@ export class ListAssessmentComponent implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'assessmentDate'; // Default sorting by date
   sortDirection: boolean = true; // true for ascending, false for descending
-
+  page: number = 1; // Variable pour la page actuelle
+  pageSize: number = 6; // Nombre d'éléments par page
   
   constructor(
     private assessmentService: AssessmentService,
@@ -58,6 +61,7 @@ export class ListAssessmentComponent implements OnInit {
       assessment.finalDecision.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment reason
       new Date(assessment.assessmentDate).toISOString().includes(this.searchQuery) // Search by assessment date
     );
+    this.page = 1; // Reset to page 1 after a search
   }
   
 

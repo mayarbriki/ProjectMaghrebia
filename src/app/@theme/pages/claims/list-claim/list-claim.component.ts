@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService, User } from 'src/app/auth.service'; 
+import { NgxPaginationModule } from 'ngx-pagination';
 
 
 @Component({
@@ -15,7 +16,7 @@ import { AuthService, User } from 'src/app/auth.service';
   templateUrl: './list-claim.component.html',
   styleUrls: ['./list-claim.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,NgxPaginationModule]
 })
 export class ListClaimComponent implements OnInit {
   claims: Claim[] = [];
@@ -24,6 +25,8 @@ export class ListClaimComponent implements OnInit {
   selectedSort: string = 'id';
   sortDirection: boolean = true; 
   statusOptions = Object.values(StatusClaim);
+  page: number = 1; // Variable pour la page actuelle
+  pageSize: number = 6; // Nombre d'éléments par page
 
 statusClaims = Object.values(StatusClaim);
 currentUser: User | null = null;
@@ -99,8 +102,8 @@ currentUser: User | null = null;
       claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       new Date(claim.submissionDate).toISOString().includes(this.searchQuery) 
-
     );
+    this.page = 1; // Reset to page 1 after a search
   }
  
 

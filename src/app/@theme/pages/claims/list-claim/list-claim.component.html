@@ -1,6 +1,6 @@
 <div class="list-claim-container">
     <div class="header-container">
-        <h3>List of Claims</h3>
+        <h3>Claims List</h3>
         <div class="header-actions">
             <!-- Recherche avancée -->
             <input 
@@ -35,7 +35,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let claim of filteredClaims; let i = index">
+            <tr *ngFor="let claim of filteredClaims | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
                 <td>{{ i + 1 }}</td>
                 <td>{{ claim.fullName }}</td>
                 <td>{{ claim.claimName }}</td>
@@ -74,4 +74,8 @@
             </tr>
         </tbody>
     </table>
+    
+    <div class="pagination-container">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
 </div>

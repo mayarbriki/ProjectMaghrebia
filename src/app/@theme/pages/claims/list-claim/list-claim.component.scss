@@ -52,6 +52,12 @@ td select {
     }
 }
 
+.pagination-container {
+    display: flex;
+    justify-content: center;  /* Centre horizontalement */
+    margin-top: 20px;         /* Espacement entre la grille et la pagination */
+  }
+  
   .header-container {
       display: flex;
       flex-direction: column; 

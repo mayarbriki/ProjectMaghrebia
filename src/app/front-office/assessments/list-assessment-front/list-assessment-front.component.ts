@@ -130,15 +130,31 @@ export class ListAssessmentComponentFront implements OnInit {
   }
 
   deleteAssessment(id: string): void {
-    if (confirm('Are you sure you want to delete this assessment?')) {
-      this.assessmentService.deleteAssessment(id).subscribe(() => {
-        this.assessments = this.assessments.filter(assessment => assessment.idAssessment !== id);
-        this.applySearch(); // Reapply search after deletion
-      }, (error) => {
-        console.error('Error deleting assessment:', error);
-      });
+    const userId = this.currentUser?.id;
+    const role = this.currentUser?.role;
+  
+    // Vérifier que l'utilisateur est authentifié et a le droit de supprimer
+    if (userId && role && (this.isAdmin() || this.isAgent())) {
+      if (confirm('Are you sure you want to delete this assessment?')) {
+        this.assessmentService.deleteAssessment(id, userId, role).subscribe(
+          () => {
+            // Supprimer l'évaluation de la liste locale après la suppression
+            this.assessments = this.assessments.filter(assessment => assessment.idAssessment !== id);
+            this.filteredAssessments = [...this.assessments]; // Mise à jour de la liste filtrée
+  
+            // Recharger les évaluations à partir du serveur pour s'assurer que les données sont actualisées
+            this.fetchAssessments(); // Cela peut être nécessaire si les données viennent du backend
+          },
+          (error) => {
+            console.error('Error deleting assessment:', error);
+          }
+        );
+      }
+    } else {
+      alert('You do not have permission to delete this assessment.');
     }
   }
+  
 
   navigateToAddAssessment(): void {
     this.router.navigate(['assessmentsFront/AddAssessment']);

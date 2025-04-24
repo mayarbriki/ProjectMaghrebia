@@ -78,4 +78,61 @@
     <div class="pagination-container">
         <pagination-controls (pageChange)="page = $event"></pagination-controls>
     </div>
+
+    <div class="stats-charts-container">
+        <h4>Claim Statistics</h4>
+      
+        <div class="total-claims-container">
+          <h4>Total Claims: {{ totalClaims }}</h4>
+        </div>
+      
+        <p class="chart-description">Below are the pie charts showing the status and reason distribution. The bar chart shows claims per day.</p>
+      
+        <div class="charts-grid">
+          <!-- Pie chart for status distribution -->
+          <div class="chart-container">
+            <ngx-charts-pie-chart
+              [view]="[300, 300]"
+              [scheme]="colorScheme"
+              [results]="statusChartData"
+              [legend]="true"
+              [doughnut]="true"
+              [labels]="true">
+            </ngx-charts-pie-chart>
+            <p class="chart-label">Status Distribution</p>
+          </div>
+      
+          <!-- Pie chart for reason distribution -->
+          <div class="chart-container">
+            <ngx-charts-pie-chart
+              [view]="[300, 300]"
+              [scheme]="colorScheme2"
+              [results]="reasonChartData"
+              [legend]="true"
+              [doughnut]="true"
+              [labels]="true">
+            </ngx-charts-pie-chart>
+            <p class="chart-label">Reason Distribution</p>
+          </div>
+      
+          <!-- Bar chart for claims by date -->
+          <div class="chart-container">
+            <ngx-charts-bar-vertical
+              [view]="[600, 300]"
+              [scheme]="colorScheme"
+              [results]="dailyChartData"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Date"
+              yAxisLabel="Claims">
+            </ngx-charts-bar-vertical>
+            <p class="chart-label">Claims by Date</p>
+          </div>
+        </div>
+      </div>
+      
 </div>

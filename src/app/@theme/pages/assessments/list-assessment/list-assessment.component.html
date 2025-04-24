@@ -89,4 +89,59 @@
   <div class="pagination-container">
     <pagination-controls (pageChange)="page = $event"></pagination-controls>
 </div>
+
+
+<div class="stats-charts-container">
+    <h4>Assessment Statistics</h4>
+    <div class="total-assessments-container">
+        <h4>Total Assessments: 
+          <span [ngClass]="{ 'updated': totalAssessments !== previousTotalAssessments }">
+            {{ totalAssessments }}
+          </span>
+        </h4>
+      </div>
+      
+    <p class="chart-description">Below are the pie charts showing the status and final decision distribution. The bar chart shows assessments per day.</p>
+    <div class="charts-grid">
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [view]="[300, 300]"
+          [scheme]="colorScheme"
+          [results]="statusChartData"
+          [legend]="true"
+          [doughnut]="true"
+          [labels]="true"
+        ></ngx-charts-pie-chart>
+        <p class="chart-label">Status Distribution</p>
+      </div>
+
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [view]="[300, 300]"
+          [scheme]="colorScheme2"
+          [results]="decisionChartData"
+          [legend]="true"
+          [doughnut]="true"
+          [labels]="true"
+        ></ngx-charts-pie-chart>
+        <p class="chart-label">Final Decision Distribution</p>
+      </div>
+      <div class="chart-container">
+        <ngx-charts-bar-vertical
+          [view]="[600, 300]"
+          [scheme]="colorScheme"
+          [results]="dailyChartData"
+          [gradient]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          xAxisLabel="Date"
+          yAxisLabel="Submissions"
+        ></ngx-charts-bar-vertical>
+        <p class="chart-label">Assessments by Date</p>
+      </div>
+    </div>
+  </div>
 </div>

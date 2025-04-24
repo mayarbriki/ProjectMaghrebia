@@ -37,10 +37,10 @@ export class AssessmentService {
   }
 
   // Delete Assessment
-  deleteAssessment(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
+  deleteAssessment(id: string, userId: number, role: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/delete/${id}?userId=${userId}&role=${role}`);
   }
-
+  
  // Update status
 updateStatus(id: string, status: string): Observable<Assessment> {
   return this.http.put<Assessment>(

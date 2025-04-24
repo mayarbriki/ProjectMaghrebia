@@ -65,9 +65,23 @@ export class ViewAssessmentComponentFront implements OnInit {
 
 
   deleteAssessment(): void {
+    // Vérifiez si l'utilisateur est authentifié et récupérez ses informations
+    if (!this.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    const userId = this.currentUser.id;  // ID de l'utilisateur
+    const role = this.currentUser.role;   // Rôle de l'utilisateur
+
     if (confirm('Are you sure you want to delete this assessment?')) {
-      this.assessmentService.deleteAssessment(this.assessment.idAssessment).subscribe(
+      // Convertissez l'ID de l'évaluation en string
+      const assessmentId = String(this.assessment.idAssessment);
+
+      // Appelez le service de suppression avec l'ID de l'évaluation, l'ID de l'utilisateur et son rôle
+      this.assessmentService.deleteAssessment(assessmentId, userId, role).subscribe(
         () => {
+          // Une fois la suppression réussie, naviguez vers la liste des évaluations
           this.router.navigate(['/assessments']);
         },
         (error) => {

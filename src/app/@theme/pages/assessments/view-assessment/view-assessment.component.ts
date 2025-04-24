@@ -5,7 +5,7 @@ import { Assessment, StatusAssessment, FinalDecision } from '../../../../models/
 import { Claim } from '../../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { AuthService,User} from '../../../../auth.service';
 @Component({
   selector: 'app-view-assessment',
   templateUrl: './view-assessment.component.html',
@@ -30,6 +30,7 @@ export class ViewAssessmentComponent implements OnInit {
 
   constructor(
     private assessmentService: AssessmentService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
@@ -53,10 +54,20 @@ export class ViewAssessmentComponent implements OnInit {
   }
 
   deleteAssessment(): void {
+    const user = this.authService.getUser(); // Get the current user
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+
+    const userId = user.id;  // Get user ID
+    const role = user.role;   // Get user role (e.g., admin or regular user)
+    const assessmentId = String(this.assessment.idAssessment);  // Convert assessment ID to string
+
     if (confirm('Are you sure you want to delete this assessment?')) {
-      this.assessmentService.deleteAssessment(this.assessment.idAssessment).subscribe(
+      this.assessmentService.deleteAssessment(assessmentId, userId, role).subscribe(
         () => {
-          this.router.navigate(['/admin/assessments']);
+          this.router.navigate(['/admin/assessments']); // Navigate to the list of assessments
         },
         (error) => {
           console.error('Error deleting assessment:', error);

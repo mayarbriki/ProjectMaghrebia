@@ -7,6 +7,66 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
+      .stats-charts-container {
+        margin-top: 40px;
+      }
+      
+      .charts-grid {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap; /* Permet de retourner à la ligne si l'espace est insuffisant */
+    }
+    
+    .chart-container {
+        text-align: center;
+        margin-bottom: 30px;
+        flex: 1 1 calc(50% - 10px); /* Prendre 50% de l'espace pour les graphiques pie */
+    }
+    
+    .chart-container:nth-child(3) {
+        flex: 1 1 100%; /* Le graphique bar prend toute la largeur */
+    }
+    
+      
+      .chart-description {
+        font-size: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+      
+      .chart-label {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+
+      h4 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+        color: #333;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      .total-assessments-container span.updated {
+        color: #4CAF50; /* Color change on update */
+        font-weight: bold;
+        animation: fadeInOut 1s ease-out;
+      }
+      
+      @keyframes fadeInOut {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      
+      
     .header-container {
         display: flex;
         flex-direction: column;
@@ -184,6 +244,5 @@
         outline: none;
         box-shadow: 0 0 5px rgba(23, 162, 184, 0.5);
     }
-
-    
+         
 }

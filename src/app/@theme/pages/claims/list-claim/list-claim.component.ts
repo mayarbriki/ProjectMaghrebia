@@ -9,6 +9,8 @@ import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
 import { AuthService, User } from 'src/app/auth.service'; 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 
 @Component({
@@ -16,7 +18,7 @@ import { NgxPaginationModule } from 'ngx-pagination';
   templateUrl: './list-claim.component.html',
   styleUrls: ['./list-claim.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,NgxPaginationModule]
+  imports: [CommonModule, FormsModule,NgxPaginationModule,NgxChartsModule]
 })
 export class ListClaimComponent implements OnInit {
   claims: Claim[] = [];
@@ -30,6 +32,25 @@ export class ListClaimComponent implements OnInit {
 
 statusClaims = Object.values(StatusClaim);
 currentUser: User | null = null;
+
+totalClaims: number = 0;
+statusChartData: any[] = [];
+reasonChartData: any[] = [];
+dailyChartData: any[] = [];
+
+colorScheme: Color = {
+  name: 'custom1',
+  selectable: true,
+  group: ScaleType.Ordinal,
+  domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+};
+
+colorScheme2: Color = {
+  name: 'custom2',
+  selectable: true,
+  group: ScaleType.Ordinal,
+  domain: ['#3366CC', '#DC3912', '#FF9900']
+};
 
   constructor(
     private claimService: ClaimService, 
@@ -56,6 +77,7 @@ currentUser: User | null = null;
       (data) => {
         this.claims = data;
         this.filteredClaims = [...this.claims];
+        this.calculateStats();
       },
       (error) => {
         console.error('Error fetching claims:', error);
@@ -90,6 +112,7 @@ currentUser: User | null = null;
       (error) => {
         console.error('Erreur mise à jour statut:', error);
         this.updatingClaims.delete(claim.idClaim);
+        this.calculateStats();
       }
     );
   }
@@ -104,6 +127,7 @@ currentUser: User | null = null;
       new Date(claim.submissionDate).toISOString().includes(this.searchQuery) 
     );
     this.page = 1; // Reset to page 1 after a search
+    this.calculateStats();
   }
  
 
@@ -198,4 +222,23 @@ currentUser: User | null = null;
     );
   }  
   
+  calculateStats(): void {
+    this.totalClaims = this.filteredClaims.length;
+
+    // Pour le pie chart des statuts
+    const statusMap: { [key: string]: number } = {};
+    const reasonMap: { [key: string]: number } = {};
+    const dateMap: { [key: string]: number } = {};
+
+    for (const claim of this.filteredClaims) {
+      statusMap[claim.statusClaim] = (statusMap[claim.statusClaim] || 0) + 1;
+      reasonMap[claim.claimReason] = (reasonMap[claim.claimReason] || 0) + 1;
+      const date = new Date(claim.submissionDate).toISOString().split('T')[0];
+      dateMap[date] = (dateMap[date] || 0) + 1;
+    }
+
+    this.statusChartData = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
+    this.reasonChartData = Object.entries(reasonMap).map(([name, value]) => ({ name, value }));
+    this.dailyChartData = Object.entries(dateMap).map(([name, value]) => ({ name, value }));
+  }
 }

@@ -55,16 +55,18 @@ export class ListAssessmentComponent implements OnInit {
   }  
 
   applySearch(): void {
+    const query = this.searchQuery.toLowerCase();
     this.filteredAssessments = this.assessments.filter(assessment =>
-      assessment.idAssessment.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment ID
-      assessment.statusAssessment.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment name
-      assessment.finalDecision.toLowerCase().includes(this.searchQuery.toLowerCase()) ||  // Search by assessment reason
-      new Date(assessment.assessmentDate).toISOString().includes(this.searchQuery) // Search by assessment date
+      assessment.claim?.claimName?.toLowerCase().includes(query) ||
+      new Date(assessment.assessmentDate).toISOString().includes(query) ||
+      assessment.statusAssessment?.toLowerCase().includes(query) ||
+      assessment.finalDecision?.toLowerCase().includes(query)
     );
-    this.page = 1; // Reset to page 1 after a search
+    this.applySort(); 
+    this.page = 1;
   }
   
-
+  
   applySort(): void {
     if (this.selectedSort === 'assessmentDate') {
       this.filteredAssessments.sort((a, b) => {
@@ -72,8 +74,12 @@ export class ListAssessmentComponent implements OnInit {
         const dateB = new Date(b.assessmentDate).getTime();
         return this.sortDirection ? dateA - dateB : dateB - dateA;
       });
-    } else if (this.selectedSort === 'id') {
-      this.filteredAssessments.sort((a, b) => a.idAssessment.localeCompare(b.idAssessment));
+    } else if (this.selectedSort === 'claimName') {
+      this.filteredAssessments.sort((a, b) => {
+        const nameA = a.claim?.claimName?.toLowerCase() || '';
+        const nameB = b.claim?.claimName?.toLowerCase() || '';
+        return this.sortDirection ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+      });
     }
   }
 

@@ -59,7 +59,19 @@
       transform: scale(1.05);
     }
   }
+  
 }
+
+.btn-primary {
+  background-color: #3498db;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #2980b9;
+  transform: scale(1.05);
+}
+
 .btn-success {
   background-color: #28a745;
   color: white;

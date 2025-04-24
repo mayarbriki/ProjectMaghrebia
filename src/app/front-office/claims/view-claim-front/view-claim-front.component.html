@@ -8,8 +8,8 @@
   
     <h3>Claim Overview</h3>
     <div class="claim-detail">
-      <div class="claim-actions">
-      <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)" title="Edit">
+      <div class="claim-actions" *ngIf="isCustomer() || isAdmin()">
+        <button class="btn btn-warning btn-sm" (click)="editClaim(claim.idClaim)" title="Edit">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
           <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
           <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
@@ -45,8 +45,7 @@
       
     </div>
     
-<!-- Buttons for Edit and Delete -->
-<div class="action-buttons">
+  <div class="action-buttons">
   <button class="btn btn-info btn-sm" (click)="viewAssessment(claim.idClaim)">
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
       <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>

@@ -9,7 +9,7 @@ import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-f
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx'; // Importation de la bibliothèque XLSX
-import {AuthService} from 'src/app/auth.service';
+import {AuthService,User} from 'src/app/auth.service';
 @Component({
   selector: 'app-view-claim-front',
   templateUrl: './view-claim-front.component.html',
@@ -34,7 +34,8 @@ export class ViewClaimComponentFront implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
-    claims: Claim[] = [];
+   claims: Claim[] = [];
+   currentUser: User | null = null;
 
 
   constructor(
@@ -67,6 +68,17 @@ export class ViewClaimComponentFront implements OnInit {
     }
   }
   
+  isCustomer(): boolean {
+    return this.currentUser?.role === 'CUSTOMER';
+  }
+
+  isAgent(): boolean {
+    return this.currentUser?.role === 'AGENT';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
+  }
   isImage(url: string): boolean {
     // Vérifier si l'URL est définie et si elle correspond à une image (par extension)
     if (!url) return false; // Assurez-vous que l'URL existe

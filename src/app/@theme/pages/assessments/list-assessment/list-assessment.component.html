@@ -13,6 +13,7 @@
           <!-- Sort Options -->
           <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
               <option value="assessmentDate">Sort by Date</option>
+              <option value="claimName">Sort by Claim Name</option>
           </select>
 
           <button class="btn-info" (click)="toggleSortDirection()">

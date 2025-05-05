@@ -142,10 +142,27 @@ public class ControllerAssessment {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Void> deleteAssessment(@PathVariable UUID id) {
-        serviceAssessment.deleteAssessment(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteAssessment(@PathVariable UUID id, @RequestParam("userId") Long userId, @RequestParam("role") String role) {
+        // Récupérer l'Assessment à supprimer
+        Assessment assessment = assessmentRepository.findById(id).orElse(null);
+
+        if (assessment == null) {
+            return ResponseEntity.notFound().build();  // Si l'évaluation n'existe pas
+        }
+
+        // Vérifier si l'utilisateur est le propriétaire ou un administrateur
+        if (!role.equals("ADMIN") && !role.equals("AGENT")) {
+            // Si l'utilisateur n'est pas ADMIN/AGENT, vérifier s'il est le propriétaire du claim associé
+            if (!assessment.getClaim().getUserId().equals(userId)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();  // L'utilisateur n'est pas autorisé
+            }
+        }
+
+        // Si l'utilisateur est autorisé, procéder à la suppression
+        serviceAssessment.deleteAssessment(id); // Suppression via votre service
+        return ResponseEntity.noContent().build();  // Retourner une réponse sans contenu pour indiquer succès
     }
+
     @PutMapping("/{id}/status")
     public ResponseEntity<Assessment> updateStatusAssessment(
             @PathVariable UUID id,
@@ -169,16 +186,14 @@ public class ControllerAssessment {
             @PathVariable UUID id,
             @RequestParam("decision") String decision) {
 
-        Assessment assessment = assessmentRepository.findById(id).orElseThrow(() ->
-                new NoSuchElementException("Assessment not found with ID: " + id)
-        );
-
         try {
-            assessment.setFinalDecision(finalDecision.valueOf(decision.toUpperCase()));
-            Assessment updated = assessmentRepository.save(assessment);
-            return ResponseEntity.ok(updated);
+            finalDecision parsedDecision = finalDecision.valueOf(decision.toUpperCase());
+            Assessment updatedAssessment = serviceAssessment.updateFinalDecision(id, parsedDecision); // ✅ call service
+            return ResponseEntity.ok(updatedAssessment);
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.badRequest().build(); // décision invalide
+            return ResponseEntity.badRequest().body(null); // Invalid decision
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

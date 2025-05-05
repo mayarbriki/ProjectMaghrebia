@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+/uploads/*
+!/uploads/.gitkeep
+
+/uploads_Assessments/*
+!/uploads_Assessments/.gitkeep

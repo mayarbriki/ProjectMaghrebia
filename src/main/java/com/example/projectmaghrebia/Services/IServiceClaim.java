@@ -11,4 +11,6 @@ public interface IServiceClaim {
     Claim updateClaim(UUID id, Claim claim);
     void deleteClaim(UUID id);
     Claim updateClaimStatus(UUID id, String status);
+    void sendClaimApprovedNotification(Claim claim) ;
+
 }

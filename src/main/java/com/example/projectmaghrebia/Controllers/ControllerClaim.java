@@ -4,6 +4,7 @@ import com.example.projectmaghrebia.Entities.Claim;
 import com.example.projectmaghrebia.Entities.statusClaim;
 import com.example.projectmaghrebia.Repositories.ClaimRepository;
 import com.example.projectmaghrebia.Services.IServiceClaim;
+import com.example.projectmaghrebia.Services.ServiceClaim;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -89,13 +90,14 @@ public class ControllerClaim {
             return ResponseEntity.notFound().build();
         }
 
-        // Si ce n’est pas un admin, vérifier l’appartenance de la réclamation
-        if (!role.equalsIgnoreCase("ADMIN") && !claim.getUserId().equals(userId)) {
+        // Si ce n’est ni un admin ni un agent, vérifier l’appartenance de la réclamation
+        if (!role.equalsIgnoreCase("ADMIN") && !role.equalsIgnoreCase("AGENT") && !claim.getUserId().equals(userId)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
         return ResponseEntity.ok(claim);
     }
+
 
 
     @GetMapping("/all")
@@ -200,6 +202,12 @@ public class ControllerClaim {
 
         try {
             existingClaim.setStatusClaim(statusClaim.valueOf(status.toUpperCase()));
+
+            // Si le statut est APPROVED, envoyer un email de notification via le service
+            if (statusClaim.APPROVED.equals(existingClaim.getStatusClaim())) {
+                serviceClaim.sendClaimApprovedNotification(existingClaim); // Appel au service
+            }
+
             return ResponseEntity.ok(claimRepository.save(existingClaim));
         } catch (IllegalArgumentException e) {
             log.error("❌ Statut invalide reçu: {}", status);

@@ -10,7 +10,7 @@ import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-f
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { AuthService, User } from 'src/app/auth.service';
 import { jsPDF } from 'jspdf';
-
+import * as QRCode from 'qrcode';
 @Component({
   selector: 'app-view-assessment-front',
   templateUrl: './view-assessment-front.component.html',
@@ -102,13 +102,11 @@ export class ViewAssessmentComponentFront implements OnInit {
   downloadPDF(): void {
     const doc = new jsPDF();
     const pageWidth = doc.internal.pageSize.getWidth();
-  
     const logoImg = new Image();
     logoImg.src = 'assets/FrontOffice/img/maghrebia (2).png';
   
     logoImg.onload = () => {
       doc.addImage(logoImg, 'PNG', 20, 10, 50, 25);
-  
       const title = 'Final Assessment Document';
       doc.setTextColor(0, 102, 204);
       doc.setFont('helvetica', 'bold');
@@ -167,9 +165,46 @@ export class ViewAssessmentComponentFront implements OnInit {
       doc.text('Phone: 00 216 71 788 800 | Fax: 00 216 71 788 334', boxX, contactY + 5);
       doc.text('Email: relation.client@maghrebia.com.tn', boxX, contactY + 10);
   
-      const fileName = `assessment_${this.assessment.claim?.fullName || 'document'}.pdf`;
-      doc.save(fileName);
-    };
-  }
-
-}
+      // QR Code generation
+      const qrData = 
+      `MAGHREBIA INSURANCE - ASSESSMENT DETAILS
+      ----------------------------------------
+      Claim: ${this.assessment.claim?.claimName || 'N/A'}
+      Assessment Date: ${new Date(this.assessment.assessmentDate).toLocaleDateString()}
+      Findings: ${this.assessment.findings || 'N/A'}
+      Status: ${this.assessment.statusAssessment}
+      Final Decision: ${this.assessment.finalDecision}
+      Submission Date: ${new Date(this.assessment.submissionDate).toLocaleDateString()}
+      ----------------------------------------
+      This is an official document from Maghrebia Insurance`;
+      
+            QRCode.toDataURL(qrData, 
+              { 
+                errorCorrectionLevel: 'H', 
+                margin: 2, 
+                width: 200 
+              }, 
+              (err, url) => {
+                if (err) {
+                  console.error('QR code generation failed', err);
+                  const fileName = `assessment_${this.assessment.claim?.fullName || 'document'}.pdf`;
+                  doc.save(fileName);
+                } else {
+                  const qrSize = 40;
+                  const qrX = (pageWidth - qrSize) / 2;
+                  const qrY = thankYouY + 30;
+                  
+                  doc.addImage(url, 'PNG', qrX, qrY, qrSize, qrSize);
+                  
+                  doc.setFontSize(8);
+                  doc.setTextColor(100);
+                  doc.text('Scan this QR code to verify assessment details', 
+                          pageWidth / 2, qrY + qrSize + 5, { align: 'center' });
+      
+                  const fileName = `assessment_${this.assessment.claim?.fullName || 'document'}.pdf`;
+                  doc.save(fileName);
+                }
+              });
+          };
+        }
+      }

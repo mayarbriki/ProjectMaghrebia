@@ -4,6 +4,7 @@ import com.example.projectmaghrebia.Entities.Category;
 import com.example.projectmaghrebia.Entities.Product;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public interface IProductService {
@@ -19,4 +20,5 @@ public interface IProductService {
     List<Long> getProductIdsByCategory(Category category); // Change to Category
     List<Product> searchProducts(String query);
     List<Product> sortProducts(List<Product> products, String sortBy, String sortDir); // New separate sort method
- }
+    Map<String, Object> getProductStatistics(); // New method returning a Map
+}

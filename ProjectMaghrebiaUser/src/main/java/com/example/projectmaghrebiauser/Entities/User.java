@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data // Generates getters, setters, toString, equals, and hashCode
-@NoArgsConstructor // Generates a no-args constructor
-@AllArgsConstructor // Generates an all-args constructor
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 public class User {
@@ -20,24 +20,27 @@ public class User {
     private Long id;
 
     private String username;
-
     private String password;
-
     private String email;
-
-    private double accountBalance ; // Add account balance field
-
-
+    private double accountBalance;
     private String phoneNumber;
-
     private String address;
-@Enumerated(EnumType.STRING)
-    private Role role; // e.g., "ADMIN", "CUSTOMER", "AGENT"
-    private String image ;
+    private String category;
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    private String image;
+
     @ElementCollection
     @CollectionTable(name = "user_bookmarked_product_ids", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "product_id")
     private List<Long> bookmarkedProductIds = new ArrayList<>();
+
+    // New attribute to store bookmarked product categories
+    @ElementCollection
+    @CollectionTable(name = "user_bookmarked_service_categories", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "category")
+    private List<String> bookmarkedServiceCategories = new ArrayList<>();
+
     @ElementCollection
     @CollectionTable(name = "user_coupon_codes", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "coupon_code")
@@ -52,5 +55,4 @@ public class User {
     @CollectionTable(name = "user_coupon_usage", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "used")
     private List<Boolean> couponUsedStatuses = new ArrayList<>();
-
 }

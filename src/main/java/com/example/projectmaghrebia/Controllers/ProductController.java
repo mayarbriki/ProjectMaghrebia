@@ -33,7 +33,18 @@ public class ProductController {
 
     @Autowired
     private FileStorageService fileStorageService;
-
+    @GetMapping("/products/statistics")
+    @Operation(
+            summary = "Get product statistics",
+            description = "Retrieve statistics about products, including total products, average price, total views, and category breakdown",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Statistics retrieved successfully")
+            }
+    )
+    public ResponseEntity<Map<String, Object>> getProductStatistics() {
+        Map<String, Object> statistics = productService.getProductStatistics();
+        return ResponseEntity.ok(statistics);
+    }
     @GetMapping("/products")
     public ResponseEntity<List<Product>> getAllProducts() {
         List<Product> products = productService.getAllProducts();
@@ -166,19 +177,23 @@ public class ProductController {
         });
         return ResponseEntity.ok(products);
     }
-    @PostMapping("/products/sort")
+    @GetMapping("/products/sort")
+    @Operation(
+            summary = "Sort all products",
+            description = "Sort all products by specified field and direction",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Products sorted successfully")
+            }
+    )
     public ResponseEntity<List<Product>> sortProducts(
-            @RequestBody List<Product> products,
             @RequestParam(value = "sortBy", defaultValue = "name") String sortBy,
             @RequestParam(value = "sortDir", defaultValue = "asc") String sortDir) {
-        if (products == null || products.isEmpty()) {
-            return ResponseEntity.badRequest().build();
-        }
-
+        List<Product> products = productService.getAllProducts();
         List<Product> sortedProducts = productService.sortProducts(products, sortBy, sortDir);
         String baseUrl = "http://localhost:6060/upload-dir/";
         sortedProducts.forEach(product -> {
             if (product.getFileName() != null && !product.getFileName().isEmpty()) {
+                // Since products are fetched directly from productService, fileName should be a raw filename
                 product.setFileName(baseUrl + product.getFileName());
             }
         });
@@ -283,4 +298,5 @@ public class ProductController {
             return "SuggestionResponse{suggestedProductIds=" + suggestedProductIds + ", topCategory='" + topCategory + "'}";
         }
     }
+
 }

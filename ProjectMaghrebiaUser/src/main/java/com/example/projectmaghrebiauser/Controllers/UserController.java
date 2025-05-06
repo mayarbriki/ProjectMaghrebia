@@ -47,6 +47,13 @@ public class UserController {
 
     private static final List<Long> POPULAR_PRODUCT_IDS = Arrays.asList(10L, 11L, 12L);
 
+    @GetMapping("/{userId}/balance")
+    public ResponseEntity<Double> getUserBalance(@PathVariable Long userId) {
+        return userService.findById(userId)
+                .map(user -> ResponseEntity.ok(user.getAccountBalance()))
+                .orElse(ResponseEntity.notFound().build());
+    }
+
     @PostMapping(value = "/register", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<User> registerUser(
             @RequestParam("username") String username,
@@ -112,9 +119,32 @@ public class UserController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
+        // Add product IDs to the user's bookmarked list
         user.getBookmarkedProductIds().addAll(productIds);
-        userRepository.save(user);
 
+        // Fetch product categories from the product service
+        for (Long productId : productIds) {
+            String url = PRODUCT_SERVICE_URL + "/" + productId;
+            try {
+                ResponseEntity<ProductDTO> response = restTemplate.getForEntity(url, ProductDTO.class);
+                if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                    ProductDTO product = response.getBody();
+                    String category = product.getCategory(); // Assuming category is a string or enum name
+                    if (category != null) {
+                        user.setCategory(category); // Set the single category field (most recent)
+                        user.getBookmarkedServiceCategories().add(category);
+                    } else {
+                        System.err.println("Category not found for product ID: " + productId);
+                    }
+                } else {
+                    System.err.println("Failed to fetch product details for product ID: " + productId);
+                }
+            } catch (Exception e) {
+                System.err.println("Error fetching product details for product ID: " + productId + " - " + e.getMessage());
+            }
+        }
+
+        userRepository.save(user);
         return ResponseEntity.ok("Products bookmarked successfully");
     }
 
@@ -125,9 +155,18 @@ public class UserController {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        if (user.getBookmarkedProductIds().remove(productId)) {
-            userRepository.save(user);
+        // Find the index of the product ID in the bookmarked list
+        int index = user.getBookmarkedProductIds().indexOf(productId);
+        if (index != -1) {
+            // Remove the product ID
+            user.getBookmarkedProductIds().remove(index);
+            // Remove the corresponding category
+            if (index < user.getBookmarkedServiceCategories().size()) {
+                user.getBookmarkedServiceCategories().remove(index);
+            }
         }
+
+        userRepository.save(user);
         return ResponseEntity.ok().build();
     }
 
@@ -214,12 +253,10 @@ public class UserController {
         return ResponseEntity.ok(suggestions);
     }
 
-    // Updated endpoint to send product via email using frontend data
     @PostMapping("/{userId}/send-product-email")
     public ResponseEntity<String> sendProductEmail(
             @PathVariable Long userId,
             @RequestBody Map<String, String> request) throws MessagingException {
-        // Extract product details from the request
         String productName = request.get("productName");
         String productDescription = request.get("productDescription");
 
@@ -227,15 +264,12 @@ public class UserController {
             return ResponseEntity.status(400).body("Product name and description are required");
         }
 
-        // Fetch the user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Generate a coupon
-        double discountAmount = 10.0; // Example: 10% discount
+        double discountAmount = 10.0;
         String couponCode = userService.generateCoupon(user, discountAmount);
 
-        // Send email with product details and coupon
         try {
             emailService.sendProductEmail(
                     user.getEmail(),
@@ -251,30 +285,73 @@ public class UserController {
         return ResponseEntity.ok("Product details and coupon sent to " + user.getEmail());
     }
 
-    // Endpoint to apply a coupon and get a discount
     @PostMapping("/{userId}/apply-coupon")
     public ResponseEntity<Map<String, Object>> applyCoupon(
             @PathVariable Long userId,
             @RequestBody Map<String, String> request) {
         String couponCode = request.get("couponCode");
 
-        // Fetch the user
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Validate and use the coupon
         boolean isValid = userService.useCoupon(user, couponCode);
         if (!isValid) {
             return ResponseEntity.status(400).body(Map.of("message", "Invalid or already used coupon"));
         }
 
-        // Get the discount amount
         double discountAmount = userService.getDiscountAmount(user, couponCode);
 
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Coupon applied successfully");
         response.put("discountAmount", discountAmount);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{userId}/share-product")
+    public ResponseEntity<String> shareProduct(
+            @PathVariable Long userId,
+            @RequestBody Map<String, String> request) throws MessagingException {
+        String productName = request.get("productName");
+        String productDescription = request.get("productDescription");
+        String recipientEmail = request.get("recipientEmail");
+
+        if (productName == null || productDescription == null || recipientEmail == null) {
+            return ResponseEntity.status(400).body("Product name, description, and recipient email are required");
+        }
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        emailService.sendReferralEmail(
+                recipientEmail,
+                user.getUsername(),
+                productName,
+                productDescription
+        );
+
+        double discountPercentage = 10.0;
+        String couponCode = userService.generateCoupon(user, discountPercentage);
+
+        double baseAmount = 100.0;
+        double discountAmount = (discountPercentage / 100.0) * baseAmount;
+
+        emailService.sendProductEmail(
+                user.getEmail(),
+                productName,
+                productDescription,
+                couponCode,
+                discountPercentage
+        );
+
+        return ResponseEntity.ok(
+                String.format(
+                        "Product shared successfully with %s, a coupon has been sent to %s, and $%.2f has been added to your account balance (new balance: $%.2f).",
+                        recipientEmail,
+                        user.getEmail(),
+                        discountAmount,
+                        user.getAccountBalance()
+                )
+        );
     }
 
     private static class SuggestionResponse {
@@ -303,57 +380,24 @@ public class UserController {
         }
     }
 
-    @PostMapping("/{userId}/share-product")
-    public ResponseEntity<String> shareProduct(
-            @PathVariable Long userId,
-            @RequestBody Map<String, String> request) throws MessagingException {
-        String productName = request.get("productName");
-        String productDescription = request.get("productDescription");
-        String recipientEmail = request.get("recipientEmail");
+    // DTO to deserialize product response from product service
+    private static class ProductDTO {
+        private Long idProduct;
+        private String category; // Assuming category is serialized as a string
+        private String description;
+        private String name;
+        private String fileName;
+        private Double price;
+        private Long views;
 
-        if (productName == null || productDescription == null || recipientEmail == null) {
-            return ResponseEntity.status(400).body("Product name, description, and recipient email are required");
+        public String getCategory() {
+            return category;
         }
 
-        // Fetch the user (sharer)
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        public void setCategory(String category) {
+            this.category = category;
+        }
 
-        // Send the product details to the recipient (friend)
-        emailService.sendReferralEmail(
-                recipientEmail,
-                user.getUsername(),
-                productName,
-                productDescription
-        );
-
-        // Reward the sharer with a coupon and add to balance
-        double discountPercentage = 10.0; // Example: 10% discount
-        String couponCode = userService.generateCoupon(user, discountPercentage);
-
-        // Calculate the monetary value of the discount (same logic as in UserService)
-        double baseAmount = 100.0; // Example: Base amount for calculation
-        double discountAmount = (discountPercentage / 100.0) * baseAmount; // e.g., $10
-
-        emailService.sendProductEmail(
-                user.getEmail(),
-                productName,
-                productDescription,
-                couponCode,
-                discountPercentage
-        );
-        // Inside shareProduct method, after calculating discountAmount:
-      //  user.setAccountBalance(user.getAccountBalance() + discountAmount);
-     //   userRepository.save(user); // Save the updated user
-
-        return ResponseEntity.ok(
-                String.format(
-                        "Product shared successfully with %s, a coupon has been sent to %s, and $%.2f has been added to your account balance (new balance: $%.2f).",
-                        recipientEmail,
-                        user.getEmail(),
-                        discountAmount,
-                        user.getAccountBalance()
-                )
-        );
+        // Add getters and setters for other fields as needed
     }
 }

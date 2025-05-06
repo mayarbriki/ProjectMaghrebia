@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -104,6 +102,7 @@ public class ProductService implements IProductService {
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
+
     public List<Product> getMostViewedProducts() {
         return productRepository.findAll(Sort.by(Sort.Direction.DESC, "views"))
                 .stream()
@@ -121,6 +120,50 @@ public class ProductService implements IProductService {
     @Override
     public List<Long> getProductIdsByCategory(Category category) {
         return productRepository.findProductIdsByCategory(category);
+    }
+    @Override
+    public Map<String, Object> getProductStatistics() {
+        List<Product> products = productRepository.findAll();
+        Map<String, Object> statistics = new HashMap<>();
+
+        // Total number of products
+        long totalProducts = products.size();
+        statistics.put("totalProducts", totalProducts);
+
+        // Average price
+        double averagePrice = products.stream()
+                .filter(product -> product.getPrice() != null)
+                .mapToDouble(Product::getPrice)
+                .average()
+                .orElse(0.0);
+        statistics.put("averagePrice", averagePrice);
+
+        // Total views
+        long totalViews = products.stream()
+                .filter(product -> product.getViews() != null)
+                .mapToLong(Product::getViews)
+                .sum();
+        statistics.put("totalViews", totalViews);
+
+        // Products by category
+        Map<String, Long> productsByCategory = products.stream()
+                .filter(product -> product.getCategory() != null)
+                .collect(Collectors.groupingBy(
+                        product -> product.getCategory().name(),
+                        Collectors.counting()
+                ));
+        statistics.put("productsByCategory", productsByCategory);
+
+        // Views by category
+        Map<String, Long> viewsByCategory = products.stream()
+                .filter(product -> product.getCategory() != null && product.getViews() != null)
+                .collect(Collectors.groupingBy(
+                        product -> product.getCategory().name(),
+                        Collectors.summingLong(Product::getViews)
+                ));
+        statistics.put("viewsByCategory", viewsByCategory);
+
+        return statistics;
     }
 
 }

@@ -9,6 +9,7 @@ import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-f
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { AuthService, User } from 'src/app/auth.service'; 
+import { trigger, transition, style, animate } from '@angular/animations';
 
 
 @Component({
@@ -16,7 +17,30 @@ import { AuthService, User } from 'src/app/auth.service';
   templateUrl: './list-claim-front.component.html',
   styleUrls: ['./list-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, NgxPaginationModule,ChatbotComponent]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, NgxPaginationModule,ChatbotComponent],
+  animations: [
+    trigger('cardAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('0.3s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ]),
+    trigger('fadeInOut', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('0.2s ease-in', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [
+        animate('0.2s ease-out', style({ opacity: 0 }))
+      ])
+    ]),
+    trigger('statCard', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'scale(0.8)' }),
+        animate('0.3s 0.1s ease-out', style({ opacity: 1, transform: 'scale(1)' }))
+      ])
+    ])
+  ]
 })
 export class ListClaimComponentFront implements OnInit {
   claims: Claim[] = [];
@@ -26,6 +50,7 @@ export class ListClaimComponentFront implements OnInit {
   page: number = 1; // Variable pour la page actuelle
   pageSize: number = 6; // Nombre d'éléments par page
   showStatistics: boolean = false;
+  statsData: any[] = [];
 
   constructor(private claimService: ClaimService, private router: Router,private authService: AuthService) {}
   currentUser: User | null = null;
@@ -70,8 +95,46 @@ export class ListClaimComponentFront implements OnInit {
   }
   
   
+  updateStatsData(): void {
+    this.statsData = [
+      { 
+        label: 'Total Claims', 
+        count: this.getTotalClaims(), 
+        color: '#9e9e9e',
+        description: 'Total number of claims submitted'
+      },
+      { 
+        label: 'Pending', 
+        count: this.getClaimCountByStatus('PENDING'), 
+        color: '#f59e0b',
+        description: 'Claims awaiting processing'
+      },
+      { 
+        label: 'Approved', 
+        count: this.getClaimCountByStatus('APPROVED'), 
+        color: '#10b981',
+        description: 'Claims that have been approved'
+      },
+      { 
+        label: 'Rejected', 
+        count: this.getClaimCountByStatus('REJECTED'), 
+        color: '#ef4444',
+        description: 'Claims that have been rejected'
+      },
+      { 
+        label: 'In Review', 
+        count: this.getClaimCountByStatus('IN_REVIEW'), 
+        color: '#3b82f6',
+        description: 'Claims currently under review'
+      }
+    ];
+  }
+
   toggleStatistics(): void {
     this.showStatistics = !this.showStatistics;
+    if (this.showStatistics) {
+      this.updateStatsData();
+    }
   }
 
   getClaimCountByStatus(status: string): number {
@@ -196,5 +259,18 @@ export class ListClaimComponentFront implements OnInit {
       }
     );
   }
-  
+  getStatusClass(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'PENDING':
+        return 'pending';
+      case 'APPROVED':
+        return 'approved';
+      case 'REJECTED':
+        return 'rejected';
+      case 'IN_REVIEW':
+        return 'in-review';
+      default:
+        return '';
+    }
+  }
 }

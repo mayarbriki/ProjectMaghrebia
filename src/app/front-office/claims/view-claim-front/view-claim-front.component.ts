@@ -44,27 +44,26 @@ export class ViewClaimComponentFront implements OnInit {
     private route: ActivatedRoute,
     private router: Router
   ) {}
+  getStatusClass(status: StatusClaim): string {
+    return status.toString();
+  }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getUser(); // Récupérer l'utilisateur connecté
     const claimId = this.route.snapshot.paramMap.get('id');
-    const user = this.authService.getUser();
-  
-    if (claimId && user) {
-      const userId = user.id;
-      const role = user.role;
+    
+    if (claimId && this.currentUser) {
+      const userId = this.currentUser.id;
+      const role = this.currentUser.role;
   
       this.claimService.getClaimById(claimId, userId, role).subscribe(
         (data) => {
           this.claim = data;
-          console.log('Claim data:', this.claim);
-          console.log('Supporting documents:', this.claim.supportingDocuments);
         },
         (error) => {
           console.error('Error fetching claim details', error);
         }
       );
-    } else {
-      console.error('Claim ID or user is missing');
     }
   }
   

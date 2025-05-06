@@ -9,28 +9,38 @@ import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-f
 import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { AuthService, User } from 'src/app/auth.service'; 
 import { NgxPaginationModule } from 'ngx-pagination';
+import { trigger, transition, style, animate } from '@angular/animations';
 
 @Component({
   selector: 'app-list-assessment-front',
   templateUrl: './list-assessment-front.component.html',
   styleUrls: ['./list-assessment-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule,HeaderFrontComponent,FooterFrontComponent,ChatbotComponent,NgxPaginationModule]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent, ChatbotComponent, NgxPaginationModule],
+  animations: [
+    trigger('cardAnimation', [
+      transition(':enter', [
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('0.3s ease-out', style({ opacity: 1, transform: 'translateY(0)' }))
+      ])
+    ])
+  ]
 })
 export class ListAssessmentComponentFront implements OnInit {
   assessments: Assessment[] = [];
   filteredAssessments: Assessment[] = [];
   searchQuery: string = '';
-  selectedSort: string = 'assessmentDate'; // Default sorting by date
-  sortDirection: boolean = true; // true for ascending, false for descending
-  page: number = 1; // Variable pour la page actuelle
-  pageSize: number = 4; // Nombre d'éléments par page
+  selectedSort: string = 'assessmentDate';
+  sortDirection: boolean = true;
+  page: number = 1;
+  pageSize: number = 6;
+  currentUser: User | null = null;
+
   constructor(
     private assessmentService: AssessmentService,
     private authService: AuthService,
     private router: Router
   ) {}
-  currentUser: User | null = null;
 
   ngOnInit(): void {
     this.fetchAssessments();
@@ -60,7 +70,6 @@ export class ListAssessmentComponentFront implements OnInit {
     }
 
     if (role === 'ADMIN' || role === 'AGENT') {
-      // ADMIN and AGENT can view all assessments
       this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
         (data) => {
           this.assessments = data;
@@ -71,7 +80,6 @@ export class ListAssessmentComponentFront implements OnInit {
         }
       );
     } else if (role === 'CUSTOMER') {
-      // CUSTOMER can only view their own assessments
       this.assessmentService.getAssessmentsByUser(userId, role).subscribe(
         (data) => {
           this.assessments = data;
@@ -81,8 +89,6 @@ export class ListAssessmentComponentFront implements OnInit {
           console.error('Error fetching customer assessments:', error);
         }
       );
-    } else {
-      console.error('Role is not recognized.');
     }
   }
 
@@ -97,7 +103,6 @@ export class ListAssessmentComponentFront implements OnInit {
     this.applySort(); 
     this.page = 1;
   }
-  
   
   applySort(): void {
     if (this.selectedSort === 'assessmentDate') {
@@ -114,11 +119,10 @@ export class ListAssessmentComponentFront implements OnInit {
       });
     }
   }
-  
 
   toggleSortDirection(): void {
     this.sortDirection = !this.sortDirection;
-    this.applySort(); // Reapply sorting after direction toggle
+    this.applySort();
   }
 
   viewAssessment(id: string): void {
@@ -133,17 +137,13 @@ export class ListAssessmentComponentFront implements OnInit {
     const userId = this.currentUser?.id;
     const role = this.currentUser?.role;
   
-    // Vérifier que l'utilisateur est authentifié et a le droit de supprimer
     if (userId && role && (this.isAdmin() || this.isAgent())) {
       if (confirm('Are you sure you want to delete this assessment?')) {
         this.assessmentService.deleteAssessment(id, userId, role).subscribe(
           () => {
-            // Supprimer l'évaluation de la liste locale après la suppression
             this.assessments = this.assessments.filter(assessment => assessment.idAssessment !== id);
-            this.filteredAssessments = [...this.assessments]; // Mise à jour de la liste filtrée
-  
-            // Recharger les évaluations à partir du serveur pour s'assurer que les données sont actualisées
-            this.fetchAssessments(); // Cela peut être nécessaire si les données viennent du backend
+            this.filteredAssessments = [...this.assessments];
+            this.fetchAssessments();
           },
           (error) => {
             console.error('Error deleting assessment:', error);
@@ -154,13 +154,27 @@ export class ListAssessmentComponentFront implements OnInit {
       alert('You do not have permission to delete this assessment.');
     }
   }
-  
 
   navigateToAddAssessment(): void {
     this.router.navigate(['assessmentsFront/AddAssessment']);
   }
 
-  goBack() : void {
+  goBack(): void {
     this.router.navigate(['/claims']);
+  }
+
+  getStatusClass(status: string): string {
+    switch (status?.toUpperCase()) {
+      case 'PENDING':
+        return 'pending';
+      case 'COMPLETED':
+        return 'completed';
+      case 'REJECTED':
+        return 'rejected';
+      case 'IN_REVIEW':
+        return 'in-review';
+      default:
+        return '';
+    }
   }
 }

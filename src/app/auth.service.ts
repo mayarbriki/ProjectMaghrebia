@@ -2,30 +2,34 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+
 export interface User {
   id: number;
   username: string;
   email: string;
-  accountBalance?: number;  // The ? makes this property optional
+  accountBalance?: number;
   phoneNumber?: string;
   address?: string;
-  role : 'ADMIN' | 'CUSTOMER' | 'AGENT';
+  role: 'ADMIN' | 'CUSTOMER' | 'AGENT';
   image?: string;
-  // Add any other properties your user object might have
+  age?: number;
+  gender?: string;
+  maritalStatus?: string;
+  occupation?: string;
+  category?: string; // Used for bookmarkedService
+  satisfactionScore?: number;
 }
+
 @Injectable({
   providedIn: 'root',
 })
-// Add this interface at the top of your file or in a separate models file
-
 export class AuthService {
-  
   private apiUrl = 'http://localhost:8082/api/users';
   private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
-  //private userSubject = new BehaviorSubject<any>(this.getUser()); // Add userSubject to emit user updates
+  private userSubject = new BehaviorSubject<User | null>(this.getUser());
 
   isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
- // user$ = this.userSubject.asObservable(); // Observable for user updates
+  user$ = this.userSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
@@ -33,100 +37,156 @@ export class AuthService {
     return !!localStorage.getItem('user');
   }
 
-  // Register a new user
+  getUser(): User | null {
+    try {
+      const userData = localStorage.getItem('user');
+      if (!userData) return null;
+
+      const user: User = JSON.parse(userData);
+      return {
+        ...user,
+        accountBalance: user.accountBalance ?? 0,
+        // Ensure category and satisfactionScore are properly preserved
+        category: user.category,
+        satisfactionScore: user.satisfactionScore
+      };
+    } catch (error) {
+      console.error('Error parsing user data:', error);
+      return null;
+    }
+  }
+
   register(userData: any, file?: File): Observable<any> {
     const formData = new FormData();
+    
     formData.append("username", userData.username);
     formData.append("password", userData.password);
     formData.append("email", userData.email);
     formData.append("phoneNumber", userData.phoneNumber);
     formData.append("address", userData.address);
+    formData.append("age", userData.age.toString());
+    formData.append("gender", userData.gender);
+    formData.append("maritalStatus", userData.maritalStatus);
+    formData.append("occupation", userData.occupation);
+    
+    // Add category and satisfactionScore if provided
+    if (userData.category) {
+      formData.append("category", userData.category);
+    }
+    
+    if (userData.satisfactionScore !== undefined) {
+      formData.append("satisfactionScore", userData.satisfactionScore.toString());
+    }
+    
     if (file) {
       formData.append("file", file);
     }
-    return this.http.post("http://localhost:8082/api/users/register", formData);
+    
+    console.log("Registration payload:");
+    formData.forEach((value, key) => {
+      console.log(`${key}: ${value}`);
+    });
+    
+    return this.http.post(`${this.apiUrl}/register`, formData)
+      .pipe(
+        catchError(error => {
+          console.error('Registration error details:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
-  // Login user
- 
+  login(username: string, password: string): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/login`, null, {
+      params: { username, password },
+    }).pipe(
+      tap(response => {
+        if (response) {
+          // Ensure all user properties are preserved
+          const user: User = {
+            ...response,
+            accountBalance: response.accountBalance ?? 0,
+            category: response.category, // Ensure category is preserved
+            satisfactionScore: response.satisfactionScore // Ensure satisfactionScore is preserved
+          };
+          console.log('Storing user data with category and satisfactionScore:', user);
+          localStorage.setItem('user', JSON.stringify(user));
+          this.isAuthenticatedSubject.next(true);
+          this.userSubject.next(user);
+        }
+      }),
+      catchError(error => {
+        console.error('Login error:', error);
+        return this.handleError(error);
+      })
+    );
+  }
+
   logout() {
     localStorage.removeItem('user');
     this.isAuthenticatedSubject.next(false);
-    this.userSubject.next(null); // Emit null user
+    this.userSubject.next(null);
   }
 
-
-
-  // Fetch updated user from backend
- // In your AuthService
- private userSubject = new BehaviorSubject<User | null>(this.getUser());
- user$ = this.userSubject.asObservable(); // Now properly typed
- getUser(): User | null {
-  try {
-    const userData = localStorage.getItem('user');
-    if (!userData) return null;
-    
-    const user: User = JSON.parse(userData);
-    return {
-      ...user,
-      accountBalance: user.accountBalance ?? 0 // Set default value if undefined
-    };
-  } catch (error) {
-    console.error('Error parsing user data:', error);
-    return null;
+  fetchUserBalance(userId: number): Observable<number> {
+    return this.http.get<number>(`${this.apiUrl}/${userId}/balance`);
   }
-}
 
-login(username: string, password: string): Observable<User> {
-  return this.http.post<User>(`${this.apiUrl}/login`, null, {
-    params: { username, password },
-  }).pipe(
-    tap(response => {
-      if (response) {
-        const user: User = {
-          ...response,
-          accountBalance: response.accountBalance ?? 0
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-        this.isAuthenticatedSubject.next(true);
-        this.userSubject.next(user);
-      }
-    }),
-    catchError(error => {
-      console.error('Login error:', error);
-      return this.handleError(error);
-    })
-  );
-}
+  fetchUser(userId: number): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
+      tap((response: User) => {
+        // Store the current user first to avoid losing category and satisfactionScore
+        const currentUser = this.getUser();
+        
+        this.fetchUserBalance(userId).subscribe({
+          next: (balance) => {
+            const userWithBalance: User = {
+              ...response,
+              accountBalance: balance,
+              // Preserve category and satisfactionScore from response or current user
+              category: response.category || currentUser?.category,
+              satisfactionScore: response.satisfactionScore !== undefined ? 
+                response.satisfactionScore : currentUser?.satisfactionScore
+            };
+            console.log('Updated user with balance and preserved fields:', userWithBalance);
+            localStorage.setItem('user', JSON.stringify(userWithBalance));
+            this.userSubject.next(userWithBalance);
+          },
+          error: (error) => console.error('Error fetching balance:', error)
+        });
+      }),
+      catchError(this.handleError)
+    );
+  }
 
-fetchUserBalance(userId: number): Observable<number> {
-  return this.http.get<number>(`${this.apiUrl}/${userId}/balance`);
-}
-
-fetchUser(userId: number): Observable<User> {
-  return this.http.get<User>(`${this.apiUrl}/${userId}`).pipe(
-    tap((response: User) => {
-      // Fetch the balance separately
-      this.fetchUserBalance(userId).subscribe({
-        next: (balance) => {
-          const userWithBalance: User = {
-            ...response,
-            accountBalance: balance
+  // Method to update user category or satisfaction score
+  updateUserPreferences(userId: number, data: {
+    category?: string;
+    satisfactionScore?: number;
+  }): Observable<User> {
+    return this.http.patch<User>(`${this.apiUrl}/${userId}/preferences`, data).pipe(
+      tap((updatedUser: User) => {
+        // Update stored user data
+        const currentUser = this.getUser();
+        if (currentUser) {
+          const updatedUserData: User = {
+            ...currentUser,
+            category: data.category ?? currentUser.category,
+            satisfactionScore: data.satisfactionScore !== undefined ? 
+              data.satisfactionScore : currentUser.satisfactionScore
           };
-          localStorage.setItem('user', JSON.stringify(userWithBalance));
-          this.userSubject.next(userWithBalance);
-        },
-        error: (error) => console.error('Error fetching balance:', error)
-      });
-    }),
-    catchError(this.handleError)
-  );
-}
-shareProduct(userId: number, shareData: { productName: string; productDescription: string; recipientEmail: string }): Observable<string> {
+          localStorage.setItem('user', JSON.stringify(updatedUserData));
+          this.userSubject.next(updatedUserData);
+        }
+      }),
+      catchError(this.handleError)
+    );
+  }
+
+  shareProduct(userId: number, shareData: { productName: string; productDescription: string; recipientEmail: string }): Observable<string> {
     return this.http.post(`${this.apiUrl}/${userId}/share-product`, shareData, { responseType: 'text' })
       .pipe(
         tap(() => {
-          // Fetch updated user after sharing to get the new balance
           this.fetchUser(userId).subscribe({
             error: (err) => console.error('Failed to fetch updated user after sharing:', err)
           });

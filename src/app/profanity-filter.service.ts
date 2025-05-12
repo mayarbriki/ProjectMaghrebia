@@ -14,7 +14,7 @@ export class ProfanityFilterService {
   }
 
   private loadBadWords(): Observable<string[]> {
-    return this.http.get<string[]>('http://localhost:6969/api/blogs/bad-words').pipe(
+    return this.http.get<string[]>('http://localhost:6061/api/blogs/bad-words').pipe(
       tap(badWords => {
         this.badWords = new Set(badWords.map(word => word.toLowerCase()));
         console.log('Loaded bad words:', this.badWords);

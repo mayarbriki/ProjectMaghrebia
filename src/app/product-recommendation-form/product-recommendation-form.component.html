@@ -1,0 +1,300 @@
+<app-header-front></app-header-front>
+
+<div class="prediction-container">
+    <h2>Your Personalized Insurance Recommendation</h2>
+    <p class="intro-text">Answer a few quick questions, and we’ll recommend the perfect insurance service for you!</p>
+  
+  
+    <!-- Modal for Product Details -->
+    <div class="modal" *ngIf="showModal" role="dialog" aria-labelledby="modalTitle" (click)="closeModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3 id="modalTitle">Product Details</h3>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>Category:</label>
+            <p>{{ selectedProduct?.category }}</p>
+          </div>
+          <div class="form-group">
+            <label>Name:</label>
+            <p>{{ selectedProduct?.name }}</p>
+          </div>
+          <div class="form-group">
+            <label>Description:</label>
+            <p>{{ selectedProduct?.description }}</p>
+          </div>
+          <div class="form-group">
+            <label>Price:</label>
+            <p>{{ selectedProduct?.price | number:'1.2-2' }}</p>
+          </div>
+          <div class="form-group">
+            <label>Image:</label>
+            <p>{{ selectedProduct?.file_name }}</p>
+            <!-- Uncomment and update path if images are accessible:
+            <img [src]="selectedProduct?.file_name" alt="{{ selectedProduct?.name }}" class="product-image">
+            -->
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn btn-secondary" (click)="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Progress Bar -->
+    <div class="progress-bar">
+      <div class="progress-step" [ngClass]="{'active': currentStep >= 1}">Personal Info</div>
+      <div class="progress-step" [ngClass]="{'active': currentStep >= 2}">Financial Info</div>
+      <div class="progress-step" [ngClass]="{'active': currentStep >= 3}">Product Info</div>
+      <div class="progress-step" [ngClass]="{'active': currentStep >= 4}">Preferences</div>
+    </div>
+  
+    <form [formGroup]="predictionForm" (ngSubmit)="onSubmit()" class="prediction-form">
+      <!-- Step 1: Personal Information -->
+      <div class="questionnaire-section" *ngIf="currentStep === 1">
+        <h3>Tell Us About Yourself</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="age">How old are you?</label>
+            <input type="number" id="age" formControlName="age" placeholder="e.g., 30" min="18" max="100">
+            <div *ngIf="predictionForm.get('age')?.invalid && predictionForm.get('age')?.touched" class="error-message">
+              Please enter an age between 18 and 100.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="gender">What’s your gender?</label>
+            <select id="gender" formControlName="gender">
+              <option value="" disabled selected>Choose one</option>
+              <option *ngFor="let option of genders" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('gender')?.invalid && predictionForm.get('gender')?.touched" class="error-message">
+              Please select a gender.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="region">Where do you live?</label>
+            <select id="region" formControlName="region">
+              <option value="" disabled selected>Choose your region</option>
+              <option *ngFor="let option of regions" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('region')?.invalid && predictionForm.get('region')?.touched" class="error-message">
+              Please select a region.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="maritalStatus">What’s your marital status?</label>
+            <select id="maritalStatus" formControlName="maritalStatus">
+              <option value="" disabled selected>Choose one</option>
+              <option *ngFor="let option of maritalStatuses" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('maritalStatus')?.invalid && predictionForm.get('maritalStatus')?.touched" class="error-message">
+              Please select a marital status.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="occupation">What do you do for work?</label>
+            <select id="occupation" formControlName="occupation">
+              <option value="" disabled selected>Choose your occupation</option>
+              <option *ngFor="let option of occupations" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('occupation')?.invalid && predictionForm.get('occupation')?.touched" class="error-message">
+              Please select an occupation.
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-actions">
+          <button type="button" (click)="nextStep(2)" [disabled]="predictionForm.get(['age', 'gender', 'region', 'maritalStatus', 'occupation'])?.invalid" class="btn btn-primary">
+            Next: Financial Info
+          </button>
+        </div>
+      </div>
+  
+      <!-- Step 2: Financial Information -->
+      <div class="questionnaire-section" *ngIf="currentStep === 2">
+        <h3>Your Financial Details</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="incomeLevel">What’s your annual income? <span class="tooltip">Enter your total yearly income before taxes.</span></label>
+            <input type="number" id="incomeLevel" formControlName="incomeLevel" placeholder="e.g., 50000" min="0">
+            <div *ngIf="predictionForm.get('incomeLevel')?.invalid && predictionForm.get('incomeLevel')?.touched" class="error-message">
+              Please enter a valid income amount.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="tenureYears">How long have you been our customer?</label>
+            <input type="number" id="tenureYears" formControlName="tenureYears" placeholder="e.g., 5" min="0" max="50">
+            <div *ngIf="predictionForm.get('tenureYears')?.invalid && predictionForm.get('tenureYears')?.touched" class="error-message">
+              Please enter a number between 0 and 50 years.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="purchaseAmount">How much have you spent with us? <span class="tooltip">Total amount spent on our services.</span></label>
+            <input type="number" id="purchaseAmount" formControlName="purchaseAmount" placeholder="e.g., 5000" min="0">
+            <div *ngIf="predictionForm.get('purchaseAmount')?.invalid && predictionForm.get('purchaseAmount')?.touched" class="error-message">
+              Please enter a valid amount.
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-actions">
+          <button type="button" (click)="prevStep(1)" class="btn btn-secondary">Back</button>
+          <button type="button" (click)="nextStep(3)" [disabled]="predictionForm.get(['incomeLevel', 'tenureYears', 'purchaseAmount'])?.invalid" class="btn btn-primary">
+            Next: Product Info
+          </button>
+        </div>
+      </div>
+  
+      <!-- Step 3: Product Information -->
+      <div class="questionnaire-section" *ngIf="currentStep === 3">
+        <h3>Your Current Services</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="currentProduct">Which service do you currently use?</label>
+            <select id="currentProduct" formControlName="currentProduct">
+              <option value="" disabled selected>Choose a service</option>
+              <option *ngFor="let option of productOptions" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('currentProduct')?.invalid && predictionForm.get('currentProduct')?.touched" class="error-message">
+              Please select a service.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="bookmarkedService">Have you bookmarked any service?</label>
+            <select id="bookmarkedService" formControlName="bookmarkedService">
+              <option value="" disabled selected>Choose a service</option>
+              <option *ngFor="let option of productOptions" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('bookmarkedService')?.invalid && predictionForm.get('bookmarkedService')?.touched" class="error-message">
+              Please select a service.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="isBookmarked">Is this service bookmarked?</label>
+            <select id="isBookmarked" formControlName="isBookmarked">
+              <option value="1">Yes</option>
+              <option value="0">No</option>
+            </select>
+            <div *ngIf="predictionForm.get('isBookmarked')?.invalid && predictionForm.get('isBookmarked')?.touched" class="error-message">
+              Please select an option.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="satisfactionScore">How satisfied are you with us? <span class="tooltip">1 = Very Unsatisfied, 5 = Very Satisfied</span></label>
+            <select id="satisfactionScore" formControlName="satisfactionScore">
+              <option value="" disabled selected>Choose a score</option>
+              <option value="1">1 - Very Unsatisfied</option>
+              <option value="2">2 - Unsatisfied</option>
+              <option value="3">3 - Neutral</option>
+              <option value="4">4 - Satisfied</option>
+              <option value="5">5 - Very Satisfied</option>
+            </select>
+            <div *ngIf="predictionForm.get('satisfactionScore')?.invalid && predictionForm.get('satisfactionScore')?.touched" class="error-message">
+              Please select a satisfaction score.
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-actions">
+          <button type="button" (click)="prevStep(2)" class="btn btn-secondary">Back</button>
+          <button type="button" (click)="nextStep(4)" [disabled]="predictionForm.get(['currentProduct', 'bookmarkedService', 'isBookmarked', 'satisfactionScore'])?.invalid" class="btn btn-primary">
+            Next: Preferences
+          </button>
+        </div>
+      </div>
+  
+      <!-- Step 4: Behavioral Information -->
+      <div class="questionnaire-section" *ngIf="currentStep === 4">
+        <h3>Your Preferences</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="interestedInOtherProducts">Are you interested in other products?</label>
+            <select id="interestedInOtherProducts" formControlName="interestedInOtherProducts">
+              <option value="" disabled selected>Choose one</option>
+              <option *ngFor="let option of yesNoOptions" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('interestedInOtherProducts')?.invalid && predictionForm.get('interestedInOtherProducts')?.touched" class="error-message">
+              Please select an option.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="marketingInteraction">How do you interact with our marketing?</label>
+            <select id="marketingInteraction" formControlName="marketingInteraction">
+              <option value="" disabled selected>Choose one</option>
+              <option *ngFor="let option of marketingInteractions" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('marketingInteraction')?.invalid && predictionForm.get('marketingInteraction')?.touched" class="error-message">
+              Please select an option.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="preferredCommunicationChannel">How do you prefer to hear from us?</label>
+            <select id="preferredCommunicationChannel" formControlName="preferredCommunicationChannel">
+              <option value="" disabled selected>Choose one</option>
+              <option *ngFor="let option of communicationChannels" [value]="option">{{ option }}</option>
+            </select>
+            <div *ngIf="predictionForm.get('preferredCommunicationChannel')?.invalid && predictionForm.get('preferredCommunicationChannel')?.touched" class="error-message">
+              Please select a communication method.
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label>Which services have you looked at recently?</label>
+            <div class="form-check">
+              <div class="form-check-item">
+                <label for="isHealthViewed">Health</label>
+                <input type="checkbox" id="isHealthViewed" formControlName="isHealthViewed" (change)="updateCheckbox($event, 'isHealthViewed')">
+              </div>
+              <div class="form-check-item">
+                <label for="isAutoViewed">Auto</label>
+                <input type="checkbox" id="isAutoViewed" formControlName="isAutoViewed" (change)="updateCheckbox($event, 'isAutoViewed')">
+              </div>
+              <div class="form-check-item">
+                <label for="isRealEstateViewed">Real Estate</label>
+                <input type="checkbox" id="isRealEstateViewed" formControlName="isRealEstateViewed" (change)="updateCheckbox($event, 'isRealEstateViewed')">
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <div class="form-actions">
+          <button type="button" (click)="prevStep(3)" class="btn btn-secondary">Back</button>
+          <button type="submit" [disabled]="predictionForm.invalid || isLoading" class="btn btn-primary">
+            {{ isLoading ? 'Recommending...' : 'Get My Recommendation!' }}
+          </button>
+        </div>
+      </div>
+    </form>
+  
+    <!-- Error Message -->
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }} Please check your answers and try again.
+    </div>
+  
+    <!-- Recommendation Result (optional, can be removed if modal is sufficient) -->
+    <div *ngIf="prediction && !showModal" class="prediction-result">
+      <h3>Your Personalized Recommendation</h3>
+ 
+<div *ngIf="prediction && !showModal" class="prediction-result">
+    <div class="result-card">
+      <p class="result-heading">We Recommend:</p>
+      <p class="result-value">{{ prediction.prediction }}</p>
+      <p class="result-info">{{ getRecommendation().description }}</p>
+      <div class="form-actions">
+        <button type="button" class="btn btn-primary" (click)="openModal(getRecommendedProduct()!)" [disabled]="!getRecommendedProduct()">{{ getRecommendation().cta }}</button>
+        <button type="button" (click)="resetForm()" class="btn btn-secondary">Start Over</button>
+      </div>
+    </div>
+  </div>
+      </div>
+    </div>

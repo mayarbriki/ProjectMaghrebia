@@ -36,7 +36,7 @@ export interface BlogStatistics {
   providedIn: 'root'
 })
 export class BlogService {
-  private apiUrl = 'http://localhost:6969/api/blogs';
+  private apiUrl = 'http://localhost:6061/api/blogs';
 
   constructor(
     private http: HttpClient,

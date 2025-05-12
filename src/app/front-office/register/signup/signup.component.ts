@@ -21,10 +21,13 @@ export class SignupComponent {
       fullname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      phoneNumber: ['', Validators.required],
       confirmPassword: ['', Validators.required],
-      address: ['', Validators.required], // ✅ Ensure address is included
-      file: [null]
+      phoneNumber: ['', Validators.required],
+      address: ['', Validators.required],
+      age: [null, [Validators.required, Validators.min(18), Validators.max(120)]],
+      gender: ['', Validators.required],
+      maritalStatus: ['', Validators.required],
+      occupation: ['', Validators.required]
     });
   }
 
@@ -36,15 +39,19 @@ export class SignupComponent {
     if (this.signupForm.invalid) {
       return;
     }
-  
+
     const user = {
-      username: this.signupForm.value.fullname,
+      username: this.signupForm.value.fullname, // Maps to username on backend
       email: this.signupForm.value.email,
-      phoneNumber: this.signupForm.value.phoneNumber, // ✅ Add this
-      address: this.signupForm.value.address, // ✅ Add this
-      password: this.signupForm.value.password
+      phoneNumber: this.signupForm.value.phoneNumber,
+      address: this.signupForm.value.address,
+      password: this.signupForm.value.password,
+      age: this.signupForm.value.age,
+      gender: this.signupForm.value.gender,
+      maritalStatus: this.signupForm.value.maritalStatus,
+      occupation: this.signupForm.value.occupation
     };
-  
+
     this.authService.register(user, this.selectedFile ?? undefined).subscribe({
       next: (response) => {
         console.log('User registered:', response);
@@ -55,6 +62,5 @@ export class SignupComponent {
         console.error(err);
       }
     });
-  }    
-  
+  }
 }

@@ -53,6 +53,8 @@ import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessmen
 import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
 import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
 import { TransactionsComponent } from './@theme/pages/transactions/transactions.component';
+import { PredictionComponent } from './prediction/prediction.component';
+import { ProductRecommendationFormComponent } from './product-recommendation-form/product-recommendation-form.component';
 
 const routes: Routes = [
   // Front-Office Routes
@@ -82,6 +84,7 @@ const routes: Routes = [
   { path: 'app-bookmark', component: BookmarkComponent },
   { path: 'blogs/:id', component: BlogSingleComponent },
   { path: 'blog-statistics', component: BlogStatisticsComponent },
+  { path: 'app-product-recommendation-form', component: ProductRecommendationFormComponent },
 
   // Back-Office Routes
   {
@@ -126,6 +129,9 @@ const routes: Routes = [
       { path: 'incidents', component: IncidentsComponent },
       { path: 'joboffers', component: JoboffersComponent },
       { path: 'news', component: NewsComponent },
+      { path: 'app-prediction', component: PredictionComponent },
+  
+      
     ],
   },
 

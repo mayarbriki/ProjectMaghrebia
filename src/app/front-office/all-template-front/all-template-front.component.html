@@ -60,53 +60,47 @@
 </section>
 
 <main id="main">
+  <div class="circle-button-container">
+    <a href="/app-product-recommendation-form" class="circle-button">
+      <i class="fa fa-plus"></i>
+    </a>
+  </div>
+  
+  <style>
+  .circle-button-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+  }
+  
+  .circle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 50%;
+    text-decoration: none;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+  }
+  
+  .circle-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.1);
+  }
+  
+  .circle-button i {
+    font-size: 24px;
+  }
+  </style>
 
  
 
-    <!--==========================
-      About Section
-    ============================-->
-    <section id="about">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-            <h2>About Maghrebia Insurance</h2>
-            <p> offers three plans tailored to users' needs. The basic plan provides limited access to events and meetings. The standard plan offers unlimited access with automated meeting scheduling. The premium plan, designed for businesses, includes advanced features for optimized event management.</p>
-          </div>
-          
-        </div>
-      </div>
-    </section>
-
-<!--==========================
-  Intro Section
-============================-->
-<section id="intro">
-  <div class="intro-container wow fadeIn">
-    <h1 class="mb-4 pb-0">Maghrebia<br><span>Insurance</span> </h1>
-    <p class="mb-4 pb-0">Protect what matters most with our comprehensive insurance plans – reliable coverage, peace of mind, and support when you need it most</p>
-  <a href="#about" class="about-btn scrollto">About Us</a>
-</div>
-</section>
-
-<main id="main">
-
-
-
-  <!--==========================
-    About Section
-  ============================-->
-  <section id="about">
-    <div class="container">
-      <div class="row">
-        <div class="col-lg-6">
-          <h2>About Maghrebia Insurance</h2>
-          <p> offers three plans tailored to users' needs. The basic plan provides limited access to events and meetings. The standard plan offers unlimited access with automated meeting scheduling. The premium plan, designed for businesses, includes advanced features for optimized event management.</p>
-        </div>
-        
-      </div>
-    </div>
-  </section>
+  
 
 
 <!--<app-claims></app-claims>-->

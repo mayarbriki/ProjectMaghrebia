@@ -1,0 +1,352 @@
+.prediction-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .prediction-form {
+    background-color: #f5f7fa;
+    border-radius: 8px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+  }
+  
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  
+  .form-section {
+    background-color: #ffffff;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .form-section h3 {
+    font-size: 1.2rem;
+    color: #3498db;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e1e5ea;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #2c3e50;
+  }
+  
+  input, select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dce1e8;
+    border-radius: 4px;
+    font-size: 14px;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+  }
+  
+  .error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .form-check {
+    margin-top: 15px;
+  }
+  
+  .form-check-item {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .form-check-item label {
+    margin-bottom: 0;
+    margin-right: 10px;
+    min-width: 100px;
+  }
+  
+  .form-check-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+  }
+  
+  .form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+  }
+  
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+  
+  .btn-small {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+  
+  .btn-primary {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .btn-primary:hover {
+    background-color: #2980b9;
+  }
+  
+  .btn-primary:disabled {
+    background-color: #95a5a6;
+    cursor: not-allowed;
+  }
+  
+  .btn-secondary {
+    background-color: #ecf0f1;
+    color: #2c3e50;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #dce1e8;
+  }
+  
+  .error-alert {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .prediction-result {
+    background-color: #f0f7ff;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .prediction-result h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    text-align: center;
+  }
+  
+  .result-card {
+    background-color: white;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  .result-heading {
+    font-weight: 600;
+    color: #7f8c8d;
+    margin-bottom: 5px;
+  }
+  
+  .result-value {
+    font-size: 2rem;
+    color: #3498db;
+    margin: 10px 0;
+    font-weight: 700;
+  }
+  
+  .result-info {
+    color: #2c3e50;
+    margin-bottom: 20px;
+  }
+  
+  .intro-text {
+    text-align: center;
+    color: #7f8c8d;
+    margin-bottom: 20px;
+    font-size: 16px;
+  }
+  
+  .progress-bar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-step {
+    flex: 1;
+    max-width: 150px;
+    text-align: center;
+    padding: 10px;
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    color: #7f8c8d;
+    font-size: 14px;
+    transition: background-color 0.2s, color 0.2s;
+  }
+  
+  .progress-step.active {
+    background-color: #3498db;
+    color: white;
+  }
+  
+  .questionnaire-section {
+    margin-bottom: 20px;
+  }
+  
+  .tooltip {
+    font-size: 12px;
+    color: #7f8c8d;
+    cursor: help;
+  }
+  
+  /* Table and Modal Styles */
+  .product-table {
+    margin-bottom: 30px;
+  }
+  
+  .product-table h3 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #e1e5ea;
+  }
+  
+  th {
+    background-color: #f5f7fa;
+    color: #2c3e50;
+    font-weight: 600;
+  }
+  
+  td {
+    color: #34495e;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-content {
+    background-color: white;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 500px;
+    width: 90%;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+  
+  .modal-content h3 {
+    color: #2c3e50;
+    margin-top: 0;
+    text-align: center;
+  }
+  
+  .modal-body {
+    margin-bottom: 20px;
+  }
+  
+  .modal-body .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .modal-body label {
+    font-weight: 600;
+    color: #34495e;
+  }
+  
+  .modal-body p {
+    margin: 5px 0 0;
+    color: #2c3e50;
+  }
+  
+  .product-image {
+    max-width: 100%;
+    height: auto;
+    margin-top: 10px;
+    border-radius: 4px;
+  }
+  
+  @media (max-width: 600px) {
+    .prediction-container {
+      padding: 10px;
+    }
+  
+    .form-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .progress-bar {
+      flex-direction: column;
+      gap: 5px;
+    }
+  
+    .progress-step {
+      max-width: none;
+    }
+  
+    .form-actions {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    .btn {
+      width: 100%;
+    }
+  
+    table, th, td {
+      font-size: 14px;
+    }
+  
+    th, td {
+      padding: 8px;
+    }
+  }

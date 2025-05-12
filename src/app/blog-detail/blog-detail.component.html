@@ -1,38 +1,43 @@
 <div class="blog-container">
-  <!-- Search Input -->
-  <div class="search-controls">
-    <input 
-      type="text" 
-      [(ngModel)]="searchQuery" 
-      (input)="onSearch()" 
-      placeholder="Search blogs..." 
-      class="search-input" 
-    />
-  </div>
+  <!-- Search & Sorting Controls -->
+  <div class="search-sort-container">
+    <!-- Search Input -->
+    <div class="search-controls">
+      <input 
+        type="text" 
+        [(ngModel)]="searchQuery" 
+        (input)="onSearch()" 
+        placeholder="Search blogs..." 
+        class="search-input" 
+      />
+    </div>
 
-  <!-- Sorting Controls -->
-  <div class="sorting-controls">
-    <span class="sort-label">Sort By:</span>
-    <div class="sort-options">
-      <ng-container *ngFor="let option of sortOptions">
-        <span 
-          class="sort-option" 
-          [class.active]="sortBy === option.value" 
-          (click)="sort(option.value)">
-          {{ option.label }}
-          <span class="sort-arrow">{{ getSortArrow(option.value) }}</span>
-        </span>
-      </ng-container>
+    <!-- Sorting Controls -->
+    <div class="sorting-controls">
+      <span class="sort-label">Sort By:</span>
+      <div class="sort-options">
+        <ng-container *ngFor="let option of sortOptions">
+          <span 
+            class="sort-option" 
+            [class.active]="sortBy === option.value" 
+            (click)="sort(option.value)">
+            {{ option.label }}
+            <span class="sort-arrow">{{ getSortArrow(option.value) }}</span>
+          </span>
+        </ng-container>
+      </div>
     </div>
   </div>
 
-  <!-- Blog Cards -->
-  <div *ngFor="let blog of displayedBlogs" class="blog-card" (click)="viewBlog(blog.id)">
-    <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image" />
-    <h2>{{ blog.title }}</h2>
-    <p><strong>Author:</strong> {{ blog.author }}</p>
-    <p>{{ blog.content | slice:0:100 }}...</p>
-    <p><strong>Likes:</strong> {{ blog.likes || 0 }}</p>
+  <!-- Blog Cards Container -->
+  <div class="blog-cards">
+    <div *ngFor="let blog of displayedBlogs" class="blog-card" (click)="viewBlog(blog.id)">
+      <img *ngIf="blog.image" [src]="getBlogImageUrl(blog.image)" alt="Blog Image" class="blog-image" />
+      <h2>{{ blog.title }}</h2>
+      <p><strong>Author:</strong> {{ blog.author }}</p>
+      <p>{{ blog.content | slice:0:100 }}...</p>
+      <p><strong>Likes:</strong> {{ blog.likes || 0 }}</p>
+    </div>
   </div>
 
   <!-- No Blogs Message -->

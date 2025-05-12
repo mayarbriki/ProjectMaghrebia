@@ -93,7 +93,7 @@ export class BlogSingleComponent implements OnInit {
   }
 
   getBlogImageUrl(imageFileName?: string): string {
-    return imageFileName ? `http://localhost:6969/uploads/${imageFileName}` : '';
+    return imageFileName ? `http://localhost:6061/uploads/${imageFileName}` : '';
   }
 
   backToList(): void {

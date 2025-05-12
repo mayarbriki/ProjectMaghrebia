@@ -1,68 +1,140 @@
 <section id="signup" class="wow fadeInUp">
-    <div class="container">
-      <div class="section-header">
-        <h2>Sign Up</h2>
-        <p>Create a new account</p>
-      </div>
-  
-      <div class="row justify-content-center">
-        <div class="col-md-6">
-          <div class="card">
-            <div class="card-body">
-              <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
-                <div class="form-group">
-                  <label for="fullname">Full Name</label>
-                  <input type="text" class="form-control" id="fullname" formControlName="fullname" placeholder="Enter your full name">
-                  <small *ngIf="signupForm.get('fullname')?.invalid && signupForm.get('fullname')?.touched" class="text-danger">Full Name is required.</small>
-                </div>
-  
-                <div class="form-group">
-                  <label for="email">Email Address</label>
-                  <input type="email" class="form-control" id="email" formControlName="email" placeholder="Enter your email">
-                  <small *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger">Enter a valid email.</small>
-                </div>
-  
-                <div class="form-group">
-                  <label for="password">Password</label>
-                  <input type="password" class="form-control" id="password" formControlName="password" placeholder="Enter a password">
-                  <small *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">Password is required.</small>
-                </div>
-  
-                <div class="form-group">
-                  <label for="confirmPassword">Confirm Password</label>
-                  <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm your password">
-                  <small *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched" class="text-danger">Passwords must match.</small>
-                </div>
-                <div class="form-group">
-                    <label for="file">Profile Picture</label>
-                    <input type="file" class="form-control-file" id="file" (change)="onFileSelected($event)">
-                  </div>
-                  <div class="form-group">
-                    <label for="phoneNumber">Phone Number</label>
-                    <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number">
-                    <small *ngIf="signupForm.get('phoneNumber')?.invalid && signupForm.get('phoneNumber')?.touched" class="text-danger">
-                      Enter a valid phone number (10 digits).
-                    </small>
-                  </div>
-                  <div class="form-group">
-                    <label for="address">Address</label>
-                    <input type="text" class="form-control" id="address" formControlName="address" placeholder="Enter your address">
-                    <small *ngIf="signupForm.get('address')?.invalid && signupForm.get('address')?.touched" class="text-danger">
-                      Address is required.
-                    </small>
-                  </div>
+  <div class="container">
+    <div class="section-header">
+      <h2>Sign Up</h2>
+      <p>Create a new account</p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+              <!-- Personal Information -->
+              <div class="form-group">
+                <label for="fullname">Full Name</label>
+                <input type="text" class="form-control" id="fullname" formControlName="fullname" placeholder="Enter your full name">
+                <small *ngIf="signupForm.get('fullname')?.invalid && signupForm.get('fullname')?.touched" class="text-danger">Full Name is required.</small>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" class="form-control" id="email" formControlName="email" placeholder="Enter your email">
+                <small *ngIf="signupForm.get('email')?.invalid && signupForm.get('email')?.touched" class="text-danger">Enter a valid email.</small>
+              </div>
+
+              <!-- Demographics (Required by Backend) -->
+              <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" class="form-control" id="age" formControlName="age" placeholder="Enter your age">
+                <small *ngIf="signupForm.get('age')?.invalid && signupForm.get('age')?.touched" class="text-danger">
+                  Age is required and must be between 18 and 120.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="gender">Gender</label>
+                <select class="form-control" id="gender" formControlName="gender">
+                  <option value="">Select gender</option>
+                  <option value="MALE">Male</option>
+                  <option value="FEMALE">Female</option>
+                  <option value="OTHER">Other</option>
+                </select>
+                <small *ngIf="signupForm.get('gender')?.invalid && signupForm.get('gender')?.touched" class="text-danger">
+                  Please select a gender.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="maritalStatus">Marital Status</label>
+                <select class="form-control" id="maritalStatus" formControlName="maritalStatus">
+                  <option value="">Select marital status</option>
+                  <option value="SINGLE">Single</option>
+                  <option value="MARRIED">Married</option>
+                  <option value="DIVORCED">Divorced</option>
+                  <option value="WIDOWED">Widowed</option>
+                </select>
+                <small *ngIf="signupForm.get('maritalStatus')?.invalid && signupForm.get('maritalStatus')?.touched" class="text-danger">
+                  Please select your marital status.
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="occupation">Occupation</label>
+                <select class="form-control" id="occupation" formControlName="occupation">
+                  <option value="">Select occupation</option>
+                  <option value="ENGINEER">ENGINEER</option>
+                  <option value="ADMINISTRATIVE">ADMINISTRATIVE</option>
+                  <option value="EXECUTIVE">EXECUTIVE</option>
+                  <option value="SALES">SALES</option>
+                  <option value="SELF_EMPLOYED">SELF_EMPLOYED</option>
+                  <option value="TECHNICIAN">TECHNICIAN</option>
+
+
+
+               
                   
-  
-                <button type="submit" class="btn btn-primary btn-block" [disabled]="signupForm.invalid">Sign Up</button>
-  
-                <p class="text-center mt-3">
-                  Already have an account? <a routerLink="/signin">Sign In</a>
-                </p>
-              </form>
-            </div>
+                  <option value="UNEMPLOYED">Unemployed</option>
+                </select>
+                <small *ngIf="signupForm.get('occupation')?.invalid && signupForm.get('occupation')?.touched" class="text-danger">
+                  Please select your occupation.
+                </small>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="form-group">
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" class="form-control" id="phoneNumber" formControlName="phoneNumber" placeholder="Enter your phone number">
+                <small *ngIf="signupForm.get('phoneNumber')?.invalid && signupForm.get('phoneNumber')?.touched" class="text-danger">
+                  Enter a valid phone number.
+                </small>
+              </div>
+              
+              <div class="form-group">
+                <label for="address">Address</label>
+                <input type="text" class="form-control" id="address" formControlName="address" placeholder="Enter your address">
+                <small *ngIf="signupForm.get('address')?.invalid && signupForm.get('address')?.touched" class="text-danger">
+                  Address is required.
+                </small>
+              </div>
+
+              <!-- Security -->
+              <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" id="password" formControlName="password" placeholder="Enter a password">
+                <small *ngIf="signupForm.get('password')?.invalid && signupForm.get('password')?.touched" class="text-danger">
+                  Password is required (minimum 6 characters).
+                </small>
+              </div>
+
+              <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" class="form-control" id="confirmPassword" formControlName="confirmPassword" placeholder="Confirm your password">
+                <small *ngIf="signupForm.get('confirmPassword')?.invalid && signupForm.get('confirmPassword')?.touched" class="text-danger">
+                  Passwords must match.
+                </small>
+              </div>
+
+              <!-- Profile Picture -->
+              <div class="form-group">
+                <label for="file">Profile Picture</label>
+                <input type="file" class="form-control-file" id="file" (change)="onFileSelected($event)">
+              </div>
+
+              <!-- Error Message Display -->
+              <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+                {{ errorMessage }}
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="signupForm.invalid">Sign Up</button>
+
+              <p class="text-center mt-3">
+                Already have an account? <a routerLink="/signin">Sign In</a>
+              </p>
+            </form>
           </div>
         </div>
       </div>
     </div>
-  </section>
-  
+  </div>
+</section>

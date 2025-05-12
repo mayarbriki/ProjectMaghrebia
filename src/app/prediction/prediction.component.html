@@ -1,0 +1,191 @@
+<div class="prediction-container">
+    <h2>Insurance Service Prediction</h2>
+    
+    <form [formGroup]="predictionForm" (ngSubmit)="onSubmit()" class="prediction-form">
+      <div class="form-grid">
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h3>Personal Information</h3>
+          
+          <div class="form-group">
+            <label for="age">Age:</label>
+            <input type="number" id="age" formControlName="age" min="18" max="100">
+            <div *ngIf="predictionForm.get('age')?.invalid && predictionForm.get('age')?.touched" class="error-message">
+              Age is required (18-100)
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" formControlName="gender">
+              <option *ngFor="let option of genders" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="region">Region:</label>
+            <select id="region" formControlName="region">
+              <option *ngFor="let option of regions" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="maritalStatus">Marital Status:</label>
+            <select id="maritalStatus" formControlName="maritalStatus">
+              <option *ngFor="let option of maritalStatuses" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="occupation">Occupation:</label>
+            <select id="occupation" formControlName="occupation">
+              <option *ngFor="let option of occupations" [value]="option">{{option}}</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Financial Information -->
+        <div class="form-section">
+          <h3>Financial Information</h3>
+          
+          <div class="form-group">
+            <label for="incomeLevel">Income Level:</label>
+            <input type="number" id="incomeLevel" formControlName="incomeLevel" min="0">
+            <div *ngIf="predictionForm.get('incomeLevel')?.invalid && predictionForm.get('incomeLevel')?.touched" class="error-message">
+              Valid income is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="tenureYears">Tenure Years:</label>
+            <input type="number" id="tenureYears" formControlName="tenureYears" min="0" max="50">
+            <div *ngIf="predictionForm.get('tenureYears')?.invalid && predictionForm.get('tenureYears')?.touched" class="error-message">
+              Valid tenure (0-50) is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="purchaseAmount">Purchase Amount:</label>
+            <input type="number" id="purchaseAmount" formControlName="purchaseAmount" min="0">
+            <div *ngIf="predictionForm.get('purchaseAmount')?.invalid && predictionForm.get('purchaseAmount')?.touched" class="error-message">
+              Valid purchase amount is required
+            </div>
+          </div>
+        </div>
+        
+        <!-- Product Information -->
+        <div class="form-section">
+          <h3>Product Information</h3>
+          
+          <div class="form-group">
+            <label for="currentProduct">Current Product:</label>
+            <select id="currentProduct" formControlName="currentProduct">
+              <option *ngFor="let option of productOptions" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="bookmarkedService">Bookmarked Service:</label>
+            <select id="bookmarkedService" formControlName="bookmarkedService">
+              <option *ngFor="let option of productOptions" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="isBookmarked">Is Bookmarked:</label>
+            <select id="isBookmarked" formControlName="isBookmarked">
+              <option [value]="1">Yes</option>
+              <option [value]="0">No</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="satisfactionScore">Satisfaction Score:</label>
+            <select id="satisfactionScore" formControlName="satisfactionScore">
+              <option [value]="1">1 - Very Unsatisfied</option>
+              <option [value]="2">2 - Unsatisfied</option>
+              <option [value]="3">3 - Neutral</option>
+              <option [value]="4">4 - Satisfied</option>
+              <option [value]="5">5 - Very Satisfied</option>
+            </select>
+          </div>
+        </div>
+        
+        <!-- Behavioral Information -->
+        <div class="form-section">
+          <h3>Behavioral Information</h3>
+          
+          <div class="form-group">
+            <label for="interestedInOtherProducts">Interested In Other Products:</label>
+            <select id="interestedInOtherProducts" formControlName="interestedInOtherProducts">
+              <option *ngFor="let option of yesNoOptions" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="marketingInteraction">Marketing Interaction:</label>
+            <select id="marketingInteraction" formControlName="marketingInteraction">
+              <option *ngFor="let option of marketingInteractions" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="preferredCommunicationChannel">Preferred Communication:</label>
+            <select id="preferredCommunicationChannel" formControlName="preferredCommunicationChannel">
+              <option *ngFor="let option of communicationChannels" [value]="option">{{option}}</option>
+            </select>
+          </div>
+          
+          <div class="form-check">
+            <label>Services Viewed:</label>
+            
+            <div class="form-check-item">
+              <label for="isHealthViewed">Health</label>
+              <select id="isHealthViewed" formControlName="isHealthViewed">
+                <option [value]="1">Yes</option>
+                <option [value]="0">No</option>
+              </select>
+            </div>
+            
+            <div class="form-check-item">
+              <label for="isAutoViewed">Auto</label>
+              <select id="isAutoViewed" formControlName="isAutoViewed">
+                <option [value]="1">Yes</option>
+                <option [value]="0">No</option>
+              </select>
+            </div>
+            
+            <div class="form-check-item">
+              <label for="isRealEstateViewed">Real Estate</label>
+              <select id="isRealEstateViewed" formControlName="isRealEstateViewed">
+                <option [value]="1">Yes</option>
+                <option [value]="0">No</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" [disabled]="predictionForm.invalid || isLoading" class="btn btn-primary">
+          {{ isLoading ? 'Loading...' : 'Predict Next Purchase' }}
+        </button>
+        <button type="button" (click)="resetForm()" class="btn btn-secondary">
+          Reset Form
+        </button>
+      </div>
+    </form>
+    
+    <div *ngIf="errorMessage" class="error-alert">
+      {{ errorMessage }}
+    </div>
+    
+    <div *ngIf="prediction" class="prediction-result">
+      <h3>Prediction Result</h3>
+      <div class="result-card">
+        <p class="result-heading">Next Service Likely to be Purchased:</p>
+        <p class="result-value">{{ prediction.prediction }}</p>
+        <p class="result-info">This customer is most likely to purchase the {{ prediction.prediction }} service next.</p>
+      </div>
+    </div>
+  </div>

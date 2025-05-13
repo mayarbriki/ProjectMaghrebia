@@ -14,7 +14,7 @@ export class TransactionsComponent implements OnInit {
   transactionForm: Transaction = {
     user_id: 0,
     amount: 0,
-    payment_method: 'CASH', // ✅ Use a valid default enum value
+    payment_method: 'PAYPAL', // ✅ Use a valid default enum value
     transaction_date: '',
     status: 'PENDING' // ✅ Use a valid default enum value
   };
@@ -86,7 +86,7 @@ export class TransactionsComponent implements OnInit {
     this.transactionForm = {
       user_id: 0,
       amount: 0,
-      payment_method: 'CASH',
+      payment_method: 'PAYPAL', // Default value
       transaction_date: '',
       status: 'PENDING',
     };

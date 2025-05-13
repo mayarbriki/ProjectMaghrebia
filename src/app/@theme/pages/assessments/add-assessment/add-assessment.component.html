@@ -35,12 +35,12 @@
             <input type="date" id="submissionDate" class="form-control" required [(ngModel)]="assessment.submissionDate" name="submissionDate">
         </div>
 
-        <!-- Upload Documents -->
+        <!-- Upload Documents 
         <div class="form-group">
             <label class="font-weight-bold">Upload Documents</label>
             <input type="file" id="file-upload" class="form-control file-input" multiple (change)="onFileSelected($event)">
         </div>
-
+-->
         <!-- Buttons -->
         <div class="button-group">
             <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!assessmentForm.form.valid">Add </button>

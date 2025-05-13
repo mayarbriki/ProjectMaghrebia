@@ -82,17 +82,6 @@
 <link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
       <div id="logo" class="pull-left">
         <a href="#" class="scrollto"><img src="../../../assets/FrontOffice/img/maghrebia (2).png" alt="" title=""></a>
-        <!-- Bootstrap CSS File -->
-<link href="/assets/FrontOffice/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Libraries CSS Files -->
-<link href="/assets/FrontOffice/lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
-<link href="/assets/FrontOffice/lib/animate/animate.min.css" rel="stylesheet">
-<link href="/assets/FrontOffice/lib/venobox/venobox.css" rel="stylesheet">
-<link href="/assets/FrontOffice/lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
-
-<!-- Main Stylesheet File -->
-<link href="/assets/FrontOffice/css/style.css" rel="stylesheet">
       </div>
 
       <nav id="nav-menu-container">
@@ -101,42 +90,30 @@
           <li><a href="#about">About</a></li>
           <li><a href="/claims">Claims</a></li>
           <li><a href="#contracts">Contracts</a></li>
-          <li><a href="/propertiesF ">Properties</a></li>
-          <li><a href="/incidents">Incidents</a></li>
+          <li><a href="#properties">Properties</a></li>
+          <li><a href="#sponsors">Sponsors</a></li>
           <li><a href="/signin">News</a></li>
           <li><a href="/services">Services</a></li>
-          <li class="buy-tickets"><a href="/signin">Login</a></li>  
+
+          <!-- Conditional rendering -->
+          <ng-container *ngIf="!isAuthenticated; else profileMenu">
+            <li><a href="/signup">SignUp</a></li>
+            <li class="buy-tickets"><a href="/signin">Login</a></li>
+          </ng-container>
+
+          <ng-template #profileMenu>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                <img src="/assets/FrontOffice/img/user-profile.png" alt="" width="30" height="30" class="rounded-circle">
+              </a>
+              <ul class="dropdown-menu">
+              </ul>
+            </li>
+          </ng-template>
           
-              
+          
+
         </ul>
-      </nav>
+      </nav><!-- #nav-menu-container -->
     </div>
   </header><!-- #header -->
-
-  <!--==========================
-    Intro Section
-  ============================-->
- <!-- <section id="intro">
-    <div class="intro-container wow fadeIn">
-      <h1 class="mb-4 pb-0">Maghrebia<br><span>Insurance</span> </h1>
-      <p class="mb-4 pb-0">Protect what matters most with our comprehensive insurance plans – reliable coverage, peace of mind, and support when you need it most</p>
-    <a href="#about" class="about-btn scrollto">About Us</a>
-  </div>
-</section>
--->
-<main id="main">
-
- 
-
-    <!--==========================
-      About Section
-    ============================-->
-    <section id="about">
-      <div class="container">
-        <div class="row">
-          <div class="col-lg-6">
-          </div>
-          
-        </div>
-      </div>
-    </section>

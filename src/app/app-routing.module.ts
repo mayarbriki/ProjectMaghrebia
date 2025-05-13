@@ -13,6 +13,8 @@ import { ProductDisplayComponent } from './product-display/product-display.compo
 import { FeedbackComponent } from './feedback/feedback.component';
 import { AddClaimComponentFront } from './front-office/claims/add-claim-front/add-claim-front.component';
 import { ListClaimComponentFront } from './front-office/claims/list-claim-front/list-claim-front.component';
+import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
+import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
 import { ModifyClaimComponentFront } from './front-office/claims/modify-claim-front/modify-claim-front.component';
 import { ViewClaimComponentFront } from './front-office/claims/view-claim-front/view-claim-front.component';
 import { ListAssessmentComponentFront } from './front-office/assessments/list-assessment-front/list-assessment-front.component';
@@ -26,13 +28,15 @@ import { FeedbackDisplayComponent } from './feedback-display/feedback-display.co
 import { BlogSingleComponent } from './blog-single/blog-single.component';
 import { BlogStatisticsComponent } from './blog-statistics/blog-statistics.component';
 import { ContractsComponent } from './front-office/contracts/contracts.component';
-import { TransactionComponent } from './front-office/transactions/transactions.component';
+import { TransactionsComponent } from './front-office/transactions/transactions.component';
 import { TrainingsComponent } from './front-office/trainings/trainings.component';
 import { TrainingGalleryComponent } from './front-office/training-gallery/training-gallery.component';
 import { QuizComponent } from './front-office/quiz/quiz.component';
 import { EnrollmentComponent } from './enrollment/enrollment.component';
 import { BookmarkComponent } from './bookmark/bookmark.component';
-
+import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
+import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
+import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
 // Back-Office Imports
 import { AdminComponent } from './demo/layout/admin';
 import { EmptyComponent } from './demo/layout/empty';
@@ -52,7 +56,9 @@ import { PropertiesComponentF } from './front-office/properties/properties.compo
 import { PropertyCollageComponent } from './@theme/pages/property/property-collage/property-collage.component';
 import { IncidentFormComponent } from './front-office/incidents/incident-form/incident-form.component';
 import { IncidentListComponent } from './front-office/incidents/incident-list/incident-list.component';
-
+import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
+import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
+import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
 // Combined Routes
 const routes: Routes = [
   // Front-Office Routes
@@ -73,10 +79,14 @@ const routes: Routes = [
     path: 'signup', // New route for the message component
     component: SignupComponent
   },
-  {
-    path: 'claims', // New route for the message component
-    component: ListClaimComponentFront
-  },
+  { path: 'claims', component: ListClaimComponentFront },
+  { path: 'claimsFront/AddClaim', component: AddClaimComponentFront },
+  { path: 'claimsFront/EditClaim/:id', component: ModifyClaimComponentFront },
+  { path: 'claimsFront/DetailsClaim/:id', component: ViewClaimComponentFront },
+  { path: 'assessments', component: ListAssessmentComponentFront },
+  { path: 'assessmentsFront/ViewAssessment/:id', component: ViewAssessmentComponentFront },
+  { path: 'assessmentsFront/AddAssessment', component: AddAssessmentFrontComponent },
+  { path: 'assessmentsFront/EditAssessment/:id', component: ModifyAssessmentFrontComponent },
   {
     path: 'Services', // New route for the message component
     component: ServicesComponent
@@ -91,7 +101,7 @@ const routes: Routes = [
   },
   {
     path:'transactions',
-    component:TransactionComponent
+    component:TransactionsComponent
   },
   {
     path:'list',
@@ -143,17 +153,20 @@ const routes: Routes = [
         path: 'articles',
         component: ArticlesComponent
       },
-      {
-        path: 'assesements',
-        component: ListAssessmentComponentFront
-      },
+      { path: 'assessments', component: ListAssessmentComponent },
+      { path: 'assessments/AddAssessment', component: AddAssessmentComponent },
+      { path: 'assessments/EditAssessment/:id', component: ModifyAssessmentComponent },
+      { path: 'assessments/ViewAssessment/:id', component: ViewAssessmentComponent },
+      { path: 'claims/AddClaim', component: AddClaimComponent },
+      { path: 'claims/EditClaim/:id', component: ModifyClaimComponent },
+      { path: 'claims/DetailsClaim/:id', component: ViewClaimComponent },
       {
         path: 'blogs',
         component: BlogsComponent
       },
       {
         path: 'claims',
-        component: ListClaimComponentFront
+        component: ListClaimComponent
       },
       {
         path: 'joboffers',
@@ -169,7 +182,7 @@ const routes: Routes = [
       },
       {
         path: 'transactions',
-        component: TransactionComponent
+        component: TransactionsComponent
       },
       {
         path: 'propertylistB',

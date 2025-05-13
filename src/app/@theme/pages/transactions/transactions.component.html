@@ -1,66 +1,39 @@
-
-
-<div class="transactions-container">
-  <link rel="stylesheet" href="/assets/FrontOffice/css/style.css">
-
-  <h2 class="text-center mb-4">💰 Transaction Management</h2>
-
-  <!-- ✅ Add Transaction Form -->
-  <<div class="transaction-form">
-    <h3>{{ isEditing ? '✏️ Edit Transaction' : '➕ Add New Transaction' }}</h3>
-    <form (ngSubmit)="addTransaction()" class="form-container">
-
+<div class="container">
+    <h2>Transactions</h2>
+  
+    <!-- Form for Adding/Editing Transactions -->
+    <form (ngSubmit)="addTransaction()">
+  
       <div class="form-group">
-        <label>💲 Amount:</label>
-        <input type="number" [(ngModel)]="transactionForm.amount" name="amount" required />
+        <label>Amount:</label>
+        <input type="number" [(ngModel)]="transactionForm.amount" name="amount" class="form-control" required />
       </div>
-
+  
       <div class="form-group">
-        <label>💳 Payment Method:</label>
-        <select [(ngModel)]="transactionForm.payment_method" name="payment_method" required>
-          <option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</option>
+        <label>Payment Method:</label>
+        <input type="text" [(ngModel)]="transactionForm.payment_method" name="payment_method" class="form-control" required />
+      </div>
+  
+      <div class="form-group">
+        <label>Transaction Date:</label>
+        <input type="datetime-local" [(ngModel)]="transactionForm.transaction_date" name="transaction_date" class="form-control" required />
+      </div>
+  
+      <div class="form-group">
+        <label>Status:</label>
+        <select [(ngModel)]="transactionForm.status" name="status" class="form-control" required>
+          <option value="PENDING">PENDING</option>
+          <option value="COMPLETED">COMPLETED</option>
+          <option value="FAILED">FAILED</option>
         </select>
       </div>
-
-      <div class="form-group">
-        <label>📅 Transaction Date:</label>
-        <input type="datetime-local" [(ngModel)]="transactionForm.transaction_date" name="transaction_date" required />
-      </div>
-
-      <div class="form-group">
-        <label>📜 Contract ID:</label>
-        <input type="number" [(ngModel)]="transactionForm.contract_id" name="contract_id" />
-      </div>
-
-      <div class="form-group">
-        <label>📌 Status:</label>
-        <select [(ngModel)]="transactionForm.status" name="status" required>
-          <option value="PENDING">⏳ PENDING</option>
-          <option value="COMPLETED">✔ COMPLETED</option>
-          <option value="FAILED">❌ FAILED</option>
-        </select>
-      </div>
-
-      <div class="form-actions">
-        <button type="submit" class="btn-primary">
-          {{ isEditing ? '✏️ Update' : '➕ Add' }} Transaction
-        </button>
-        <button type="button" class="btn-cancel" (click)="resetForm()" *ngIf="isEditing">❌ Cancel</button>
-      </div>
-      <div class="statistics-container">
-        <h3>Statistiques des Transactions</h3>
-        <p>✅ Transactions Validées : {{ validatedTransactionCount }}</p>
-        <p>❌ Transactions Rejetées : {{ failedTransactionCount }}</p>
-        <p>💰 Total Montant Validé : {{ totalValidatedAmount }} TND</p>
-      </div>
-      
-
+  
+      <button type="submit" class="btn btn-primary">{{ isEditing ? 'Update' : 'Add' }} Transaction</button>
+      <button type="button" class="btn btn-secondary" (click)="resetForm()" *ngIf="isEditing">Cancel</button>
     </form>
-  </div>
-
-  <!-- ✅ Transactions Table -->
-  <div class="table-container">
-    <table>
+  
+    <!-- Table Displaying Transactions -->
+    <table *ngIf="transactions.length > 0; else noTransactions" class="table">
       <thead>
         <tr>
           <th>ID</th>
@@ -70,35 +43,23 @@
           <th>Transaction Date</th>
           <th>Status</th>
           <th>Actions</th>
-      
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let transaction of transactions">
           <td>{{ transaction.transaction_id }}</td>
           <td>{{ transaction.user_id }}</td>
-          <td class="text-success fw-bold">{{ transaction.amount | currency }}</td>
-          <td class="text-primary">{{ transaction.payment_method }}</td>
+          <td>{{ transaction.amount | currency }}</td>
+          <td>{{ transaction.payment_method }}</td>
           <td>{{ transaction.transaction_date | date:'short' }}</td>
+          <td>{{ transaction.status }}</td>
           <td>
-            <span class="badge success" *ngIf="transaction.status === 'COMPLETED'">✔ Completed</span>
-            <span class="badge danger" *ngIf="transaction.status === 'FAILED'">❌ Failed</span>
-            <span class="badge warning" *ngIf="transaction.status === 'PENDING'">⏳ Pending</span>
-          </td>
-          <td>
-            <button (click)="editTransaction(transaction)" class="btn-edit">✏️ Edit</button>
-            <button (click)="deleteTransaction(transaction.transaction_id!)" class="btn-delete">🗑️ Delete</button>
-          </td>
-          
+            <button (click)="editTransaction(transaction)" class="btn btn-warning">Edit</button>
+            <button (click)="deleteTransaction(transaction.transaction_id!)" class="btn btn-danger">Delete</button>
+        </td>
         </tr>
       </tbody>
     </table>
-  </div>
-
-  <!-- ✅ No Transactions Placeholder -->
-  <ng-template #noTransactions>
-    <p class="no-data">📌 No transactions available.</p>
-  </ng-template>
   
     <ng-template #noTransactions>
       <p>No transactions available.</p>

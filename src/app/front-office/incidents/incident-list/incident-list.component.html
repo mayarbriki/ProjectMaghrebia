@@ -1,0 +1,39 @@
+<app-header-front></app-header-front>
+<div class="max-w-5xl mx-auto px-4 py-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">📋 Incident Reports</h2>
+
+  <div *ngIf="isLoading" class="text-blue-600 font-medium">Loading incidents...</div>
+
+  <div *ngIf="!isLoading && incidents.length === 0" class="text-gray-500 italic">
+    No incidents have been submitted yet.
+  </div>
+
+  <div *ngIf="!isLoading && incidents.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div *ngFor="let incident of incidents"
+     class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition hover:bg-gray-50">
+
+  <h3 class="text-xl font-semibold text-indigo-600 mb-1">{{ incident.title }}</h3>
+
+  <p class="text-sm text-gray-500 mb-2">
+    <span class="font-medium text-gray-700">Date:</span> {{ incident.dateOfIncident | date }}
+  </p>
+
+  <p class="text-sm text-gray-600 mb-2">
+    <span class="font-medium text-gray-700">Severity:</span> {{ incident.severity || 'Not specified' }}
+  </p>
+
+  <p class="text-sm text-gray-700 mb-3 line-clamp-3">{{ incident.description }}</p>
+
+  <p class="text-xs text-gray-500 italic">Submitted by: {{ incident.userEmail }}</p>
+
+  <div class="flex gap-2 mt-4">
+    <button (click)="generateIncidentPDF(incident, generateLocationIQStaticImageUrl(incident.latitude, incident.longitude))"
+            class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">Download PDF</button>
+
+            <button (click)="getAssessment(incident)"
+            class="text-sm bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Assess Coverage</button>
+  </div>
+</div>
+
+  </div>
+</div>

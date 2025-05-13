@@ -15,8 +15,10 @@ import { ViewClaimComponentFront } from '../claims/view-claim-front/view-claim-f
 import { ListAssessmentComponentFront } from '../assessments/list-assessment-front/list-assessment-front.component';
 import { ViewAssessmentComponentFront } from '../assessments/view-assessment-front/view-assessment-front.component';
 import { ContractsComponent } from "../contracts/contracts.component";
-import { PropertiesComponent } from '../properties/properties.component';
-import { IncidentsComponent } from "../incidents/incidents.component";
+import { IncidentFormComponent } from '../incidents/incident-form/incident-form.component';
+import { PropertiesComponent } from "../../@theme/pages/property/properties/properties.component";
+import { PropertiessComponent } from "../property/properties/properties.component";
+
 import { BlogsComponent } from '../blogs/blogs.component';
 import { ProductDisplayComponent } from 'src/app/product-display/product-display.component';
 import { BlogDetailComponent } from 'src/app/blog-detail/blog-detail.component';
@@ -28,11 +30,11 @@ import { ModifyAssessmentFrontComponent } from '../assessments/modify-assessment
   templateUrl: './all-template-front.component.html',
   styleUrls: ['./all-template-front.component.css'],
  // imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, FooterFrontComponent, SponsorsComponent, ClaimsComponent, ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent , BlogDetailComponent]
-  imports: [HeaderFrontComponent, ProductDisplayComponent,RouterModule, 
+  imports: [HeaderFrontComponent, RouterModule,ProductDisplayComponent,RouterModule, 
             FooterFrontComponent, SponsorsComponent, 
-            ListClaimComponentFront, AddClaimComponentFront, ModifyClaimComponentFront,ViewClaimComponentFront,
+            ListClaimComponentFront, AddClaimComponentFront, ModifyClaimComponentFront,ViewClaimComponentFront,IncidentFormComponent,
             ListAssessmentComponentFront, ViewAssessmentComponentFront,AddAssessmentFrontComponent, ModifyAssessmentFrontComponent,
-            ContractsComponent, PropertiesComponent, IncidentsComponent, BlogsComponent, BlogDetailComponent]
+            ContractsComponent, PropertiesComponent, BlogsComponent, BlogDetailComponent, PropertiessComponent]
 })
 export class AllTemplateFrontComponent {
 

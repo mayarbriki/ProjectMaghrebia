@@ -40,56 +40,81 @@ import DashboardComponent from './demo/pages/dashboard/dashboard.component';
 import SamplePageComponent from './demo/pages/other/sample-page/sample-page.component';
 import { ContratsComponent } from './@theme/pages/contrats/contrats.component';
 import { ArticlesComponent } from './@theme/pages/articles/articles.component';
-import { IncidentsComponent } from './@theme/pages/incidents/incidents.component';
+
 import { JoboffersComponent } from './@theme/pages/joboffers/joboffers.component';
 import { NewsComponent } from './@theme/pages/news/news.component';
-import { PropertiesComponent } from './@theme/pages/properties/properties.component';
-import { FeedbackAdminComponent } from './feedback-admin/feedback-admin.component';
-import { StatisticsComponent } from './statistics/statistics.component';
-import { ListClaimComponent } from './@theme/pages/claims/list-claim/list-claim.component';
-import { AddClaimComponent } from './@theme/pages/claims/add-claim/add-claim.component';
-import { ModifyClaimComponent } from './@theme/pages/claims/modify-claim/modify-claim.component';
-import { ViewClaimComponent } from './@theme/pages/claims/view-claim/view-claim.component';
-import { ListAssessmentComponent } from './@theme/pages/assessments/list-assessment/list-assessment.component';
-import { AddAssessmentComponent } from './@theme/pages/assessments/add-assessment/add-assessment.component';
-import { ModifyAssessmentComponent } from './@theme/pages/assessments/modify-assessment/modify-assessment.component';
-import { ViewAssessmentComponent } from './@theme/pages/assessments/view-assessment/view-assessment.component';
-import { TransactionsComponent } from './@theme/pages/transactions/transactions.component';
-import { PredictionComponent } from './prediction/prediction.component';
-import { ProductRecommendationFormComponent } from './product-recommendation-form/product-recommendation-form.component';
+import { PropertiesComponent } from './@theme/pages/property/properties/properties.component';
 
+import { PropertyListComponent } from './@theme/pages/property/property-list/property-list.component';
+import { PropertyMobileDetailComponent } from './@theme/pages/property/property-mobile-detail/property-mobile-detail.component';
+import { PropertiessComponent } from './front-office/property/properties/properties.component';
+import { PropertiesComponentF } from './front-office/properties/properties.component';
+import { PropertyCollageComponent } from './@theme/pages/property/property-collage/property-collage.component';
+import { IncidentFormComponent } from './front-office/incidents/incident-form/incident-form.component';
+import { IncidentListComponent } from './front-office/incidents/incident-list/incident-list.component';
+
+// Combined Routes
 const routes: Routes = [
   // Front-Office Routes
-  { path: '', component: AllTemplateFrontComponent },
-  { path: 'enrollment', component: EnrollmentComponent },
-  { path: 'app-feedback-display', component: FeedbackDisplayComponent },
-  { path: 'app-header-front', component: HeaderFrontComponent },
-  { path: 'app-feedback', component: FeedbackComponent },
-  { path: 'product/:id', component: ProductDetailComponent },
-  { path: 'message', component: MessageComponent },
-  { path: 'app-blog-detail', component: BlogDetailComponent },
-  { path: 'app-product-display', component: ProductDisplayComponent },
-  { path: 'signin', component: SigninComponent },
-  { path: 'signup', component: SignupComponent },
-  { path: 'claims', component: ListClaimComponentFront },
-  { path: 'claimsFront/AddClaim', component: AddClaimComponentFront },
-  { path: 'claimsFront/EditClaim/:id', component: ModifyClaimComponentFront },
-  { path: 'claimsFront/DetailsClaim/:id', component: ViewClaimComponentFront },
-  { path: 'assessments', component: ListAssessmentComponentFront },
-  { path: 'assessmentsFront/ViewAssessment/:id', component: ViewAssessmentComponentFront },
-  { path: 'assessmentsFront/AddAssessment', component: AddAssessmentFrontComponent },
-  { path: 'assessmentsFront/EditAssessment/:id', component: ModifyAssessmentFrontComponent },
-  { path: 'Services', component: ServicesComponent },
-  { path: 'contracts', component: ContractsComponent },
-  { path: 'transactions', component: TransactionComponent },
-  { path: 'trainings', component: TrainingsComponent },
-  { path: 'training-gallery', component: TrainingGalleryComponent },
-  { path: 'quiz/:id', component: QuizComponent },
-  { path: 'app-bookmark', component: BookmarkComponent },
-  { path: 'blogs/:id', component: BlogSingleComponent },
-  { path: 'blog-statistics', component: BlogStatisticsComponent },
-  { path: 'app-product-recommendation-form', component: ProductRecommendationFormComponent },
+  {
+    path: '',
+    component: AllTemplateFrontComponent,  // Front-Office as Default Route
+  },
 
+  {
+    path: 'message', // New route for the message component
+    component: MessageComponent
+  },
+  {
+    path: 'signin', // New route for the message component
+    component: SigninComponent
+  },
+  {
+    path: 'signup', // New route for the message component
+    component: SignupComponent
+  },
+  {
+    path: 'claims', // New route for the message component
+    component: ListClaimComponentFront
+  },
+  {
+    path: 'Services', // New route for the message component
+    component: ServicesComponent
+  },
+  {
+    path: 'products', // New route for the message component
+    component: ProductsComponent
+  },
+  {
+    path:'blogs',
+    component:BlogsComponent
+  },
+  {
+    path:'transactions',
+    component:TransactionComponent
+  },
+  {
+    path:'list',
+    component:PropertyListComponent
+  },
+  { path: 'property-mobile-detail/:id', component: PropertyMobileDetailComponent },
+  {
+    path:'prop',
+    component:PropertiessComponent
+  },
+  {
+    path: 'propertiesF',
+    component: PropertiesComponentF
+  },
+  {
+    path: 'report-incident/:propertyId',
+    component: IncidentFormComponent
+  },
+  {
+    path: 'incidents',
+    component: IncidentListComponent
+  },
+  
   // Back-Office Routes
   {
     path: 'admin',
@@ -110,33 +135,47 @@ const routes: Routes = [
         loadComponent: () =>
           import('./demo/pages/other/sample-page/sample-page.component').then((m) => SamplePageComponent),
       },
-      { path: 'app-statistics', component: StatisticsComponent },
-      { path: 'products', component: ProductsComponent },
-      { path: 'app-feedback-admin', component: FeedbackAdminComponent },
-      { path: 'claims', component: ListClaimComponent },
-      { path: 'claims/AddClaim', component: AddClaimComponent },
-      { path: 'claims/EditClaim/:id', component: ModifyClaimComponent },
-      { path: 'claims/DetailsClaim/:id', component: ViewClaimComponent },
-      { path: 'assessments', component: ListAssessmentComponent },
-      { path: 'assessments/AddAssessment', component: AddAssessmentComponent },
-      { path: 'assessments/EditAssessment/:id', component: ModifyAssessmentComponent },
-      { path: 'assessments/ViewAssessment/:id', component: ViewAssessmentComponent },
-      { path: 'properties', component: PropertiesComponent },
-      { path: 'contracts', component: ContratsComponent },
-      { path: 'transactions', component: TransactionsComponent },
-      { path: 'trainings', component: TrainingsComponent },
-      { path: 'training-gallery', component: TrainingGalleryComponent },
-      { path: 'quiz/:id', component: QuizComponent },
-      { path: 'enrollment', component: EnrollmentComponent },
-      { path: 'blogs', component: BlogsComponent },
-      { path: 'articles', component: BlogStatisticsComponent },
-      { path: 'incidents', component: IncidentsComponent },
-      { path: 'joboffers', component: JoboffersComponent },
-      { path: 'news', component: NewsComponent },
-      { path: 'app-prediction', component: PredictionComponent },
-  
-      
-    ],
+      {
+        path: 'contracts',
+        component: ContratsComponent
+      },
+      {
+        path: 'articles',
+        component: ArticlesComponent
+      },
+      {
+        path: 'assesements',
+        component: ListAssessmentComponentFront
+      },
+      {
+        path: 'blogs',
+        component: BlogsComponent
+      },
+      {
+        path: 'claims',
+        component: ListClaimComponentFront
+      },
+      {
+        path: 'joboffers',
+        component: JoboffersComponent
+      },
+      {
+        path: 'news',
+        component: NewsComponent
+      },
+      {
+        path: 'properties',
+        component: PropertiesComponent
+      },
+      {
+        path: 'transactions',
+        component: TransactionComponent
+      },
+      {
+        path: 'propertylistB',
+        component: PropertyListComponent
+      },
+    ]
   },
 
   // Authentication Routes

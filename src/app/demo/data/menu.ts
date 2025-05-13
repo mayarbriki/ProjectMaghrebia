@@ -73,20 +73,9 @@ export const menus: Navigation[] = [
         //target: true,
         breadcrumbs: false
       },
-      
-      {
-        id: 'training',
-        title: 'training',
-        type: 'item',
-        classes: 'nav-item',
-        url: '/admin/training-gallery',
-        icon: '#custom-password-check',
-        //target: true,
-        breadcrumbs: false
-      },
       {
         id: 'register',
-        title: 'Transactions',
+        title: 'transactions',
         type: 'item',
         classes: 'nav-item',
         url: '/admin/transactions',

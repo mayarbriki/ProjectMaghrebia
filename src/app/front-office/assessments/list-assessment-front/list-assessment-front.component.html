@@ -1,53 +1,102 @@
 <div class="list-assessment-container">
   <app-header-front></app-header-front>
-   
-   <div class="header-container">
-      <h3>List of Assessments</h3>
-      <div class="header-actions">
-        <!-- Search -->
-        <input 
-          type="text" 
-          placeholder="Search by ID or Date" 
-          [(ngModel)]="searchQuery" 
-          (input)="applySearch()" 
-          class="search-input" />
-  
-        <!-- Sort Options -->
-        <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
-          <option value="assessmentDate">Sort by Date</option>
-          <option value="id">Sort by ID</option>
-        </select>
-  
-        <!-- Sort Direction Toggle -->
-        <button class="btn btn-info" (click)="toggleSortDirection()">
-          {{ sortDirection ? 'Sort Descending' : 'Sort Ascending' }}
-        </button>
-  
-        <!-- Add Assessment Button -->
+
+  <button class="back" (click)="goBack()">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+    </svg>
+  </button>
+
+  <main class="main-content">
+    <div class="header-container">
+      <h1 *ngIf="currentUser?.role === 'CUSTOMER'; else adminOrAgentTitle">My Assessments</h1>
+      <ng-template #adminOrAgentTitle>
+        <h1>List Assessments</h1>
+      </ng-template>
+      
+      <div class="filter-row">
+        <div class="search-container">
+          <input 
+            type="text" 
+            placeholder="Search Assessments..." 
+            [(ngModel)]="searchQuery" 
+            (input)="applySearch()" 
+            class="search-input" />
+          
+          <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
+            <option value="assessmentDate">Sort by Date</option>
+            <option value="claimName">Sort by Claim Name</option>
+          </select>
+        </div>
+        
+        <div class="action-buttons">
+          <button *ngIf="isAgent() || isAdmin()" class="btn btn-add" (click)="navigateToAddAssessment()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+            </svg>
+            Add Assessment
+          </button>
+      
+          <button class="btn btn-stats" (click)="toggleSortDirection()">
+            {{ sortDirection ? '↓ Desc' : '↑ Asc' }}
+          </button>
+        </div>
       </div>
     </div>
-  
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Assessment Date</th>
-          <th>Findings</th>
-          <th>Status</th>
-          <th>Final Decision</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let assessment of filteredAssessments; let i = index">
-          <td>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</td>
-          <td>{{ assessment.findings }}</td>
-          <td>{{ assessment.statusAssessment }}</td>
-          <td>{{ assessment.finalDecision }}</td>
-          <td class="actions">
-            <button class="btn btn-primary btn-sm" (click)="viewAssessment(assessment.idAssessment)">View</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <app-footer-front></app-footer-front>
+
+    <div class="assessments-grid">
+      <div class="assessment-card" *ngFor="let assessment of filteredAssessments | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index" [@cardAnimation]>
+        <div class="assessment-card-header">
+          <div class="status-badge" [ngClass]="getStatusClass(assessment.statusAssessment)">
+            {{ assessment.statusAssessment }}
+          </div>
+          <h3>{{ assessment.claim.claimName || 'N/A' }}</h3>
+          <p class="assessment-title">Decision: {{ assessment.finalDecision }}</p>
+        </div>
+        <div class="assessment-card-body">
+          <div class="assessment-info">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z"/>
+            </svg>
+            <span>{{ assessment.assessmentDate | date:'mediumDate' }}</span>
+          </div>
+          <p class="assessment-findings">{{ assessment.findings }}</p>
+        </div>
+        <div class="assessment-card-footer">
+          <button class="btn-action view" (click)="viewAssessment(assessment.idAssessment)" title="View Details">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
+              <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5z"/>
+            </svg>
+          </button>
+        
+          <button *ngIf="isAdmin() || isAgent()" class="btn-action edit" (click)="editAssessment(assessment.idAssessment)" title="Edit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
+              <path d="M1 13.5V16h2.5l9.646-9.646-2.121-2.122L1 13.5z"/>
+            </svg>
+          </button>
+        
+          <button *ngIf="isAdmin() || isAgent()" class="btn-action delete" (click)="deleteAssessment(assessment.idAssessment)" title="Delete">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination-container">
+      <pagination-controls (pageChange)="page = $event" 
+                          previousLabel="Previous"
+                          nextLabel="Next"
+                          screenReaderPaginationLabel="Pagination"
+                          screenReaderPageLabel="page"
+                          screenReaderCurrentLabel="You're on page">
+      </pagination-controls>
+    </div>
+  </main>
+</div>
+
+<app-chatbot></app-chatbot>
+<app-footer-front></app-footer-front>

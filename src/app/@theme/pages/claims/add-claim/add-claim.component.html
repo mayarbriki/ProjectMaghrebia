@@ -17,6 +17,15 @@
         </div>
       </div>
   
+      <!-- User ID Field (visible only for Admin) -->
+<div class="form-group">
+  <label for="userId">User ID</label>
+  <input type="number" id="userId" class="form-control" required [(ngModel)]="claim.userId" name="userId" #userId="ngModel">
+  <div *ngIf="userId.invalid && userId.touched" class="error-message">
+    User ID is required for admin.
+  </div>
+</div>
+
       <!-- Claim Name -->
       <div class="form-group">
         <label for="claimName">Claim Name</label>
@@ -68,17 +77,17 @@
         </div>
       </div>
   
-      <!-- Label for Supporting Documents -->
+      <!-- Label for Supporting Documents 
       <div class="form-group">
         <label for="file-upload">Supporting Documents</label>
       </div>
   
-      <!-- Supporting Documents -->
+       Supporting Documents 
       <div class="form-group file-upload-container">
         <input type="text" id="file-name" class="form-control" [value]="fileName" readonly>
         <input type="file" id="file-upload" class="form-control file-input" (change)="onFileSelected($event)" #fileInput style="display:none;">
         <button type="button" class="btn btn-secondary upload-btn" (click)="fileInput.click()">Upload</button>
-      </div>
+      </div>-->
   
       <!-- Buttons -->
       <div class="button-group">

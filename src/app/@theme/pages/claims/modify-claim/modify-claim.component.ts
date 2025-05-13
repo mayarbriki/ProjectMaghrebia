@@ -4,7 +4,7 @@ import { ClaimService } from '../../../../claim.service';
 import { Claim, StatusClaim } from '../../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-modify-claim',
   templateUrl: './modify-claim.component.html',
@@ -21,6 +21,7 @@ export class ModifyClaimComponent implements OnInit {
     statusClaim: StatusClaim.PENDING,
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -33,32 +34,43 @@ export class ModifyClaimComponent implements OnInit {
 
   constructor(
     private claimService: ClaimService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    const claimId = this.route.snapshot.paramMap.get('id');
-    if (claimId) {
-      this.claimService.getClaimById(claimId).subscribe((data) => {
-        this.claim = data;
+    const id = this.route.snapshot.paramMap.get('id');
+    
+    const user = this.authService.getUser();
+    const userId = user ? user.id : null;
+    const role = user ? user.role : 'ADMIN';  
   
-        // Vérifier si submissionDate est défini et le convertir en objet Date
+    if (id && userId && role) {
+      this.claimService.getClaimById(id, userId, role).subscribe({
+        next: (data) => {
+          this.claim = data;
         if (this.claim.submissionDate && typeof this.claim.submissionDate === 'string') {
           this.claim.submissionDate = new Date(this.claim.submissionDate);
+        } 
+        },
+        error: (err) => {
+          console.error('Error loading claim:', err);
+          alert('Error retrieving claim.');
         }
-      }, error => {
-        console.error("Error fetching claim:", error);
       });
+    } else {
+      alert('Missing claim ID or user details');
+      this.router.navigate(['/claims']);
     }
-  }
+  }  
   
   
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files) {
       this.selectedFiles = Array.from(input.files);
-      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; // Update file name
+      this.fileName = this.selectedFiles.length > 0 ? this.selectedFiles[0].name : ''; 
     }
   }
 
@@ -71,28 +83,60 @@ export class ModifyClaimComponent implements OnInit {
       return;
     }
   
+    if (!this.claim.fullName || this.claim.fullName.trim().length === 0) {
+      alert("Full Name is required.");
+      return;
+    }
+  
+    if (!this.claim.claimName || this.claim.claimName.trim().length === 0) {
+      alert("Claim Name is required.");
+      return;
+    }
+  
+    if (!this.claim.claimReason || this.claim.claimReason.trim().length === 0) {
+      alert("Claim Reason is required.");
+      return;
+    }
+  
+    if (!this.claim.description || this.claim.description.trim().length === 0) {
+      alert("Claim Description is required.");
+      return;
+    }
+  
     formData.append("idClaim", this.claim.idClaim);
     formData.append("fullName", this.claim.fullName);
+    formData.append("userId", this.claim.userId.toString()); 
     formData.append("claimName", this.claim.claimName);
-    formData.append("submissionDate", new Date(this.claim.submissionDate).toISOString()); // Assurer que c'est un Date valide
+    formData.append("submissionDate", new Date(this.claim.submissionDate).toISOString());
     formData.append("statusClaim", this.claim.statusClaim);
     formData.append("claimReason", this.claim.claimReason);
     formData.append("description", this.claim.description);
   
-    // Ajout des fichiers au formulaire
     this.selectedFiles.forEach((file) => {
       formData.append("supportingDocuments", file);
     });
   
-    this.claimService.updateClaim(this.claim.idClaim, formData).subscribe(() => {
-      alert('Claim updated successfully!');
-      this.router.navigate(['/claims']);
-    }, error => {
-      console.error("Error updating claim:", error);
-      alert('Failed to update claim.');
-    });
-  }
+    const userId = this.authService.getUser()?.id; 
+
+    if (!userId) {
+      console.error('User ID is missing.');
+      return;
+    }
+
+    const role = 'ADMIN'; 
   
+    this.claimService.updateClaim(this.claim.idClaim, formData, userId, role).subscribe(
+      () => {
+        alert('Claim updated successfully!');
+        this.router.navigate(['/admin/claims']);
+      },
+      (error) => {
+        console.error("Error updating claim:", error);
+        alert('Failed to update claim.');
+      }
+    );
+}
+
   
   onCancel(): void {
     this.router.navigate(['/claims']);    

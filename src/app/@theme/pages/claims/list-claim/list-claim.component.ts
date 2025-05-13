@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { ClaimService } from '../../../../claim.service';
-import { AssessmentService } from '../../../../assessment.service'; // Import du service d'évaluation
+import { AssessmentService } from '../../../../assessment.service';
 import { Claim,StatusClaim } from '../../../../models/claim.model';
 import { Assessment } from '../../../../models/assessment.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ChangeDetectorRef } from '@angular/core';
+import { AuthService, User } from 'src/app/auth.service'; 
+import { NgxPaginationModule } from 'ngx-pagination';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { Color, ScaleType } from '@swimlane/ngx-charts';
 
 
 @Component({
@@ -14,7 +18,7 @@ import { ChangeDetectorRef } from '@angular/core';
   templateUrl: './list-claim.component.html',
   styleUrls: ['./list-claim.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule]
+  imports: [CommonModule, FormsModule,NgxPaginationModule,NgxChartsModule]
 })
 export class ListClaimComponent implements OnInit {
   claims: Claim[] = [];
@@ -22,14 +26,36 @@ export class ListClaimComponent implements OnInit {
   searchQuery: string = '';
   selectedSort: string = 'id';
   sortDirection: boolean = true; 
-  statusOptions = Object.values(StatusClaim); // Récupérer les valeurs de StatusClaim
-  // true for ascending, false for descending
+  statusOptions = Object.values(StatusClaim);
+  page: number = 1; // Variable pour la page actuelle
+  pageSize: number = 6; // Nombre d'éléments par page
 
-// Define the list of possible claim statuses
 statusClaims = Object.values(StatusClaim);
+currentUser: User | null = null;
+
+totalClaims: number = 0;
+statusChartData: any[] = [];
+reasonChartData: any[] = [];
+dailyChartData: any[] = [];
+
+colorScheme: Color = {
+  name: 'custom1',
+  selectable: true,
+  group: ScaleType.Ordinal,
+  domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+};
+
+colorScheme2: Color = {
+  name: 'custom2',
+  selectable: true,
+  group: ScaleType.Ordinal,
+  domain: ['#3366CC', '#DC3912', '#FF9900']
+};
+
   constructor(
     private claimService: ClaimService, 
-    private assessmentService: AssessmentService, // Ajout du service d'évaluation
+    private authService: AuthService,
+    private assessmentService: AssessmentService, 
     private router: Router,
     private cdr: ChangeDetectorRef
 
@@ -37,50 +63,60 @@ statusClaims = Object.values(StatusClaim);
 
   ngOnInit(): void {
     this.fetchClaims();
+    this.currentUser = this.authService.getUser();
   }
 
   fetchClaims(): void {
-    this.claimService.getAllClaims().subscribe(
+    this.currentUser = this.authService.getUser();
+  
+    if (!this.currentUser) {
+      console.error('User not authenticated');
+      return;
+    }
+      this.claimService.getAllClaims().subscribe(
       (data) => {
         this.claims = data;
-        this.filteredClaims = data;
+        this.filteredClaims = [...this.claims];
+        this.calculateStats();
       },
       (error) => {
         console.error('Error fetching claims:', error);
       }
     );
   }
+  
+  updatingClaims: Set<string> = new Set();
 
-  changeStatus(claim: Claim, newStatus: string) {
+  changeStatus(claim: Claim, selectedStatus: string): void {
+    if (claim.statusClaim === selectedStatus) return; // Rien à faire si le statut est déjà sélectionné
+    
     const confirmation = confirm('Are you sure you want to update the status of this claim?');
+    if (!confirmation) return;
   
-    if (confirmation) {
-      // Check if the status is different before sending the update
-      if (claim.statusClaim !== newStatus) {
-        this.claimService.updateClaimStatus(claim.idClaim, newStatus).subscribe(
-          (updatedClaim) => {
-            // Update the claim's status in the UI after the backend update
-            const index = this.claims.findIndex(c => c.idClaim === claim.idClaim);
-            if (index !== -1) {
-              // Update the status locally
-              this.claims[index].statusClaim = updatedClaim.statusClaim;
-              this.filteredClaims = [...this.claims]; // Trigger change detection for filtered claims
-              
-              // Manually trigger Angular change detection
-              this.cdr.detectChanges();
-            }
-            console.log('Status updated successfully:', updatedClaim.statusClaim);
-          },
-          (error) => {
-            console.error('Error updating status:', error);
-          }
-        );
-      }
+    const user = this.authService.getUser();
+    if (!user) {
+      console.error('User not authenticated');
+      return;
     }
-  }
   
-
-
+    const userId = user.id;
+    const role = user.role; 
+  
+    this.updatingClaims.add(claim.idClaim);
+    this.claimService.updateClaimStatus(claim.idClaim, selectedStatus, userId, role).subscribe(
+      (updatedClaim) => {
+        claim.statusClaim = updatedClaim.statusClaim;
+        this.updatingClaims.delete(claim.idClaim);
+        this.cdr.detectChanges();
+      },
+      (error) => {
+        console.error('Erreur mise à jour statut:', error);
+        this.updatingClaims.delete(claim.idClaim);
+        this.calculateStats();
+      }
+    );
+  }
+ 
   applySearch(): void {
     this.filteredClaims = this.claims.filter(claim =>
       claim.fullName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
@@ -88,9 +124,10 @@ statusClaims = Object.values(StatusClaim);
       claim.claimReason.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.statusClaim.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
       claim.description.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) // Search by assessment date
-
+      new Date(claim.submissionDate).toISOString().includes(this.searchQuery) 
     );
+    this.page = 1; // Reset to page 1 after a search
+    this.calculateStats();
   }
  
 
@@ -109,7 +146,7 @@ statusClaims = Object.values(StatusClaim);
 
   toggleSortDirection(): void {
     this.sortDirection = !this.sortDirection;
-    this.applySort(); // Reapply sorting after direction toggle
+    this.applySort();
   }
 
 
@@ -126,16 +163,28 @@ statusClaims = Object.values(StatusClaim);
       console.error('Invalid claim ID');
       return;
     }
-
-    if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(id).subscribe(() => {
-        this.claims = this.claims.filter(claim => claim.idClaim !== id);
-        this.applySearch();
-      }, (error) => {
-        console.error('Error deleting claim:', error);
-      });
+  
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      return;
     }
-  }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    if (confirm('Are you sure you want to delete this claim?')) {
+      this.claimService.deleteClaim(id, userId, role).subscribe(
+        () => {
+          this.claims = this.claims.filter(claim => claim.idClaim !== id);
+          this.applySearch(); 
+        },
+        (error) => {
+          console.error('Error deleting claim:', error);
+        }
+      );
+    }
+  }  
 
   navigateToAddClaim(): void {
     this.router.navigate(['admin/claims/AddClaim']);
@@ -143,11 +192,21 @@ statusClaims = Object.values(StatusClaim);
 
  
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      alert('User not authenticated. Please log in.');
+      return;
+    }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    this.claimService.getClaimById(idClaim, userId, role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
-          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]); 
+          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]);
         } else {
           alert('No assessment found for this claim.');
         }
@@ -161,7 +220,25 @@ statusClaims = Object.values(StatusClaim);
         }
       }
     );
+  }  
+  
+  calculateStats(): void {
+    this.totalClaims = this.filteredClaims.length;
+
+    // Pour le pie chart des statuts
+    const statusMap: { [key: string]: number } = {};
+    const reasonMap: { [key: string]: number } = {};
+    const dateMap: { [key: string]: number } = {};
+
+    for (const claim of this.filteredClaims) {
+      statusMap[claim.statusClaim] = (statusMap[claim.statusClaim] || 0) + 1;
+      reasonMap[claim.claimReason] = (reasonMap[claim.claimReason] || 0) + 1;
+      const date = new Date(claim.submissionDate).toISOString().split('T')[0];
+      dateMap[date] = (dateMap[date] || 0) + 1;
+    }
+
+    this.statusChartData = Object.entries(statusMap).map(([name, value]) => ({ name, value }));
+    this.reasonChartData = Object.entries(reasonMap).map(([name, value]) => ({ name, value }));
+    this.dailyChartData = Object.entries(dateMap).map(([name, value]) => ({ name, value }));
   }
-  
-  
 }

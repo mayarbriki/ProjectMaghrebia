@@ -6,15 +6,16 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HeaderFrontComponent } from 'src/app/front-office/header-front/header-front.component';
 import { FooterFrontComponent } from 'src/app/front-office/footer-front/footer-front.component';
+import { ChatbotComponent } from 'src/app/chatbot/chatbot.component';
 import { jsPDF } from 'jspdf';
 import * as XLSX from 'xlsx'; // Importation de la bibliothèque XLSX
-
+import {AuthService,User} from 'src/app/auth.service';
 @Component({
   selector: 'app-view-claim-front',
   templateUrl: './view-claim-front.component.html',
   styleUrls: ['./view-claim-front.component.scss'],
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent]
+  imports: [CommonModule, FormsModule, HeaderFrontComponent, FooterFrontComponent,ChatbotComponent]
 })
 export class ViewClaimComponentFront implements OnInit {
   claim: Claim = {
@@ -25,6 +26,7 @@ export class ViewClaimComponentFront implements OnInit {
     statusClaim: StatusClaim.PENDING,
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -32,23 +34,31 @@ export class ViewClaimComponentFront implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
-    claims: Claim[] = [];
+   claims: Claim[] = [];
+   currentUser: User | null = null;
 
 
   constructor(
     private claimService: ClaimService,
+    private authService: AuthService, 
     private route: ActivatedRoute,
     private router: Router
   ) {}
+  getStatusClass(status: StatusClaim): string {
+    return status.toString();
+  }
 
   ngOnInit(): void {
+    this.currentUser = this.authService.getUser(); // Récupérer l'utilisateur connecté
     const claimId = this.route.snapshot.paramMap.get('id');
-    if (claimId) {
-      this.claimService.getClaimById(claimId).subscribe(
+    
+    if (claimId && this.currentUser) {
+      const userId = this.currentUser.id;
+      const role = this.currentUser.role;
+  
+      this.claimService.getClaimById(claimId, userId, role).subscribe(
         (data) => {
           this.claim = data;
-          console.log('Claim data:', this.claim); // Afficher les données de la réclamation
-          console.log('Supporting documents:', this.claim.supportingDocuments); // Afficher les documents de support
         },
         (error) => {
           console.error('Error fetching claim details', error);
@@ -57,7 +67,17 @@ export class ViewClaimComponentFront implements OnInit {
     }
   }
   
+  isCustomer(): boolean {
+    return this.currentUser?.role === 'CUSTOMER';
+  }
 
+  isAgent(): boolean {
+    return this.currentUser?.role === 'AGENT';
+  }
+
+  isAdmin(): boolean {
+    return this.currentUser?.role === 'ADMIN';
+  }
   isImage(url: string): boolean {
     // Vérifier si l'URL est définie et si elle correspond à une image (par extension)
     if (!url) return false; // Assurez-vous que l'URL existe
@@ -70,26 +90,37 @@ export class ViewClaimComponentFront implements OnInit {
   }
 
   deleteClaim(id: string): void {
-    if (!id) {
-      console.error('Invalid claim ID');
+    const user = this.authService.getUser();
+  
+    if (!id || !user) {
+      console.error('Invalid claim ID or user');
       return;
     }
   
     if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(id).subscribe(() => {
-        // Filter out the deleted claim from the list
-        this.claims = this.claims.filter(claim => claim.idClaim !== id);
-  
-        // Navigate to the claims list (you can adjust the route path as needed)
-        this.router.navigate(['/claims']); // Example route
-      }, (error) => {
-        console.error('Error deleting claim:', error);
-      });
+      this.claimService.deleteClaim(id, user.id, user.role).subscribe(
+        () => {
+          this.claims = this.claims.filter(claim => claim.idClaim !== id);
+          this.router.navigate(['/claims']);
+        },
+        (error) => {
+          console.error('Error deleting claim:', error);
+        }
+      );
     }
   }
+  
+  
 
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser();
+  
+    if (!user) {
+      console.error('User not found');
+      return;
+    }
+  
+    this.claimService.getClaimById(idClaim, user.id, user.role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
@@ -108,106 +139,98 @@ export class ViewClaimComponentFront implements OnInit {
       }
     );
   }
+  
 
-  // Nouvelle méthode pour télécharger les détails de la réclamation en PDF
   downloadPDF(): void {
     const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
   
-    // Ajouter un cadre autour de la page
-    doc.setDrawColor(0); // Couleur du cadre (noir)
-    doc.setLineWidth(1); // Épaisseur du cadre
-    doc.rect(10, 10, 190, 277); // Crée un rectangle de 10x10 à 190x277 pour la page
+    const logoImg = new Image();
+    logoImg.src = 'assets/FrontOffice/img/maghrebia (2).png';
   
-    // Titre principal du PDF (centré avec couleur et taille de police)
-    doc.setFont('helvetica', 'bold');
-    doc.setFontSize(22);
-    doc.setTextColor(50, 50, 255); // Couleur bleue pour le titre
-    doc.text('Claim Details', 105, 20, { align: 'center' });
+    logoImg.onload = () => {
+      doc.addImage(logoImg, 'PNG', 20, 10, 50, 25);
   
-    doc.setFontSize(14);
-    doc.setTextColor(0, 0, 0); // Couleur noire pour le texte suivant
+      const title = 'Customer Claim Overview';
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(22);
+      doc.setTextColor(50, 50, 255);
+      const titleWidth = doc.getTextWidth(title);
+      doc.text(title, (pageWidth - titleWidth) / 2, 45);
   
-    // Informations sur la réclamation
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Full Name:`, 20, 40);
-    doc.setFont('helvetica', 'normal');
-    doc.text(this.claim.fullName, 80, 40);
+      const boxX = 15;
+      const boxY = 55;
+      const boxWidth = pageWidth - 30;
+      const boxHeight = 100;
+      doc.setDrawColor(180);
+      doc.setLineWidth(0.5);
+      doc.rect(boxX, boxY, boxWidth, boxHeight);
   
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Claim Name:`, 20, 50);
-    doc.setFont('helvetica', 'normal');
-    doc.text(this.claim.claimName, 80, 50);
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      let y = boxY + 12;
+      const lineHeight = 10;
   
-    // Formater la date de soumission pour s'assurer qu'elle est bien une Date
-    const submissionDate = this.claim.submissionDate instanceof Date
-      ? this.claim.submissionDate
-      : new Date(this.claim.submissionDate);
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Submission Date:`, 20, 60);
-    doc.setFont('helvetica', 'normal');
-    doc.text(submissionDate.toLocaleDateString(), 80, 60);
+      const drawField = (label: string, value: string) => {
+        doc.setFont('helvetica', 'bold');
+        doc.text(`${label}:`, boxX + 5, y);
+        doc.setFont('helvetica', 'normal');
+        doc.text(value, boxX + 60, y);
+        y += lineHeight;
+      };
   
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Status:`, 20, 70);
-    doc.setFont('helvetica', 'normal');
-    doc.text(this.claim.statusClaim, 80, 70);
+      drawField('Full Name', this.claim.fullName || 'N/A');
+      drawField('Claim Name', this.claim.claimName || 'N/A');
   
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Reason:`, 20, 80);
-    doc.setFont('helvetica', 'normal');
-    doc.text(this.claim.claimReason, 80, 80);
+      const submissionDate = this.claim.submissionDate instanceof Date
+        ? this.claim.submissionDate
+        : new Date(this.claim.submissionDate);
+      drawField('Submission Date', submissionDate.toLocaleDateString());
   
-    doc.setFont('helvetica', 'bold');
-    doc.text(`Description:`, 20, 90);
-    doc.setFont('helvetica', 'normal');
+      drawField('Status', this.claim.statusClaim || 'N/A');
+      drawField('Reason', this.claim.claimReason || 'N/A');
   
-    // Pour gérer le texte long et éviter qu'il sorte du cadre
-    const descriptionText = this.claim.description || ''; 
-    const maxWidth = 100; // Largeur maximale du texte
-    const lines: string[] = doc.splitTextToSize(descriptionText, maxWidth); // Découpe le texte en lignes
-  
-    // Affiche les lignes découpées à partir de la position (80, 90)
-    let yPosition = 90;
-    lines.forEach((line: string) => { // Spécification du type 'string' pour 'line'
-      doc.text(line, 80, yPosition);
-      yPosition += 10; // Espace entre les lignes
-    });
-  
-    // Documents de soutien
-    let yPos = yPosition + 10; // On commence à une nouvelle position après la description
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('Supporting Documents:', 20, yPos);
-    yPos += 10;
-  
-    this.claim.supportingDocuments.forEach((file, index) => {
+      doc.setFont('helvetica', 'bold');
+      doc.text('Description:', boxX + 5, y);
       doc.setFont('helvetica', 'normal');
-      doc.text(`${index + 1}. ${file.url}`, 20, yPos);
-      yPos += 10;
-    });
+      const descLines: string[] = doc.splitTextToSize(this.claim.description || '', 100);
+      y += 5;
+      descLines.forEach(line => {
+        doc.text(line, boxX + 60, y);
+        y += lineHeight;
+      });
   
-    // Séparer les sections par des lignes
-    doc.setDrawColor(0);
-    doc.setLineWidth(0.5);
-    doc.line(20, yPos + 5, 190, yPos + 5);
+      const thankYouY = boxY + boxHeight + 20;
+      doc.setFont('helvetica', 'italic');
+      doc.setFontSize(11);
+      const line1 = 'Thank you for trusting Maghrebia Insurance.';
+      const line2 = 'We remain at your disposal for any further information.';
+      const line1Width = doc.getTextWidth(line1);
+      const line2Width = doc.getTextWidth(line2);
+      doc.text(line1, (pageWidth - line1Width) / 2, thankYouY);
+      doc.text(line2, (pageWidth - line2Width) / 2, thankYouY + 10);
   
-    // Footer avec du texte en petit et aligné au centre
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'italic');
-    doc.setTextColor(150, 150, 150);
-    doc.text('Generated by MyPiProject', 105, yPos + 15, { align: 'center' });
+      const footerY = 270;
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(100);
+      doc.text(
+        `Maghrebia Insurance — 64, rue de Palestine, 1002 / 24, Rue du Royaume d'Arabie Saoudite, Tunis`,
+        boxX,
+        footerY
+      );
+      doc.text(`Phone: 00 216 71 788 800 | Fax: 00 216 71 788 334`, boxX, footerY + 5);
+      doc.text(`Email: relation.client@maghrebia.com.tn`, boxX, footerY + 10);
   
-    // Sauvegarde le fichier PDF
-    doc.save('claim-details.pdf');
+      doc.save('Customer_Claim_Overview.pdf');
+    };
   }
     
   downloadExcel(): void {
-    // Formater la date de soumission pour s'assurer qu'elle est bien une Date
     const submissionDate = this.claim.submissionDate instanceof Date
       ? this.claim.submissionDate
       : new Date(this.claim.submissionDate);
   
-    // Créer un tableau d'objets avec les informations de la réclamation
     const claimData = [
       { label: 'Full Name', value: this.claim.fullName },
       { label: 'Claim Name', value: this.claim.claimName },
@@ -217,22 +240,18 @@ export class ViewClaimComponentFront implements OnInit {
       { label: 'Description', value: this.claim.description }
     ];
   
-    // Ajouter une section pour les documents de soutien
     const documents = this.claim.supportingDocuments.map((file, index) => ({
       label: `Supporting Document ${index + 1}`,
       value: file.url
     }));
   
-    // Combiner les données dans un seul tableau
     const finalData = [...claimData, ...documents];
   
-    // Créer une feuille Excel à partir des données
     const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(finalData.map(item => ({
       'Field': item.label,
       'Value': item.value
     })));
   
-    // Ajouter un titre à la feuille Excel
     const title = 'Claim Details Report';
     ws['!merges'] = [
       { s: { r: 0, c: 0 }, e: { r: 0, c: 1 } } // Fusionner les cellules de la première ligne
@@ -244,7 +263,6 @@ export class ViewClaimComponentFront implements OnInit {
       fill: { fgColor: { rgb: '4CAF50' } } // Fond vert
     };
   
-    // Appliquer des styles aux autres cellules (ex: fond coloré pour les en-têtes)
     const headerStyle = { 
       font: { bold: true, sz: 12, color: { rgb: '000000' } }, // Textes des en-têtes en gras
       fill: { fgColor: { rgb: 'D3D3D3' } }, // Fond gris clair pour les en-têtes

@@ -4,7 +4,7 @@ import { ClaimService } from '../../../../claim.service';
 import { Claim, StatusClaim } from '../../../../models/claim.model';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
+import { AuthService } from 'src/app/auth.service';
 @Component({
   selector: 'app-view-claim',
   templateUrl: './view-claim.component.html',
@@ -21,6 +21,7 @@ export class ViewClaimComponent implements OnInit {
     statusClaim: StatusClaim.PENDING,
     claimReason: '',
     description: '',
+    userId: 0,
     supportingDocuments: [],
     assessment: null
   };
@@ -28,9 +29,11 @@ export class ViewClaimComponent implements OnInit {
   statusClaims = Object.values(StatusClaim);
   selectedFiles: File[] = [];
   temporaryOtherClaimReason: string = '';
+  claims: Claim[] = [];
 
   constructor(
     private claimService: ClaimService,
+    private authService: AuthService,
     private route: ActivatedRoute,
     private router: Router
     
@@ -38,39 +41,66 @@ export class ViewClaimComponent implements OnInit {
 
   ngOnInit(): void {
     const claimId = this.route.snapshot.paramMap.get('id');
-    if (claimId) {
-      this.claimService.getClaimById(claimId).subscribe(
+    const user = this.authService.getUser(); 
+    if (claimId && user) {
+      const userId = user.id; 
+      const role = user.role; 
+  
+      this.claimService.getClaimById(claimId, userId, role).subscribe(
         (data) => {
+          console.log('FULL CLAIM:', data);
           this.claim = data;
+          console.log('Claim data:', this.claim);
+          console.log('Supporting documents:', this.claim.supportingDocuments);
         },
         (error) => {
           console.error('Error fetching claim details', error);
         }
       );
+    } else {
+      console.error('Claim ID or User is missing');
     }
   }
-  editClaim(): void {
+  
+   editClaim(): void {
     this.router.navigate([`/admin/claims/EditClaim/${this.claim.idClaim}`]);
   }
 
-  deleteClaim(): void {
+  deleteClaim(id: string): void {
+    const user = this.authService.getUser();
+    if (!id || !user) {
+      console.error('Invalid claim ID or user');
+      return;
+    }
+  
+    const userId = user.id;
+    const role = user.role; 
+  
     if (confirm('Are you sure you want to delete this claim?')) {
-      this.claimService.deleteClaim(this.claim.idClaim).subscribe(
-        () => {
-          this.router.navigate(['/admin/claims']);
-        },
-        (error) => {
-          console.error('Error deleting claim:', error);
-        }
-      );
+      this.claimService.deleteClaim(id, userId, role).subscribe(() => {
+        this.claims = this.claims.filter(claim => claim.idClaim !== id);
+        this.router.navigate(['/admin/claims']);
+      }, (error) => {
+        console.error('Error deleting claim:', error);
+      });
     }
   }
+  
   viewAssessment(idClaim: string): void {
-    this.claimService.getClaimById(idClaim).subscribe(
+    const user = this.authService.getUser(); 
+    if (!user) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    const userId = user.id; 
+    const role = user.role; 
+  
+    this.claimService.getClaimById(idClaim, userId, role).subscribe(
       (claim) => {
         if (claim && claim.assessment) {
           const idAssessment = claim.assessment.idAssessment;
-          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]); 
+          this.router.navigate([`/admin/assessments/ViewAssessment/${idAssessment}`]);
         } else {
           alert('No assessment found for this claim.');
         }
@@ -84,7 +114,7 @@ export class ViewClaimComponent implements OnInit {
         }
       }
     );
-  }
+  }  
   goBack(): void {
     this.router.navigate(['/admin/claims'], { relativeTo: this.route });
   }

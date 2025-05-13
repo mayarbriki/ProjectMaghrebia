@@ -1,6 +1,6 @@
 <div class="list-claim-container">
     <div class="header-container">
-        <h3>List of Claims</h3>
+        <h3>Claims List</h3>
         <div class="header-actions">
             <!-- Recherche avancée -->
             <input 
@@ -35,19 +35,22 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let claim of filteredClaims; let i = index">
+            <tr *ngFor="let claim of filteredClaims | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
                 <td>{{ i + 1 }}</td>
                 <td>{{ claim.fullName }}</td>
                 <td>{{ claim.claimName }}</td>
                 <td>{{ claim.submissionDate | date:'yyyy-MM-dd' }}</td>
                 <td>
-                    <select [(ngModel)]="claim.statusClaim" (change)="changeStatus(claim, claim.statusClaim)" class="form-control">
-                        <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-                    </select>
-                    
-                </td>
-                
-                              
+                    <select
+                    [ngModel]="claim.statusClaim"
+                    (ngModelChange)="changeStatus(claim, $event)"
+                    class="form-control"
+                  >
+                    <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                  </select>
+                  
+                  </td>
+                                        
                  <td class="actions">
                     <button class="btn btn-primary btn-sm" (click)="viewClaim(claim.idClaim)">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
@@ -71,4 +74,65 @@
             </tr>
         </tbody>
     </table>
+    
+    <div class="pagination-container">
+        <pagination-controls (pageChange)="page = $event"></pagination-controls>
+    </div>
+
+    <div class="stats-charts-container">
+        <h4>Claim Statistics</h4>
+      
+        <div class="total-claims-container">
+          <h4>Total Claims: {{ totalClaims }}</h4>
+        </div>
+      
+        <p class="chart-description">Below are the pie charts showing the status and reason distribution. The bar chart shows claims per day.</p>
+      
+        <div class="charts-grid">
+          <!-- Pie chart for status distribution -->
+          <div class="chart-container">
+            <ngx-charts-pie-chart
+              [view]="[300, 300]"
+              [scheme]="colorScheme"
+              [results]="statusChartData"
+              [legend]="true"
+              [doughnut]="true"
+              [labels]="true">
+            </ngx-charts-pie-chart>
+            <p class="chart-label">Status Distribution</p>
+          </div>
+      
+          <!-- Pie chart for reason distribution -->
+          <div class="chart-container">
+            <ngx-charts-pie-chart
+              [view]="[300, 300]"
+              [scheme]="colorScheme2"
+              [results]="reasonChartData"
+              [legend]="true"
+              [doughnut]="true"
+              [labels]="true">
+            </ngx-charts-pie-chart>
+            <p class="chart-label">Reason Distribution</p>
+          </div>
+      
+          <!-- Bar chart for claims by date -->
+          <div class="chart-container">
+            <ngx-charts-bar-vertical
+              [view]="[600, 300]"
+              [scheme]="colorScheme"
+              [results]="dailyChartData"
+              [gradient]="false"
+              [xAxis]="true"
+              [yAxis]="true"
+              [legend]="false"
+              [showXAxisLabel]="true"
+              [showYAxisLabel]="true"
+              xAxisLabel="Date"
+              yAxisLabel="Claims">
+            </ngx-charts-bar-vertical>
+            <p class="chart-label">Claims by Date</p>
+          </div>
+        </div>
+      </div>
+      
 </div>

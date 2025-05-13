@@ -37,7 +37,36 @@ export class AssessmentService {
   }
 
   // Delete Assessment
-  deleteAssessment(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/delete/${id}`);
+  deleteAssessment(id: string, userId: number, role: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/delete/${id}?userId=${userId}&role=${role}`);
   }
+  
+ // Update status
+updateStatus(id: string, status: string): Observable<Assessment> {
+  return this.http.put<Assessment>(
+    `${this.baseUrl}/${id}/status`,
+    {}, 
+    { params: { status } } 
+  );
+}
+
+// Update final decision 
+updateFinalDecision(id: string, decision: string): Observable<Assessment> {
+  return this.http.put<Assessment>(
+    `${this.baseUrl}/${id}/final-decision`,
+    {},
+    { params: { decision } }
+  );
+}
+
+// Get Assessments by current user (or all if admin/agent)
+getAssessmentsByUser(userId: number, role: string): Observable<Assessment[]> {
+  return this.http.get<Assessment[]>(`${this.baseUrl}/assessmentByUser`, {
+    params: {
+      userId: userId.toString(),
+      role: role
+    }
+  });
+}
+  
 }

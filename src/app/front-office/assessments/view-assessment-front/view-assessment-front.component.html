@@ -1,27 +1,112 @@
 <app-header-front></app-header-front>
 <div *ngIf="assessment" class="view-assessment-container">
-  <button class="back" (click)="goBack()">
-    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
-      <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
-    </svg>
-  </button>
-    <h3>Assessment Details</h3>
-    <div class="assessment-detail">
-      <p><strong>Assessment Date:</strong> {{ assessment.assessmentDate | date }}</p>
-      <p><strong>Findings:</strong> {{ assessment.findings }}</p>
-      <p><strong>Status:</strong> {{ assessment.statusAssessment }}</p>
-      <p><strong>Final Decision:</strong> {{ assessment.finalDecision }}</p>
-      <p><strong>Submission Date:</strong> {{ assessment.submissionDate | date }}</p>
-      
-      <!--<p><strong>Documents:</strong></p>
-      <ul>
-        <li *ngFor="let file of assessment.assessmentDocuments">
-          <a href="{{ file }}" target="_blank">{{ file }}</a>
-        </li>
-      </ul>-->
+  <div class="assessment-header">
+    <button class="back-btn" (click)="goBack()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M15 18l-6-6 6-6"/>
+      </svg>
+    </button>
+    
+    <div class="header-content">
+      <h1 class="assessment-title">
+        <span>Assessment Report</span>
+        <span class="claim-name">{{ assessment.claim.claimName }}</span>
+      </h1>
+      <div class="status-badge" [ngClass]="assessment.statusAssessment.toLowerCase()">
+        {{ assessment.statusAssessment }}
+      </div>
     </div>
-  
-   
   </div>
-  
-  <app-footer-front></app-footer-front>
+
+  <div class="assessment-timeline">
+    <div class="timeline-item">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <span class="timeline-date">{{ assessment.claim.submissionDate | date:'mediumDate' }}</span>
+        <h3>Claim Submitted</h3>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <span class="timeline-date">{{ assessment.assessmentDate | date:'mediumDate' }}</span>
+        <h3>Assessment Completed</h3>
+      </div>
+    </div>
+    <div class="timeline-item" *ngIf="assessment.finalDecision !== 'IN_REVIEW'">
+      <div class="timeline-marker"></div>
+      <div class="timeline-content">
+        <span class="timeline-date">{{ assessment.submissionDate | date:'mediumDate' }}</span>
+        <h3>Final Decision Made</h3>
+      </div>
+    </div>
+  </div>
+
+  <div class="assessment-details">
+    <div class="detail-card">
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+          <polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/>
+          <line x1="16" y1="17" x2="8" y2="17"/>
+          <polyline points="10 9 9 9 8 9"/>
+        </svg>
+      </div>
+      <h3>Findings Summary</h3>
+      <p>{{ assessment.findings }}</p>
+    </div>
+
+    <div class="detail-card decision-card">
+      <div class="card-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+      <h3>Final Decision</h3>
+      <div class="decision-content">
+        <span class="decision-badge" [ngClass]="assessment.finalDecision.toLowerCase()">
+          {{ assessment.finalDecision }}
+        </span>
+        <p *ngIf="assessment.finalDecision === 'APPROVED'" class="decision-message">
+          Your claim has been approved. Payment processing will begin shortly.
+        </p>
+        <p *ngIf="assessment.finalDecision === 'REJECTED'" class="decision-message">
+          Your claim has been rejected. Contact our support for more information.
+        </p>
+        <p *ngIf="assessment.finalDecision === 'IN_REVIEW'" class="decision-message">
+          Your claim is under review. We'll notify you once a decision is made.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="action-section">
+    <button class="action-btn download-btn" (click)="downloadPDF()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="7 10 12 15 17 10"/>
+        <line x1="12" y1="15" x2="12" y2="3"/>
+      </svg>
+      Download Report
+    </button>
+    
+    <div *ngIf="userRole === 'ADMIN' || userRole === 'AGENT'" class="admin-actions">
+      <button class="action-btn edit-btn" (click)="navigateToEditAssessment()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </button>
+      <button class="action-btn delete-btn" (click)="deleteAssessment()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="3 6 5 6 21 6"/>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<app-chatbot></app-chatbot>
+<app-footer-front></app-footer-front>

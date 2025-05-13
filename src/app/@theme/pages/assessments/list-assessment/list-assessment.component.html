@@ -1,6 +1,6 @@
 <div class="list-assessment-container">
   <div class="header-container">
-      <h3>List of Assessments</h3>
+      <h3>List Assessments</h3>
       <div class="header-actions">
           <!-- Search -->
           <input 
@@ -13,14 +13,13 @@
           <!-- Sort Options -->
           <select [(ngModel)]="selectedSort" (change)="applySort()" class="sort-select">
               <option value="assessmentDate">Sort by Date</option>
+              <option value="claimName">Sort by Claim Name</option>
           </select>
 
-          <!-- Sort Direction Toggle -->
-          <button class="btn btn-info" (click)="toggleSortDirection()">
-              {{ sortDirection ? 'Sort Descending' : 'Sort Ascending' }}
+          <button class="btn-info" (click)="toggleSortDirection()">
+            {{ sortDirection ? '↓ Desc' : '↑ Asc' }}
           </button>
 
-          <!-- Add Assessment Button -->
           <button class="btn btn-success" (click)="navigateToAddAssessment()">Add Assessment</button>
       </div>
   </div>
@@ -29,6 +28,7 @@
       <thead>
           <tr>
               <th>ID</th>
+              <th>Selected Claim</th>
               <th>Assessment Date</th>
               <th>Status</th>
               <th>Final Decision</th>
@@ -36,14 +36,32 @@
           </tr>
       </thead>
       <tbody>
-          <tr *ngFor="let assessment of filteredAssessments; let i = index">
+          <tr *ngFor="let assessment of filteredAssessments| paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index">
               <td>{{ i + 1 }}</td>
+              <td>{{ assessment.claim.claimName || 'N/A' }}</td>
               <td>{{ assessment.assessmentDate | date:'yyyy-MM-dd' }}</td>
-              <td>{{ assessment.statusAssessment }}</td>
-              <td>{{ assessment.finalDecision }}</td>
+              <td>
+                <select
+                  [ngModel]="assessment.statusAssessment"
+                  (ngModelChange)="changeStatus(assessment, $event)"
+                  class="form-control"
+                  [disabled]="updatingAssessments.has(assessment.idAssessment)">
+                  <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
+                </select>
+              </td>
+              
+              <td>
+                <select
+                  [ngModel]="assessment.finalDecision"
+                  (ngModelChange)="changeFinalDecision(assessment, $event)"
+                  class="form-control"
+                  [disabled]="updatingAssessments.has(assessment.idAssessment)">
+                  <option *ngFor="let decision of decisionOptions" [value]="decision">{{ decision }}</option>
+                </select>
+              </td>
+              
               <td class="actions">
                   <div class="action-buttons">
-                      <!-- Bouton Voir -->
                       <button class="btn btn-primary btn-sm" (click)="viewAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
                               <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zM8 12.5c-2.485 0-4.5-2.015-4.5-4.5S5.515 3.5 8 3.5s4.5 2.015 4.5 4.5-2.015 4.5-4.5 4.5z"/>
@@ -51,7 +69,6 @@
                           </svg>
                       </button>
 
-                      <!-- Bouton Modifier -->
                       <button class="btn btn-warning btn-sm" (click)="editAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
                               <path d="M15.502 1.94a.5.5 0 0 1 0 .707l-1.768 1.768-2.121-2.122 1.768-1.768a.5.5 0 0 1 .707 0l1.414 1.415z"/>
@@ -59,7 +76,6 @@
                           </svg>
                       </button>
 
-                      <!-- Bouton Supprimer -->
                       <button class="btn btn-danger btn-sm" (click)="deleteAssessment(assessment.idAssessment)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3" viewBox="0 0 16 16">
                               <path d="M6 1v1H3v1h10V2h-3V1H6zm1 3v9h2V4H7zm-3 0h1v9H4V4zm7 0h1v9h-1V4z"/>
@@ -70,4 +86,62 @@
           </tr>
       </tbody>
   </table>
+  <div class="pagination-container">
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</div>
+
+
+<div class="stats-charts-container">
+    <h4>Assessment Statistics</h4>
+    <div class="total-assessments-container">
+        <h4>Total Assessments: 
+          <span [ngClass]="{ 'updated': totalAssessments !== previousTotalAssessments }">
+            {{ totalAssessments }}
+          </span>
+        </h4>
+      </div>
+      
+    <p class="chart-description">Below are the pie charts showing the status and final decision distribution. The bar chart shows assessments per day.</p>
+    <div class="charts-grid">
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [view]="[300, 300]"
+          [scheme]="colorScheme"
+          [results]="statusChartData"
+          [legend]="true"
+          [doughnut]="true"
+          [labels]="true"
+        ></ngx-charts-pie-chart>
+        <p class="chart-label">Status Distribution</p>
+      </div>
+
+      <div class="chart-container">
+        <ngx-charts-pie-chart
+          [view]="[300, 300]"
+          [scheme]="colorScheme2"
+          [results]="decisionChartData"
+          [legend]="true"
+          [doughnut]="true"
+          [labels]="true"
+        ></ngx-charts-pie-chart>
+        <p class="chart-label">Final Decision Distribution</p>
+      </div>
+      <div class="chart-container">
+        <ngx-charts-bar-vertical
+          [view]="[600, 300]"
+          [scheme]="colorScheme"
+          [results]="dailyChartData"
+          [gradient]="false"
+          [xAxis]="true"
+          [yAxis]="true"
+          [legend]="false"
+          [showXAxisLabel]="true"
+          [showYAxisLabel]="true"
+          xAxisLabel="Date"
+          yAxisLabel="Submissions"
+        ></ngx-charts-bar-vertical>
+        <p class="chart-label">Assessments by Date</p>
+      </div>
+    </div>
+  </div>
 </div>

@@ -1,9 +1,9 @@
-<!-- Back Button -->
-<button class="btn btn-light back-btn" (click)="goBack()">Back
-    <i class="fa fa-arrow-left"></i> 
-  </button>
-  
 <div class="add-assessment-container">
+    <button class="back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+          <path d="M11.854 2.146a.5.5 0 0 1 0 .708L5.707 8l6.147 5.146a.5.5 0 0 1-.708.708l-6.5-6a.5.5 0 0 1 0-.708l6.5-6a.5.5 0 0 1 .708 0z"/>
+        </svg>
+      </button>
     <h3>Add Assessment</h3>
     <form (ngSubmit)="onSubmit()" #assessmentForm="ngForm" class="p-4 border rounded shadow">
 
@@ -17,7 +17,6 @@
             </select>
         </div>
         
-
         <!-- Assessment Date -->
         <div class="form-group">
             <label for="assessmentDate" class="font-weight-bold">Assessment Date</label>
@@ -28,22 +27,6 @@
         <div class="form-group">
             <label for="findings" class="font-weight-bold">Findings</label>
             <textarea id="findings" class="form-control" required [(ngModel)]="assessment.findings" name="findings"></textarea>
-        </div>
-
-        <!-- Status Assessment -->
-        <div class="form-group">
-            <label for="statusAssessment" class="font-weight-bold">Status Assessment</label>
-            <select id="statusAssessment" class="form-control" required [(ngModel)]="assessment.statusAssessment" name="statusAssessment">
-                <option *ngFor="let status of statusOptions" [value]="status">{{ status }}</option>
-            </select>
-        </div>
-
-        <!-- Final Decision -->
-        <div class="form-group">
-            <label for="finalDecision" class="font-weight-bold">Final Decision</label>
-            <select id="finalDecision" class="form-control" required [(ngModel)]="assessment.finalDecision" name="finalDecision">
-                <option *ngFor="let decision of decisionOptions" [value]="decision">{{ decision }}</option>
-            </select>
         </div>
 
         <!-- Submission Date -->
@@ -60,7 +43,7 @@
 
         <!-- Buttons -->
         <div class="button-group">
-            <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!assessmentForm.form.valid">Add Assessment</button>
+            <button type="submit" class="btn btn-primary mt-3 w-100" [disabled]="!assessmentForm.form.valid">Add </button>
             <button type="button" class="btn btn-secondary mt-3 w-100" (click)="onCancel()">Cancel</button>
         </div>
     </form>

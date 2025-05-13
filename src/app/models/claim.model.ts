@@ -7,8 +7,11 @@ export interface Claim {
     statusClaim: StatusClaim;
     claimReason: string;
     description: string;
+    userId: number;
     supportingDocuments: { name: string, url: string }[];
     assessment?: Assessment | null; 
+    isUpdating?: boolean; 
+    user?: User;
  }
   
   export enum StatusClaim {
@@ -16,4 +19,14 @@ export interface Claim {
     APPROVED = 'APPROVED',
     REJECTED = 'REJECTED',
     IN_REVIEW = 'IN_REVIEW'
+  }
+  export interface User {
+    id: number;
+    username: string;
+    email: string;
+    accountBalance?: number; 
+    phoneNumber?: string;
+    address?: string;
+    role : 'ADMIN' | 'CUSTOMER' | 'AGENT';
+    image?: string;
   }

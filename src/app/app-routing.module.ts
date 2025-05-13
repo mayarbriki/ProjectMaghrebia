@@ -17,6 +17,8 @@ import { ModifyClaimComponentFront } from './front-office/claims/modify-claim-fr
 import { ViewClaimComponentFront } from './front-office/claims/view-claim-front/view-claim-front.component';
 import { ListAssessmentComponentFront } from './front-office/assessments/list-assessment-front/list-assessment-front.component';
 import { ViewAssessmentComponentFront } from './front-office/assessments/view-assessment-front/view-assessment-front.component';
+import { AddAssessmentFrontComponent} from './front-office/assessments/add-assessment-front/add-assessment-front.component';
+import { ModifyAssessmentFrontComponent } from './front-office/assessments/modify-assessment-front/modify-assessment-front.component';
 import { ProductDetailComponent } from './product-detail/product-detail.component';
 import { HeaderFrontComponent } from './front-office/header-front/header-front.component';
 import { BlogDetailComponent } from './blog-detail/blog-detail.component';
@@ -75,6 +77,8 @@ const routes: Routes = [
   { path: 'claimsFront/DetailsClaim/:id', component: ViewClaimComponentFront },
   { path: 'assessments', component: ListAssessmentComponentFront },
   { path: 'assessmentsFront/ViewAssessment/:id', component: ViewAssessmentComponentFront },
+  { path: 'assessmentsFront/AddAssessment', component: AddAssessmentFrontComponent },
+  { path: 'assessmentsFront/EditAssessment/:id', component: ModifyAssessmentFrontComponent },
   { path: 'Services', component: ServicesComponent },
   { path: 'contracts', component: ContractsComponent },
   { path: 'transactions', component: TransactionComponent },

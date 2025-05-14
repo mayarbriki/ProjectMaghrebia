@@ -52,7 +52,7 @@ This project focuses on optimizing the Maghrebia Insurance website by improving 
 
 ### Logical Architecture
 - Class Diagram and Use Case Diagram provided in the documentation.
-- ![Uploading image.png…]()
+![image](https://github.com/user-attachments/assets/422fb323-ad22-4555-ad4f-967cb2fc5acd)
 
 
 ## Setup Instructions

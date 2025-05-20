@@ -66,3 +66,6 @@ For detailed technical specifications, refer to the full report included in the 
 
 ## Contact
 For questions or support, please contact the development team.
+## Documentation
+[rapport-2.pdf](https://github.com/user-attachments/files/20343610/rapport-2.pdf)
+
